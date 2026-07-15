@@ -1292,7 +1292,7 @@ a:hover { color: var(--accent-hover); }
     </div>
 </figure>
 <p><em>Figure 3. Submit-at-budget performance under 16k and 256k automatic compaction thresholds. The x-axis shows the cumulative context-processing budget (prompt + output tokens) per task. </em></p>
-<p>For evaluation, we compare <strong>AutoCompact-Qwen3 30B Coder (SFT)</strong> and <strong>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</strong> against <strong>Qwen/Qwen3-Coder-30B-A3B-Instruct</strong> on SWE-bench Verified under identical scaffold and runtime settings. We test 16k and 256k automatic compaction thresholds. All models use rule-based compaction at the threshold, while the AutoCompact variants can also invoke <code>request_summary()</code> proactively. We measure submit-at-budget performance by stopping each run at fixed cumulative prompt + output token budgets and evaluating the current workspace patch.</p>
+<p>For evaluation, we compare <strong>AutoCompact-Qwen3 30B Coder (SFT)</strong> and <strong>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</strong> against <strong>Qwen/Qwen3-Coder-30B-A3B-Instruct</strong> on SWE-bench Verified under identical scaffold and runtime settings<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span>. We test 16k and 256k automatic compaction thresholds. All models use rule-based compaction at the threshold, while the AutoCompact variants can also invoke <code>request_summary()</code> proactively. We measure submit-at-budget performance by stopping each run at fixed cumulative prompt + output token budgets and evaluating the current workspace patch.</p>
 <p>Figure 3 shows that across both compaction thresholds: 1) <strong>AutoCompact consistently solves more tasks than the baseline under the same context-processing budget.</strong> On average, the SFT model raises the absolute pass rate by <strong>2.6%</strong>, while the SFT+GRPO model raises it by <strong>10.2%</strong>; 2) AutoCompact uses the available context-processing budget more efficiently: to achieve the same pass rate, the baseline requires a larger token budget; and 3) <strong>the compaction policy benefits from outcome-based optimization.</strong> GRPO builds on the SFT cold start and delivers a further <strong>7.7%</strong> absolute pass-rate improvement over the SFT-only model.</p>
 <h3>Trajectory analysis: what did AutoCompact learn?</h3>
 <p>Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>request_summary()</code> in <strong>44.3%</strong> of tasks; after GRPO, this rises to <strong>58.5%</strong>, indicating that outcome-based optimization encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
@@ -1316,8 +1316,12 @@ window.BLOG_REFERENCES = {
         url: "https://terminal-agent.github.io/blog/annotation/"
     },
     "mini-swe-agent": {
-        label: "Mini-SWE-Agent (2025)",
+        label: "mini-SWE-agent (SWE-agent Team, 2025; project)",
         url: "https://github.com/SWE-agent/mini-swe-agent"
+    },
+    "tty-use": {
+        label: "Terminal: LLM’s Last Tool (Lin and Liu, 2025; technical blog)",
+        url: "https://terminal-agent.github.io/blog/tool/"
     },
     "swe-rebench": {
         label: "SWE-rebench: An Automated Pipeline for Task Collection and Decontaminated Evaluation of Software Engineering Agents (Badertdinov et al., 2025)",
