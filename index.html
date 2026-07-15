@@ -467,6 +467,7 @@ a:hover { color: var(--accent-hover); }
 }
 
 .visual-action .action-run,
+.context-rewrite-visual[data-mode="running"] .visual-action .action-running,
 .context-rewrite-visual[data-mode="after"] .visual-action .action-reset {
     display: inline-flex;
     align-items: center;
@@ -493,9 +494,16 @@ a:hover { color: var(--accent-hover); }
     transform: rotate(-20deg);
 }
 
+.visual-action .action-running,
 .visual-action .action-reset,
+.context-rewrite-visual[data-mode="running"] .visual-action .action-run,
 .context-rewrite-visual[data-mode="after"] .visual-action .action-run {
     display: none;
+}
+
+.context-rewrite-visual[data-mode="running"] .visual-action {
+    cursor: wait;
+    opacity: 0.72;
 }
 
 .visual-status {
@@ -510,203 +518,232 @@ a:hover { color: var(--accent-hover); }
     text-align: center;
 }
 
-/* Figure 1: context rewrite */
-.context-flow {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 92px minmax(0, 1fr);
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.context-window {
-    min-width: 0;
-    padding: 0.75rem;
+/* Figure 1: one trajectory compacts in place */
+.single-trajectory {
+    padding: 0.72rem;
     border: 1px solid var(--divider);
-    border-radius: 0;
     background: var(--card-bg);
-    transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
 }
 
-.window-label {
+.trajectory-meta {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding-bottom: 0.55rem;
     border-bottom: 1px solid var(--divider);
-}
-
-.window-label span {
     color: var(--text-secondary);
-    font-size: 0.67rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 0.62rem;
 }
 
-.window-label strong {
-    font-size: 0.78rem;
-}
-
-.context-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 0.38rem;
-    min-height: 238px;
-    padding: 0.65rem 0;
-    justify-content: center;
-}
-
-.context-segment {
-    position: relative;
-    min-height: 31px;
-    padding: 0.38rem 0.48rem 0.38rem 3rem;
-    overflow: hidden;
-    border: 1px solid transparent;
-    border-radius: 0;
-    font-size: 0.69rem;
-    line-height: 1.35;
-    transition: min-height 0.4s ease, max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease, transform 0.4s ease, border-width 0.4s ease;
-}
-
-.context-segment > span {
-    position: absolute;
-    top: 0.42rem;
-    left: 0.43rem;
-    font-size: 0.57rem;
+.trajectory-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
-.segment-keep {
+.trajectory-label i {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--viz-blue-soft);
+}
+
+.size-after { display: none; }
+.context-rewrite-visual[data-mode="after"] .size-before { display: none; }
+.context-rewrite-visual[data-mode="after"] .size-after { display: inline; }
+
+.trajectory-stream {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    padding-top: 0.68rem;
+}
+
+.trajectory-block,
+.trajectory-trigger,
+.trajectory-summary {
+    display: grid;
+    grid-template-columns: 122px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 0.08rem 0.65rem;
+    padding: 0.58rem 0.65rem;
+    border: 1px solid var(--divider);
+    background: var(--card-bg);
+}
+
+.trajectory-block > span,
+.trajectory-trigger > span,
+.trajectory-summary > span {
+    grid-row: 1 / span 2;
+    color: var(--text-secondary);
+    font-size: 0.56rem;
+    font-weight: 600;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+
+.trajectory-block > strong,
+.trajectory-trigger > strong,
+.trajectory-summary > strong {
+    align-self: end;
+    font-size: 0.7rem;
+    line-height: 1.35;
+}
+
+.trajectory-block > small,
+.trajectory-trigger > small {
+    align-self: start;
+    color: var(--text-secondary);
+    font-size: 0.59rem;
+    line-height: 1.4;
+}
+
+.trajectory-initial {
+    order: 1;
     border-color: #cbd4ef;
     background: var(--viz-blue-soft);
 }
 
-.segment-keep > span { color: var(--viz-blue); }
+.trajectory-initial > span { color: var(--viz-blue); }
 
-.segment-drop {
-    max-height: 48px;
-    border-color: #d8d8d3;
+.trajectory-noise {
+    order: 2;
+    max-height: 190px;
+    padding: 0.55rem 0.65rem;
+    overflow: hidden;
+    border: 1px solid var(--divider);
     background: var(--viz-neutral-soft);
-    color: var(--text-secondary);
+    opacity: 1;
+    transition: max-height 0.95s ease, padding 0.95s ease, border-width 0.95s ease, opacity 0.65s ease, transform 0.95s ease;
 }
 
-.segment-drop > span { color: #777773; }
+.noise-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.38rem;
+}
 
-.segment-summary {
-    min-height: 116px;
-    padding-left: 0.55rem;
-    border-color: #bfddd7;
+.noise-heading span,
+.noise-turn span {
+    color: var(--text-secondary);
+    font-size: 0.54rem;
+    font-weight: 600;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+
+.noise-heading strong { font-size: 0.68rem; }
+
+.noise-turn {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0.27rem 0.4rem;
+    border-top: 1px solid rgba(104, 104, 100, 0.16);
+    color: var(--text-secondary);
+    font-size: 0.59rem;
+}
+
+.trajectory-trigger,
+.trajectory-summary {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    border-width: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: max-height 0.8s ease, padding 0.8s ease, border-width 0.8s ease, opacity 0.55s ease, transform 0.8s ease;
+}
+
+.trajectory-trigger {
+    order: 5;
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.trajectory-trigger > span,
+.trajectory-trigger > small { color: rgba(255, 255, 255, 0.78); }
+
+.post-content .trajectory-trigger code {
+    padding: 0;
+    background: transparent;
+    color: #ffffff;
+    font-size: 0.78rem;
+}
+
+.context-rewrite-visual[data-stage="trigger"] .trajectory-trigger {
+    max-height: 100px;
+    padding-top: 0.58rem;
+    padding-bottom: 0.58rem;
+    border-width: 1px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.trajectory-summary {
+    order: 3;
+    border-color: #9fcac1;
     background: var(--viz-green-soft);
 }
 
-.segment-summary > span {
-    position: static;
-    display: block;
-    margin-bottom: 0.18rem;
-    color: var(--viz-green);
+.trajectory-summary > span { color: var(--viz-green); }
+
+.trajectory-recent {
+    order: 4;
+    grid-template-rows: auto;
 }
 
-.segment-summary strong {
-    display: block;
-    font-size: 0.7rem;
-}
+.trajectory-recent > span { grid-row: auto; }
+.trajectory-recent > strong { align-self: center; }
 
-.post-content .segment-summary ul {
-    margin: 0.35rem 0 0 1rem;
+.post-content .trajectory-summary ul {
+    grid-column: 2;
+    margin: 0.25rem 0 0 1rem;
     color: var(--text-secondary);
-    font-size: 0.6rem;
-    line-height: 1.35;
-}
-
-.post-content .segment-summary li + li { margin-top: 0.15rem; }
-
-.window-foot {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    color: var(--text-secondary);
-    font-size: 0.62rem;
-}
-
-.context-load {
-    flex: 0 0 54px;
-    height: 5px;
-    overflow: hidden;
-    border-radius: 99px;
-    background: var(--divider);
-}
-
-.context-load i {
-    display: block;
-    width: 92%;
-    height: 100%;
-    border-radius: inherit;
-    background: var(--viz-warm);
-}
-
-.context-load.compact i {
-    width: 45%;
-    background: var(--viz-green);
-}
-
-.compact-transition {
-    display: grid;
-    justify-items: center;
-    gap: 0.35rem;
-    color: var(--text-secondary);
-    text-align: center;
-}
-
-.transition-label {
-    padding: 0.28rem 0.38rem;
-    border: 1px dashed #e5bfb2;
-    border-radius: 0;
-    background: var(--viz-warm-soft);
-    color: var(--viz-warm);
     font-size: 0.58rem;
-}
-
-.transition-label code { background: transparent; }
-
-.transition-arrow {
-    color: var(--accent);
-    font-size: 1.5rem;
-    line-height: 1;
-    transition: transform 0.4s ease;
-}
-
-.transition-note {
-    font-size: 0.56rem;
     line-height: 1.35;
 }
 
-.context-after { opacity: 0.24; transform: scale(0.97); }
+.post-content .trajectory-summary li + li { margin-top: 0.12rem; }
 
-.context-rewrite-visual[data-mode="after"] .context-before {
-    opacity: 0.28;
-    transform: scale(0.97);
-}
-
-.context-rewrite-visual[data-mode="after"] .context-after {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: none;
-}
-
-.context-rewrite-visual[data-mode="after"] .context-before .segment-drop {
-    min-height: 0;
+.context-rewrite-visual[data-stage="compress"] .trajectory-noise,
+.context-rewrite-visual[data-mode="after"] .trajectory-noise {
     max-height: 0;
     padding-top: 0;
     padding-bottom: 0;
     border-width: 0;
     opacity: 0;
-    transform: scale(0.92);
+    transform: scale(0.98);
 }
 
-.context-rewrite-visual[data-mode="after"] .transition-arrow { transform: translateX(6px); }
+.context-rewrite-visual[data-stage="compress"] .trajectory-summary,
+.context-rewrite-visual[data-mode="after"] .trajectory-summary {
+    max-height: 150px;
+    padding-top: 0.58rem;
+    padding-bottom: 0.58rem;
+    border-width: 1px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.context-rewrite-visual[data-stage="compress"] .trajectory-trigger,
+.context-rewrite-visual[data-mode="after"] .trajectory-trigger {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    opacity: 0;
+    transform: translateY(-5px);
+}
 
 /* Figure 2: training-to-inference trajectory */
 .step-controls,
@@ -1026,19 +1063,21 @@ a:hover { color: var(--accent-hover); }
         align-self: flex-start;
         width: auto;
     }
-    .context-flow {
+    .trajectory-block,
+    .trajectory-trigger,
+    .trajectory-summary {
         grid-template-columns: minmax(0, 1fr);
-        gap: 0.55rem;
+        grid-template-rows: auto;
+        gap: 0.18rem;
     }
-    .compact-transition {
-        grid-template-columns: auto auto 1fr;
-        justify-items: start;
-        text-align: left;
+    .trajectory-block > span,
+    .trajectory-trigger > span,
+    .trajectory-summary > span {
+        grid-row: auto;
     }
-    .transition-arrow { transform: rotate(90deg); }
-    .context-rewrite-visual[data-mode="after"] .transition-arrow { transform: rotate(90deg) translateX(5px); }
-    .context-stack { min-height: 0; }
-    .context-after { opacity: 0.28; }
+    .post-content .trajectory-summary ul { grid-column: 1; }
+    .context-rewrite-visual[data-stage="compress"] .trajectory-summary,
+    .context-rewrite-visual[data-mode="after"] .trajectory-summary { max-height: 220px; }
     .trajectory-compare {
         grid-template-columns: minmax(0, 1fr);
         gap: 0.55rem;
@@ -1136,53 +1175,53 @@ a:hover { color: var(--accent-hover); }
 <figure class="article-figure autocompact-visual context-rewrite-visual" id="context-rewrite-visual" data-mode="before">
     <div class="visual-heading">
         <div>
-            <span class="visual-kicker">Interactive walkthrough</span>
-            <strong>Turn a noisy trajectory into a compact working state</strong>
+            <span class="visual-kicker">Interactive compaction</span>
+            <strong>One trajectory, before and after a proactive summary</strong>
         </div>
         <button class="visual-action" type="button" aria-pressed="false">
             <span class="action-run">Run demo <span class="action-icon" aria-hidden="true">→</span></span>
+            <span class="action-running">Compacting <span class="action-icon action-icon-running" aria-hidden="true">…</span></span>
             <span class="action-reset">Reset demo <span class="action-icon action-icon-reset" aria-hidden="true">↺</span></span>
         </button>
     </div>
-    <div class="context-flow">
-        <section class="context-window context-before" aria-label="Context before compaction">
-            <div class="window-label"><span>Before</span><strong>Full trajectory</strong></div>
-            <div class="context-stack">
-                <div class="context-segment segment-keep" data-kind="keep"><span>Keep</span>Initial task</div>
-                <div class="context-segment segment-drop" data-kind="drop"><span>Drop</span>Long file outputs</div>
-                <div class="context-segment segment-drop" data-kind="drop"><span>Drop</span>Repeated inspect / grep</div>
-                <div class="context-segment segment-drop" data-kind="drop"><span>Drop</span>Failed edits</div>
-                <div class="context-segment segment-drop" data-kind="drop"><span>Drop</span>Stale hypotheses</div>
-                <div class="context-segment segment-keep" data-kind="keep"><span>Keep</span>Recent local state</div>
-            </div>
-            <div class="window-foot"><span class="context-load" aria-hidden="true"><i></i></span><span>Noise grows with every turn</span></div>
-        </section>
-
-        <div class="compact-transition" aria-hidden="true">
-            <span class="transition-label"><code>request_summary()</code></span>
-            <span class="transition-arrow">→</span>
-            <span class="transition-note">replace history,<br>do not append</span>
+    <div class="single-trajectory" aria-label="A single agent trajectory before and after proactive context compaction">
+        <div class="trajectory-meta">
+            <span class="trajectory-label"><i aria-hidden="true"></i>Active trajectory</span>
+            <span class="trajectory-size"><span class="size-before">Long active context</span><span class="size-after">Compact working context</span></span>
         </div>
-
-        <section class="context-window context-after" aria-label="Context after compaction">
-            <div class="window-label"><span>After</span><strong>Effective context</strong></div>
-            <div class="context-stack">
-                <div class="context-segment segment-keep"><span>Kept</span>Initial task</div>
-                <div class="context-segment segment-summary">
-                    <span>Summary</span>
-                    <strong># Auto Context Summary</strong>
-                    <ul>
-                        <li>current objective and conclusion</li>
-                        <li>modified files and unresolved issues</li>
-                        <li>verification status and next action</li>
-                    </ul>
-                </div>
-                <div class="context-segment segment-keep"><span>Kept</span>Recent 3 rounds</div>
+        <div class="trajectory-stream">
+            <div class="trajectory-block trajectory-initial">
+                <span>Initial task</span>
+                <strong>Implement the requested code change</strong>
+                <small>The original user request remains visible throughout the rollout.</small>
             </div>
-            <div class="window-foot"><span class="context-load compact" aria-hidden="true"><i></i></span><span>Bounded working state</span></div>
-        </section>
+            <div class="trajectory-noise" aria-label="Earlier exploration turns">
+                <div class="noise-heading"><span>Earlier turns</span><strong>Exploration history</strong></div>
+                <div class="noise-turn"><span>Tool</span>Long file output</div>
+                <div class="noise-turn"><span>Agent</span>Repeated inspect / grep</div>
+                <div class="noise-turn"><span>Agent</span>Failed edit and stale hypothesis</div>
+            </div>
+            <div class="trajectory-summary">
+                <span>Generated working state</span>
+                <strong># Auto Context Summary</strong>
+                <ul>
+                    <li>current objective and conclusion</li>
+                    <li>modified files and unresolved issues</li>
+                    <li>verification status and next action</li>
+                </ul>
+            </div>
+            <div class="trajectory-block trajectory-recent">
+                <span>Kept verbatim</span>
+                <strong>Recent turns</strong>
+            </div>
+            <div class="trajectory-trigger">
+                <span>Next agent turn · proactive action</span>
+                <strong><code>request_summary()</code></strong>
+                <small>The model decides to replace the accumulated history.</small>
+            </div>
+        </div>
     </div>
-    <div class="visual-status" role="status" aria-live="polite">Before compaction: exploration history remains in the model's active context.</div>
+    <div class="visual-status" role="status" aria-live="polite">Before: useful working state and expired exploration share the same active trajectory.</div>
 </figure>
 <p><em>Figure 1. When the model decides that the current context should be cleaned up, it calls </em><em><strong><code>request_summary()</code></strong></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><strong><code># Auto Context Summary</code></strong></em><em>, instead of the full history.</em></p>
 <p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>request_summary()</code>.</p>
@@ -1500,15 +1539,71 @@ window.BLOG_REFERENCES = {
     if (contextVisual) {
         var contextAction = contextVisual.querySelector('.visual-action');
         var contextStatus = contextVisual.querySelector('.visual-status');
+        var contextTimers = [];
+        var contextMessages = isZh ? {
+            before: '压缩前：有效工作状态和过期探索过程仍共享同一条活动轨迹。',
+            prepare: 'Agent 到达一个阶段边界，开始判断此前的探索过程是否仍然需要。',
+            trigger: '下一轮：Agent 主动生成 request_summary()，决定替换累积历史。',
+            compress: '压缩中：旧探索过程离开活动上下文，摘要成为新的工作状态。',
+            after: '压缩后：同一条轨迹只保留初始任务、摘要和最近对话。'
+        } : {
+            before: 'Before: useful working state and expired exploration share the same active trajectory.',
+            prepare: 'The agent reaches a phase transition and evaluates whether the earlier exploration is still needed.',
+            trigger: 'Next agent turn: the model proactively generates request_summary() to replace the accumulated history.',
+            compress: 'Compacting: earlier exploration leaves the active context as the summary becomes the new working state.',
+            after: 'After: the same trajectory now contains only the initial task, summary, and recent turns.'
+        };
+
+        function clearContextTimers() {
+            contextTimers.forEach(function (timer) { window.clearTimeout(timer); });
+            contextTimers = [];
+        }
+
+        function resetContextDemo() {
+            clearContextTimers();
+            contextVisual.dataset.mode = 'before';
+            delete contextVisual.dataset.stage;
+            contextAction.disabled = false;
+            contextAction.setAttribute('aria-pressed', 'false');
+            contextStatus.textContent = contextMessages.before;
+        }
+
+        function runContextDemo() {
+            clearContextTimers();
+            contextVisual.dataset.mode = 'running';
+            delete contextVisual.dataset.stage;
+            contextAction.disabled = true;
+            contextAction.setAttribute('aria-pressed', 'false');
+            contextStatus.textContent = contextMessages.prepare;
+
+            contextTimers.push(window.setTimeout(function () {
+                contextVisual.dataset.stage = 'trigger';
+                contextStatus.textContent = contextMessages.trigger;
+            }, 500));
+
+            contextTimers.push(window.setTimeout(function () {
+                contextVisual.dataset.stage = 'compress';
+                contextStatus.textContent = contextMessages.compress;
+            }, 1900));
+
+            contextTimers.push(window.setTimeout(function () {
+                contextVisual.dataset.mode = 'after';
+                delete contextVisual.dataset.stage;
+                contextAction.disabled = false;
+                contextAction.setAttribute('aria-pressed', 'true');
+                contextStatus.textContent = contextMessages.after;
+            }, 4100));
+        }
 
         contextAction.addEventListener('click', function () {
-            var compacted = contextVisual.dataset.mode !== 'after';
-            contextVisual.dataset.mode = compacted ? 'after' : 'before';
-            contextAction.setAttribute('aria-pressed', compacted ? 'true' : 'false');
-            contextStatus.textContent = isZh
-                ? (compacted ? '压缩后：结论和下一步行动被保留，已丢弃的探索过程离开活动上下文。' : '压缩前：探索历史仍保留在模型的活动上下文中。')
-                : (compacted ? 'After compaction: the conclusion and next action survive; discarded exploration leaves the active context.' : "Before compaction: exploration history remains in the model's active context.");
+            if (contextVisual.dataset.mode === 'after') {
+                resetContextDemo();
+            } else if (contextVisual.dataset.mode === 'before') {
+                runContextDemo();
+            }
         });
+
+        resetContextDemo();
     }
 
     var trajectoryVisual = document.getElementById('trajectory-visual');
