@@ -1192,8 +1192,7 @@ a:hover { color: var(--accent-hover); }
     <div class="visual-status" role="status" aria-live="polite">Before compaction: exploration history remains in the model's active context.</div>
 </figure>
 <p><em>Figure 1. When the model decides that the current context should be cleaned up, it calls </em><em><code>request_summary()</code></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><code># Auto Context Summary</code></em><em>, instead of the full history.</em></p>
-<p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke:</p>
-<pre><code>request_summary()</code></pre>
+<p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>request_summary()</code> to replace the accumulated history with a compact working state.</p>
 <p>When <code>request_summary()</code> is invoked, the runtime compacts the current context into a <code># Auto Context Summary</code>. The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with &quot;original task + recent turns + summary.&quot;</p>
 <h3>Cold-start SFT data: collecting compact behavior in real rollouts</h3>
 <figure class="article-figure autocompact-visual trajectory-visual" id="trajectory-visual" data-step="1">
