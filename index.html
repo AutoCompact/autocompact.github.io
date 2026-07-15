@@ -455,31 +455,48 @@ a:hover { color: var(--accent-hover); }
 }
 
 .autocompact-visual .visual-action {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: #fff;
+    border: 1px solid var(--text);
+    border-radius: 999px;
+    background: var(--card-bg);
+    color: var(--text);
     white-space: nowrap;
 }
 
 .autocompact-visual .visual-action:hover {
-    border-color: var(--accent-hover);
-    background: var(--accent-hover);
-    transform: translateY(-1px);
+    border-color: var(--text);
+    background: var(--tag-bg);
 }
 
-.visual-action code {
-    padding: 0;
-    background: transparent;
-    color: inherit;
+.visual-action .action-run,
+.context-rewrite-visual[data-mode="after"] .visual-action .action-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.visual-action .action-icon {
+    display: inline-grid;
+    width: 1.3rem;
+    height: 1.3rem;
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 0.72rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.visual-action:hover .action-icon {
+    transform: translateX(2px);
+}
+
+.visual-action:hover .action-icon-reset {
+    transform: rotate(-20deg);
 }
 
 .visual-action .action-reset,
 .context-rewrite-visual[data-mode="after"] .visual-action .action-run {
     display: none;
-}
-
-.context-rewrite-visual[data-mode="after"] .visual-action .action-reset {
-    display: inline;
 }
 
 .visual-status {
@@ -1150,8 +1167,8 @@ a:hover { color: var(--accent-hover); }
             <strong>Turn a noisy trajectory into a compact working state</strong>
         </div>
         <button class="visual-action" type="button" aria-pressed="false">
-            <span class="action-run">Compact context</span>
-            <span class="action-reset">Restore full history</span>
+            <span class="action-run">Run demo <span class="action-icon" aria-hidden="true">→</span></span>
+            <span class="action-reset">Reset demo <span class="action-icon action-icon-reset" aria-hidden="true">↺</span></span>
         </button>
     </div>
     <div class="context-flow">
