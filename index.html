@@ -1240,7 +1240,7 @@ a:hover { color: var(--accent-hover); }
 <table><thead><tr><th>Sample type</th><th>Rows</th></tr></thead><tbody><tr><td>When to compact context</td><td>253</td></tr><tr><td>What to preserve in the summary</td><td>554</td></tr><tr><td>How to continue after compaction</td><td>245</td></tr><tr><td><strong>Total</strong></td><td><strong>1052</strong></td></tr></tbody></table>
 <h3>Beyond SFT: Refining AutoCompact with GRPO</h3>
 <p>The SFT stage provides a cold start for the basic compaction behavior, but it only teaches the model to imitate judge-corrected trajectories. It does not directly optimize whether a compaction decision ultimately helps solve the task.</p>
-<p>Starting from the SFT checkpoint, we continue training with GRPO on SWE-Gym tasks. For each task, we assign a binary outcome reward based on whether the final patch passes the test suite. Because <code>request_summary()</code> and the post-summary continuation are part of the same trajectory, this outcome reward provides an end-to-end training signal for when to compact, what state to preserve, and how to continue afterward.</p>
+<p>Starting from the SFT checkpoint, we continue training with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span> tasks. For each task, we assign a binary outcome reward based on whether the final patch passes the test suite. Because <code>request_summary()</code> and the post-summary continuation are part of the same trajectory, this outcome reward provides an end-to-end training signal for when to compact, what state to preserve, and how to continue afterward.</p>
 <h2>Experiment: can AutoCompact solve more tasks under the same context budget?</h2>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual" data-window="16k">
     <div class="visual-heading">
@@ -1322,6 +1322,10 @@ window.BLOG_REFERENCES = {
     "swe-rebench": {
         label: "SWE-ReBench (Nebius)",
         url: "https://huggingface.co/datasets/nebius/SWE-rebench"
+    },
+    "swe-gym": {
+        label: "Training Software Engineering Agents and Verifiers with SWE-Gym (Pan et al., 2025)",
+        url: "https://proceedings.mlr.press/v267/pan25g.html"
     },
     "swebench": {
         label: "SWE-bench: Can Language Models Resolve Real-World GitHub Issues? (Jimenez et al., 2023)",
