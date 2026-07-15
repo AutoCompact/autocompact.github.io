@@ -454,14 +454,14 @@ a:hover { color: var(--accent-hover); }
     transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.visual-action {
+.autocompact-visual .visual-action {
     border-color: var(--accent);
     background: var(--accent);
     color: #fff;
     white-space: nowrap;
 }
 
-.visual-action:hover {
+.autocompact-visual .visual-action:hover {
     border-color: var(--accent-hover);
     background: var(--accent-hover);
     transform: translateY(-1px);
@@ -1024,7 +1024,10 @@ a:hover { color: var(--accent-hover); }
         flex-direction: column;
         gap: 0.65rem;
     }
-    .visual-action { width: 100%; }
+    .visual-action {
+        align-self: flex-start;
+        width: auto;
+    }
     .context-flow {
         grid-template-columns: minmax(0, 1fr);
         gap: 0.55rem;
@@ -1147,7 +1150,7 @@ a:hover { color: var(--accent-hover); }
             <strong>Turn a noisy trajectory into a compact working state</strong>
         </div>
         <button class="visual-action" type="button" aria-pressed="false">
-            <span class="action-run">Run <code>request_summary()</code></span>
+            <span class="action-run">Compact context</span>
             <span class="action-reset">Restore full history</span>
         </button>
     </div>
