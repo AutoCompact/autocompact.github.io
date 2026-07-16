@@ -1531,20 +1531,19 @@ a:hover { color: var(--accent-hover); }
         <article class="post">
             <div class="post-content">
 <h2>TL;DR</h2>
-<aside class="callout"><p><strong>For agentic models, longer context makes it harder to stay oriented throughout the task.</strong></p>
-<p>In a coding agent trajectory, the active context accumulates failed greps, irrelevant file reads, reverted edits, and hypotheses the agent has already abandoned. Although most of this history no longer helps, it still sits in the model’s working state and adds noise.</p>
+<aside class="callout"><p>For agentic models, longer context makes it harder to stay oriented throughout the task. In a coding agent trajectory, the active context accumulates failed greps, irrelevant file reads, reverted edits, and hypotheses the agent has already abandoned. Although most of this history no longer helps, it still sits in the model’s working state and adds noise.</p>
 <p>AutoCompact augments the agent’s action space with <code>compact()</code>, <strong>allowing the model to decide when to compact its context.</strong> Specifically, at natural transition points in the task, when earlier details no longer need to be carried forward, the model can invoke <code>compact()</code> to compress the accumulated history into a summary for the next step, and then continue from there.</p>
-<p>Using only 379 SWE-ReBench tasks, we collected 1,052 SFT examples for cold-start training, then further optimized the model with GRPO. Evaluated on SWE-bench Verified<span class="cite" data-key="swebench-verified"></span>, <strong>AutoCompact-Qwen3 30B Coder</strong> improves over the Qwen/Qwen3-Coder-30B-A3B-Instruct baseline<span class="cite" data-key="qwen"></span>:</p>
+<p>Using only 379 SWE-ReBench tasks, we collected 1,052 SFT examples for cold-start training, then further optimized the model with GRPO. Evaluated on SWE-bench Verified<span class="cite" data-key="swebench-verified"></span>, AutoCompact-Qwen3 30B Coder improves over the Qwen/Qwen3-Coder-30B-A3B-Instruct baseline<span class="cite" data-key="qwen"></span>:</p>
 <ul><li>Average context-processing cost drops by <strong>15.4%</strong>.</li>
 <li>Across token-budget ranges, the absolute pass rate increases by <strong>10.2%</strong> on average, with a maximum improvement of <strong>14.3%</strong>.</li>
 </ul>
 </aside>
-<h2>Why coding agents need <br class="heading-break-mobile">context compaction</h2>
+<h2>Motivation: Long-Horizon Coding Agents Accumulate Context They No Longer Need</h2>
 <p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
 <p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
 <p><strong>This raises the central question: can the model determine when the full history of its prior work is no longer needed and compact its context accordingly?</strong> This is not just cutting off old content. The model needs to keep the working state needed for the next step: which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
 <p>AutoCompact learns this transition from the full trajectory to a compact working state for the next phase.</p>
-<h2>The core idea behind AutoCompact</h2>
+<h2>Core idea: AutoCompact Lets Agents Decide When to Compact Their Own Context</h2>
 <figure class="article-figure autocompact-visual context-rewrite-visual" id="context-rewrite-visual" data-mode="before">
     <div class="visual-heading">
         <div>
@@ -1621,7 +1620,7 @@ a:hover { color: var(--accent-hover); }
 <p><em>Figure 1. When the model decides that the current context should be cleaned up, it calls </em><em><strong><code>compact()</code></strong></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><strong><code># Auto Context Summary</code></strong></em><em>, instead of the full history.</em></p>
 <p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>compact()</code>.</p>
 <p>When <code>compact()</code> is invoked, the runtime compacts the current context into a <code># Auto Context Summary</code>. The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with &quot;original task + recent turns + summary.&quot;</p>
-<h3>Cold-start SFT data: collecting compact behavior in real rollouts</h3>
+<h3>Cold-start data: Judge-Corrected Rollouts Teach When, What, and How to Compact</h3>
 <figure class="article-figure autocompact-visual trajectory-visual" id="trajectory-visual" data-step="1" data-mode="before">
     <div class="visual-heading">
         <div>
@@ -1699,10 +1698,10 @@ a:hover { color: var(--accent-hover); }
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
 <p>Using 379 SWE-ReBench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
 <table><thead><tr><th>Sample type</th><th>Rows</th></tr></thead><tbody><tr><td>When to compact context</td><td>253</td></tr><tr><td>What to preserve in the summary</td><td>554</td></tr><tr><td>How to continue after compaction</td><td>245</td></tr><tr><td><strong>Total</strong></td><td><strong>1052</strong></td></tr></tbody></table>
-<h3>Beyond SFT: Refining <br class="heading-break-mobile">AutoCompact with GRPO</h3>
+<h3>Beyond SFT: GRPO Further Improves AutoCompact’s Task Performance</h3>
 <p>The SFT stage provides a cold start for the basic compaction behavior, but it only teaches the model to imitate judge-corrected trajectories. It does not directly optimize whether a compaction decision ultimately helps solve the task.</p>
 <p>Starting from the SFT checkpoint, we continue training with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span> tasks. For each task, <strong>we assign a binary outcome reward based on whether the final patch passes the test suite.</strong> Because <code>compact()</code> and the post-summary continuation are part of the same trajectory, this outcome reward provides an end-to-end training signal for when to compact, what state to preserve, and how to continue afterward.</p>
-<h2>Experiment: can AutoCompact <br class="heading-break-mobile">solve more tasks <br class="heading-break-desktop">under the <br class="heading-break-mobile">same context budget?</h2>
+<h2>Experiment results: More Tasks Solved with Less Context Processing</h2>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual" data-window="16k">
     <div class="visual-heading">
         <div>
@@ -1755,7 +1754,7 @@ a:hover { color: var(--accent-hover); }
 <p><em>Figure 3. Submit-at-budget performance under 16k and 256k automatic compaction thresholds. The x-axis shows the cumulative context-processing budget (prompt + output tokens) per task. </em></p>
 <p>For evaluation, we compare AutoCompact-Qwen3 30B Coder (SFT) and AutoCompact-Qwen3 30B Coder (SFT+GRPO) against Qwen/Qwen3-Coder-30B-A3B-Instruct on SWE-bench Verified under identical scaffold and runtime settings<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span>. We test 16k and 256k automatic compaction thresholds. All models use rule-based compaction at the threshold, while the AutoCompact variants can also invoke <code>compact()</code> proactively. We measure submit-at-budget performance by stopping each run at fixed cumulative prompt + output token budgets and evaluating the current workspace patch.</p>
 <p>Figure 3 shows that across both compaction thresholds: 1) <strong>AutoCompact consistently solves more tasks than the baseline under the same context-processing budget</strong>. On average, the SFT model raises the absolute pass rate by <strong>2.6%</strong>, while the SFT+GRPO model raises it by <strong>10.2%; 2) AutoCompact uses the available context-processing budget more efficiently:</strong> to achieve the same pass rate, the baseline requires a larger token budget; and 3) <strong>the compaction policy benefits from outcome-based optimization</strong>. GRPO builds on the SFT cold start and delivers a further <strong>7.7%</strong> absolute pass-rate improvement over the SFT-only model.</p>
-<h3>Trajectory analysis: <br class="heading-break-mobile">what did AutoCompact learn?</h3>
+<h3>Trajectory analysis: AutoCompact Learns Reliable Summaries and More Active Context Management</h3>
 <p>Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after GRPO, this rises to <strong>58.5%</strong>, indicating that outcome-based optimization encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
             </div>
         </article>
