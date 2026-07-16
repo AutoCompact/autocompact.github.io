@@ -81,6 +81,17 @@ a:hover { color: var(--accent-hover); }
     font-weight: 500;
     letter-spacing: -0.045em;
     line-height: 1.02;
+    text-wrap: balance;
+}
+
+.post-content h2,
+.post-content h3 {
+    text-wrap: balance;
+}
+
+.title-break-mobile,
+.heading-break-mobile {
+    display: none;
 }
 
 .post {
@@ -506,6 +517,19 @@ a:hover { color: var(--accent-hover); }
     opacity: 0.72;
 }
 
+.trajectory-visual[data-mode="running"] .trajectory-action .action-running,
+.trajectory-visual[data-mode="after"] .trajectory-action .action-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+.trajectory-visual[data-mode="running"] .trajectory-action .action-run,
+.trajectory-visual[data-mode="after"] .trajectory-action .action-run { display: none; }
+.trajectory-visual[data-mode="running"] .trajectory-action {
+    cursor: wait;
+    opacity: 0.72;
+}
+
 .visual-status {
     min-height: 2.15rem;
     margin-top: 0.85rem;
@@ -763,11 +787,38 @@ a:hover { color: var(--accent-hover); }
 .context-legend .legend-summary { background: var(--viz-green-soft); border-color: #9fcac1; }
 .context-legend .legend-drop { background: var(--viz-neutral-soft); }
 
+.step-interaction-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    margin-top: 0.7rem;
+    color: var(--text-secondary);
+    font-size: 0.54rem;
+    line-height: 1.35;
+}
+.step-interaction-hint::before {
+    content: "↳";
+    color: var(--accent);
+    font-size: 0.8rem;
+    line-height: 1;
+}
+.step-interaction-hint span {
+    padding: 0.08rem 0.24rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.45rem;
+    font-weight: 600;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+.step-interaction-hint strong { color: var(--text-secondary); font-size: inherit; font-weight: 500; }
+
 .context-step-nav {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.4rem;
-    margin-top: 0.75rem;
+    margin-top: 0.35rem;
 }
 
 .autocompact-visual .context-step-button {
@@ -848,151 +899,373 @@ a:hover { color: var(--accent-hover); }
     text-align: center;
 }
 
-/* Figure 2: training-to-inference trajectory */
-.step-controls,
-.window-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.step-controls button {
-    width: 1.8rem;
-    height: 1.8rem;
-    border: 1px solid var(--divider);
-    border-radius: 50%;
-    background: var(--tag-bg);
-    color: var(--text-secondary);
-    font-size: 0.7rem;
-    font-weight: 600;
-}
-
-.step-controls button.is-active,
-.window-controls button.is-active {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: #fff;
-}
-
-.trajectory-compare {
+/* Figure 2: judge-guided rollout annotation */
+.annotation-flow {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
-    align-items: center;
-    gap: 0.65rem;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 0.95fr) minmax(0, 1.1fr);
+    align-items: stretch;
+    gap: 0.48rem;
 }
 
-.trajectory-lane {
+.annotation-panel {
     min-width: 0;
-    padding: 0.75rem;
-    border-radius: 0;
+    padding: 0.58rem;
+    border: 1px solid var(--divider);
+    background: var(--card-bg);
 }
 
-.training-lane { background: var(--viz-blue-soft); }
-.inference-lane { background: var(--viz-green-soft); }
-
-.lane-heading {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0 0.45rem;
-    align-items: baseline;
-    padding-bottom: 0.55rem;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.12);
+.annotation-panel-head {
+    min-height: 2.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--divider);
 }
-
-.lane-heading .lane-number {
-    grid-row: 1 / span 2;
-    align-self: center;
-    padding: 0.22rem 0.38rem;
-    border-radius: 5px;
-    background: rgba(255,255,255,0.62);
-    font-size: 0.59rem;
+.annotation-panel-head span,
+.annotation-card span,
+.judge-card > span,
+.sft-output > span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.46rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.annotation-panel-head strong { display: block; font-size: 0.67rem; line-height: 1.25; }
+.annotation-panel-head small { display: block; margin-top: 0.08rem; color: var(--text-secondary); font-size: 0.49rem; line-height: 1.3; }
+
+.annotation-stack,
+.judge-stack { display: grid; gap: 0.34rem; padding-top: 0.5rem; }
+
+.annotation-card,
+.judge-card {
+    position: relative;
+    min-width: 0;
+    padding: 0.4rem 0.42rem;
+    border: 1px solid var(--divider);
+    background: var(--card-bg);
+    transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+.annotation-card strong,
+.annotation-card small,
+.judge-card strong,
+.judge-card small { display: block; }
+.annotation-card strong,
+.judge-card strong { font-size: 0.58rem; line-height: 1.3; }
+.annotation-card small,
+.judge-card small { margin-top: 0.1rem; color: var(--text-secondary); font-size: 0.48rem; line-height: 1.32; }
+
+.original-panel { background: #f8f9fd; }
+.judge-panel { background: var(--viz-warm-soft); }
+.corrected-panel { background: #f6faf8; }
+
+.original-panel .annotation-card { border-color: #d9deed; }
+.original-panel .proposal-action {
+    border-color: var(--accent);
+    background: var(--viz-blue-soft);
+}
+.proposal-badge {
+    position: absolute;
+    top: 0.32rem;
+    right: 0.35rem;
+    color: var(--accent);
+    font-size: 0.42rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.proposal-badge::before { content: "Current"; }
+.trajectory-visual[data-step="2"] .proposal-badge::before,
+.trajectory-visual[data-step="3"] .proposal-badge::before,
+.trajectory-visual[data-step="4"] .proposal-badge::before { content: "Replaced"; }
+.future-action {
+    border-style: dashed;
+    color: var(--text-secondary);
+    opacity: 0.52;
+}
+
+.judge-card { opacity: 0.2; }
+.judge-review { opacity: 1; border-color: #d6a795; background: #fff8f3; }
+.judge-eye {
+    display: inline-block;
+    margin-bottom: 0.2rem;
+    padding: 0.1rem 0.25rem;
+    border: 1px solid #d6a795;
+    color: #99502f;
+    font-size: 0.44rem;
+    font-weight: 600;
+}
+
+.protocol-list {
+    display: grid;
+    gap: 0.16rem;
+    margin: 0.32rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+.post-content .protocol-list li {
+    margin: 0;
+    padding-left: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.46rem;
+    line-height: 1.28;
+}
+.protocol-list li::before { content: "✓"; margin-left: -0.75rem; margin-right: 0.25rem; color: var(--viz-warm); }
+
+.action-diff { margin-top: 0.32rem; font-family: "IBM Plex Mono", monospace; font-size: 0.5rem; line-height: 1.5; }
+.action-diff del,
+.action-diff ins { display: block; padding: 0.08rem 0.22rem; text-decoration: none; }
+.action-diff del { background: #f7e7e1; color: #98523a; }
+.action-diff ins { margin-top: 0.12rem; background: var(--viz-green-soft); color: #267166; }
+
+.judge-outcomes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    margin-top: 0.32rem;
+}
+.judge-outcome {
+    position: relative;
+    min-width: 0;
+    padding: 0.3rem;
+    border: 1px solid var(--divider);
+    background: var(--card-bg);
+}
+.judge-outcome b,
+.judge-outcome span,
+.judge-outcome small { display: block; }
+.judge-outcome b { font-size: 0.46rem; letter-spacing: 0.04em; }
+.judge-outcome span { margin-top: 0.08rem; color: var(--text); font-size: 0.46rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.judge-outcome small { margin-top: 0.1rem; font-size: 0.42rem; line-height: 1.28; }
+.outcome-keep { border-color: #b9c6e8; background: var(--viz-blue-soft); }
+.outcome-keep b { color: var(--viz-blue); }
+.outcome-correct { border-color: #d99a42; background: #fff4e6; box-shadow: inset 0 0 0 1px #d99a42; }
+.outcome-correct b { color: #a76012; }
+.outcome-correct::after {
+    content: "THIS EXAMPLE";
+    position: absolute;
+    top: -0.38rem;
+    right: 0.18rem;
+    padding: 0.04rem 0.18rem;
+    background: #d99a42;
+    color: #fff;
+    font-size: 0.36rem;
+    font-weight: 600;
+}
+
+.judge-validation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; margin-top: 0.3rem; }
+.judge-check {
+    padding: 0.28rem;
+    border: 1px solid #d7c6e7;
+    background: #f5effa;
+    color: #685080;
+    font-size: 0.45rem;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.corrected-placeholder {
+    padding: 1.2rem 0.45rem;
+    border: 1px dashed var(--divider);
+    color: var(--text-secondary);
+    font-size: 0.5rem;
+    line-height: 1.4;
+    text-align: center;
+}
+.corrected-panel .annotation-card { opacity: 0.13; transform: translateY(4px); }
+.kept-result { border-color: #b9c6e8; background: var(--viz-blue-soft); }
+.corrected-trigger { border-color: #d99a42; background: #fff4e6; }
+.corrected-summary { border-color: #9fcac1; background: var(--viz-green-soft); }
+.corrected-continuation { border-color: #c4add9; background: #f5effa; }
+.post-content .corrected-trigger code { padding: 0; background: transparent; color: #7a470f; font-size: 0.65rem; }
+
+.summary-checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.12rem 0.3rem;
+    margin-top: 0.25rem;
+    color: var(--text-secondary);
+    font-size: 0.44rem;
+    line-height: 1.25;
+}
+.summary-checklist span::before { content: "✓ "; color: var(--viz-green); }
+
+.trajectory-visual[data-step="2"] .proposal-action,
+.trajectory-visual[data-step="3"] .proposal-action,
+.trajectory-visual[data-step="4"] .proposal-action {
+    border-color: #d6a795;
+    background: #f7e7e1;
+    color: var(--text-secondary);
+    text-decoration: line-through;
+}
+.trajectory-visual[data-step="2"] .judge-decision,
+.trajectory-visual[data-step="3"] .judge-decision,
+.trajectory-visual[data-step="4"] .judge-decision,
+.trajectory-visual[data-step="3"] .judge-validation,
+.trajectory-visual[data-step="4"] .judge-validation,
+.trajectory-visual[data-step="4"] .judge-accepted {
+    opacity: 1;
+    transform: translateY(0);
+}
+.trajectory-visual[data-step="2"] .judge-decision { border-color: #d99a42; background: #fff4e6; }
+.trajectory-visual[data-step="3"] .judge-validation,
+.trajectory-visual[data-step="4"] .judge-validation { border-color: #c4add9; background: #f5effa; }
+.trajectory-visual[data-step="4"] .judge-accepted { border-color: #73b29c; background: #e8f4ee; }
+
+.trajectory-visual[data-step="2"] .kept-result,
+.trajectory-visual[data-step="3"] .kept-result,
+.trajectory-visual[data-step="4"] .kept-result,
+.trajectory-visual[data-step="2"] .corrected-trigger,
+.trajectory-visual[data-step="3"] .corrected-trigger,
+.trajectory-visual[data-step="4"] .corrected-trigger,
+.trajectory-visual[data-step="3"] .corrected-summary,
+.trajectory-visual[data-step="4"] .corrected-summary,
+.trajectory-visual[data-step="3"] .corrected-continuation,
+.trajectory-visual[data-step="4"] .corrected-continuation {
+    opacity: 1;
+    transform: translateY(0);
+}
+.trajectory-visual[data-step="2"] .kept-result,
+.trajectory-visual[data-step="3"] .kept-result,
+.trajectory-visual[data-step="4"] .kept-result { opacity: 0.62; }
+.trajectory-visual[data-step="2"] .corrected-placeholder,
+.trajectory-visual[data-step="3"] .corrected-placeholder,
+.trajectory-visual[data-step="4"] .corrected-placeholder { display: none; }
+
+.annotation-output {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.55rem;
+    max-height: 0;
+    margin-top: 0;
+    padding: 0 0.6rem;
+    overflow: hidden;
+    border: 0 solid #73b29c;
+    background: #f2f8f5;
+    opacity: 0;
+    transition: max-height 0.55s ease, margin 0.55s ease, padding 0.55s ease, border-width 0.55s ease, opacity 0.35s ease;
+}
+.trajectory-visual[data-step="4"] .annotation-output {
+    max-height: 160px;
+    margin-top: 0.55rem;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    border-width: 1px;
+    opacity: 1;
+}
+.sft-output strong { display: block; font-size: 0.68rem; }
+.sft-output small { display: block; margin-top: 0.08rem; color: var(--text-secondary); font-size: 0.48rem; }
+.sample-counts { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-top: 0.32rem; }
+.sample-counts span { padding: 0.12rem 0.25rem; background: var(--card-bg); font-size: 0.43rem; }
+.output-arrow { color: var(--viz-green); font-size: 1.25rem; }
+.inference-result { padding-left: 0.55rem; border-left: 1px solid #b9d8cc; }
+.inference-result span { display: block; color: var(--viz-green); font-size: 0.45rem; font-weight: 600; text-transform: uppercase; }
+.inference-result strong { display: block; margin-top: 0.08rem; font-size: 0.58rem; line-height: 1.3; }
+.inference-result small { display: block; margin-top: 0.12rem; color: var(--text-secondary); font-size: 0.46rem; line-height: 1.3; }
+
+.annotation-step-button:nth-child(1) { --step-color: var(--viz-blue); --step-bg: var(--viz-blue-soft); }
+.annotation-step-button:nth-child(2) { --step-color: var(--viz-warm); --step-bg: var(--viz-warm-soft); }
+.annotation-step-button:nth-child(3) { --step-color: var(--viz-purple); --step-bg: #f5effa; }
+.annotation-step-button:nth-child(4) { --step-color: var(--viz-green); --step-bg: var(--viz-green-soft); }
+
+/* Figure 2 action-by-action mapping */
+.annotation-mapped-stack {
+    display: grid;
+    grid-template-rows: 58px 58px 66px 78px 66px;
+    gap: 0.34rem;
+    padding-top: 0.5rem;
+}
+
+.annotation-mapped-stack .annotation-card,
+.annotation-mapped-stack .judge-card {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0.14;
+    transform: translateY(3px);
+}
+
+.annotation-mapped-stack .annotation-card span,
+.annotation-mapped-stack .judge-card > span { padding-right: 2.4rem; }
+
+.action-verdict {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.32rem;
+    padding: 0.07rem 0.2rem;
+    border: 1px solid currentColor;
+    background: var(--card-bg);
+    font-size: 0.39rem;
+    font-weight: 600;
+    line-height: 1.2;
     text-transform: uppercase;
 }
 
-.lane-heading strong { font-size: 0.74rem; }
-.lane-heading > span:last-child { color: var(--text-secondary); font-size: 0.58rem; }
+.map-row-keep { --row-color: var(--viz-blue); --row-bg: var(--viz-blue-soft); }
+.map-row-trigger { --row-color: var(--viz-warm); --row-bg: #fff4e6; }
+.map-row-summary { --row-color: var(--viz-green); --row-bg: var(--viz-green-soft); }
+.map-row-continuation { --row-color: var(--viz-purple); --row-bg: #f5effa; }
 
-.post-content .trajectory-steps {
-    display: grid;
-    gap: 0.38rem;
-    margin: 0;
-    padding: 0.65rem 0 0;
-    list-style: none;
+.judge-card.map-row-keep,
+.judge-card.map-row-trigger,
+.judge-card.map-row-summary,
+.judge-card.map-row-continuation,
+.annotated-result.map-row-keep,
+.annotated-result.map-row-trigger,
+.annotated-result.map-row-summary,
+.annotated-result.map-row-continuation {
+    border-color: color-mix(in srgb, var(--row-color) 55%, white);
+    background: var(--row-bg);
 }
 
-.post-content .trajectory-steps li {
-    position: relative;
-    display: grid;
-    grid-template-columns: 49px minmax(0, 1fr);
-    gap: 0 0.45rem;
-    min-height: 50px;
-    padding: 0.42rem;
-    border: 1px solid transparent;
-    border-radius: 0;
-    opacity: 0.18;
-    transition: opacity 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
-}
-
-.post-content .trajectory-steps li + li { margin-top: 0; }
-
-.post-content .trajectory-steps li::before {
-    content: "";
-    position: absolute;
-    top: -0.42rem;
-    left: 1.9rem;
-    height: 0.42rem;
-    border-left: 1px solid rgba(80, 80, 80, 0.28);
-}
-
-.post-content .trajectory-steps li:first-child::before { display: none; }
-
-.trajectory-steps li.is-past { opacity: 0.32; }
-
-.trajectory-steps li.is-current {
-    border-color: rgba(80, 80, 80, 0.18);
-    background: rgba(255,255,255,0.78);
-    opacity: 1;
-    transform: translateY(-1px);
-}
-
-.step-node {
-    grid-row: 1 / span 2;
-    align-self: center;
-    padding: 0.25rem 0.2rem;
-    border: 1px solid #b9c6e8;
-    border-radius: 99px;
-    background: var(--card-bg);
+.action-verdict { color: var(--row-color); }
+.annotated-result.map-row-keep strong::after {
+    content: " · unchanged";
     color: var(--viz-blue);
-    font-size: 0.55rem;
-    font-weight: 600;
-    text-align: center;
+    font-size: 0.45rem;
+    font-weight: 500;
 }
 
-.judge-node {
-    border-color: #eccbbf;
-    color: var(--viz-warm);
+.trajectory-visual[data-step="1"] .map-row-keep,
+.trajectory-visual[data-step="2"] .map-row-trigger,
+.trajectory-visual[data-step="3"] .map-row-summary,
+.trajectory-visual[data-step="3"] .map-row-continuation,
+.trajectory-visual[data-step="4"] .annotation-mapped-stack > * {
+    border-color: var(--row-color, var(--divider));
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.summary-node {
-    border-color: #bfddd7;
-    color: var(--viz-green);
+.trajectory-visual[data-step="1"] .map-row-keep,
+.trajectory-visual[data-step="2"] .map-row-trigger,
+.trajectory-visual[data-step="3"] .map-row-summary,
+.trajectory-visual[data-step="3"] .map-row-continuation {
+    box-shadow: inset 0 0 0 1px var(--row-color);
 }
 
-.trajectory-steps strong { align-self: end; font-size: 0.68rem; line-height: 1.3; }
-.trajectory-steps small { color: var(--text-secondary); font-size: 0.57rem; line-height: 1.35; }
+.trajectory-visual[data-step="2"] .map-row-keep,
+.trajectory-visual[data-step="3"] .map-row-keep,
+.trajectory-visual[data-step="3"] .map-row-trigger {
+    opacity: 0.48;
+    transform: translateY(0);
+}
 
-.transfer-bridge {
-    display: grid;
-    justify-items: center;
-    gap: 0.2rem;
+.trajectory-visual[data-step="4"] .annotation-mapped-stack > * { box-shadow: none; }
+
+.annotation-decision-legend {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 0.55rem;
     color: var(--text-secondary);
-    text-align: center;
+    font-size: 0.48rem;
 }
+.annotation-decision-legend span { display: inline-flex; align-items: center; gap: 0.22rem; }
+.annotation-decision-legend i { width: 0.42rem; height: 0.42rem; border: 1px solid currentColor; }
+.annotation-decision-legend .decision-keep { color: var(--viz-blue); background: var(--viz-blue-soft); }
+.annotation-decision-legend .decision-replace { color: var(--viz-warm); background: #fff4e6; }
+.annotation-decision-legend .decision-repair { color: var(--viz-purple); background: #f5effa; }
 
-.transfer-bridge span { font-size: 0.52rem; line-height: 1.25; }
-.transfer-bridge b { color: var(--accent); font-size: 1.35rem; font-weight: 400; }
+.window-controls { display: flex; align-items: center; gap: 0.3rem; }
+.window-controls button.is-active { border-color: var(--accent); background: var(--accent); color: #fff; }
 
 /* Figure 3: submit-at-budget chart */
 .window-controls button { white-space: nowrap; }
@@ -1138,6 +1411,13 @@ a:hover { color: var(--accent-hover); }
 }
 
 @media (max-width: 560px) {
+    .title-break-mobile,
+    .heading-break-mobile {
+        display: initial;
+    }
+    .heading-break-desktop {
+        display: none;
+    }
     .top-nav {
         align-items: flex-start;
     }
@@ -1176,16 +1456,12 @@ a:hover { color: var(--accent-hover); }
     .context-legend { flex-wrap: wrap; gap: 0.35rem 0.7rem; }
     .context-step-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .autocompact-visual .context-step-button { min-height: 4.7rem; }
-    .trajectory-compare {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 0.55rem;
-    }
-    .transfer-bridge {
-        grid-template-columns: auto auto;
-        justify-content: center;
-    }
-    .transfer-bridge b { transform: rotate(90deg); }
-    .step-controls,
+    .annotation-flow { grid-template-columns: minmax(0, 1fr); }
+    .annotation-panel-head { min-height: 0; }
+    .annotation-output { grid-template-columns: minmax(0, 1fr); }
+    .output-arrow { justify-self: center; transform: rotate(90deg); }
+    .inference-result { padding-top: 0.45rem; padding-left: 0; border-top: 1px solid #b9d8cc; border-left: 0; }
+    .trajectory-visual[data-step="4"] .annotation-output { max-height: 280px; }
     .window-controls { align-self: flex-start; }
     .window-controls { width: 100%; }
     .window-controls button { flex: 1 1 0; }
@@ -1235,7 +1511,7 @@ a:hover { color: var(--accent-hover); }
     </nav>
 
     <header class="post-header">
-        <h1>AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents</h1>
+        <h1>AutoCompact: Learning <br class="title-break-mobile">When to Compact Context <br>in Long-Horizon <br class="title-break-mobile">Coding Agents</h1>
         <div class="post-meta-row">
             <div class="post-meta">
                 <span>First published: </span><time datetime="2026-07-13T00:00:00+08:00">July 13, 2026</time>
@@ -1264,7 +1540,7 @@ a:hover { color: var(--accent-hover); }
 </ul>
 <blockquote>Instead of remembering more, AutoCompact learns when to compact its context, what to drop, and how to carry the remaining state forward.</blockquote>
 </aside>
-<h2>Why coding agents need context compaction</h2>
+<h2>Why coding agents need <br class="heading-break-mobile">context compaction</h2>
 <p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
 <p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
 <p><strong>This raises the central question: can the model determine when the full history of its prior work is no longer needed and compact its context accordingly?</strong> This is not just cutting off old content. The model needs to keep the working state needed for the next step: which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
@@ -1326,6 +1602,7 @@ a:hover { color: var(--accent-hover); }
         <span><i class="legend-summary"></i>Summarize</span>
         <span><i class="legend-drop"></i>Drop as expired noise</span>
     </div>
+    <div class="step-interaction-hint"><span>Interactive</span><strong>Click any step below to jump to that state</strong></div>
     <div class="context-step-nav" role="group" aria-label="Compaction demo steps">
         <button class="context-step-button is-active" type="button" data-context-step="1" aria-pressed="true">
             <span>Step 1</span><strong>Context grows noisy</strong><small>Exploration and stale history accumulate</small>
@@ -1346,60 +1623,87 @@ a:hover { color: var(--accent-hover); }
 <p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>compact()</code>.</p>
 <p>When <code>compact()</code> is invoked, the runtime compacts the current context into a <code># Auto Context Summary</code>. The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with &quot;original task + recent turns + summary.&quot;</p>
 <h3>Cold-start SFT data: collecting compact behavior in real rollouts</h3>
-<figure class="article-figure autocompact-visual trajectory-visual" id="trajectory-visual" data-step="1">
+<figure class="article-figure autocompact-visual trajectory-visual" id="trajectory-visual" data-step="1" data-mode="before">
     <div class="visual-heading">
         <div>
-            <span class="visual-kicker">Step through the transfer</span>
-            <strong>The judge teaches a behavior, then leaves</strong>
+            <span class="visual-kicker">Interactive annotation</span>
+            <strong>How a judge turns a rollout into SFT data</strong>
         </div>
-        <div class="step-controls" role="group" aria-label="Trajectory step">
-            <button type="button" class="is-active" aria-pressed="true" data-step="1">1</button>
-            <button type="button" aria-pressed="false" data-step="2">2</button>
-            <button type="button" aria-pressed="false" data-step="3">3</button>
-            <button type="button" aria-pressed="false" data-step="4">4</button>
-        </div>
+        <button class="visual-action trajectory-action" type="button" aria-pressed="false">
+            <span class="action-run">Run demo <span class="action-icon" aria-hidden="true">→</span></span>
+            <span class="action-running">Annotating <span class="action-icon action-icon-running" aria-hidden="true">…</span></span>
+            <span class="action-reset">Reset demo <span class="action-icon action-icon-reset" aria-hidden="true">↺</span></span>
+        </button>
     </div>
-    <div class="trajectory-compare">
-        <section class="trajectory-lane training-lane" aria-label="Training trajectory with judge">
-            <div class="lane-heading">
-                <span class="lane-number">Training</span>
-                <strong>Judge corrects the rollout</strong>
-                <span>Data collection only</span>
+    <div class="annotation-flow">
+        <section class="annotation-panel original-panel" aria-label="Original base-agent rollout">
+            <div class="annotation-panel-head">
+                <span>Original rollout</span>
+                <strong>Different actions from one rollout</strong>
+                <small>Judge reviews them sequentially in the TUI</small>
             </div>
-            <ol class="trajectory-steps">
-                <li data-step="1"><span class="step-node">Agent</span><strong>Propose the next action</strong><small>read, edit, test, or continue exploring</small></li>
-                <li data-step="2"><span class="step-node judge-node">Judge</span><strong>Detect a phase boundary</strong><small>replace the proposed action with <code>compact()</code></small></li>
-                <li data-step="3"><span class="step-node judge-node">Judge</span><strong>Validate compacted state</strong><small>repair missing state or an off-track continuation</small></li>
-                <li data-step="4"><span class="step-node">SFT</span><strong>Keep the corrected trajectory</strong><small>supervise trigger, summary, and continuation</small></li>
-            </ol>
+            <div class="annotation-mapped-stack">
+                <div class="annotation-card map-row-keep"><span>Action 1 · Agent</span><strong>Inspect candidate files</strong><small>Localization is still in progress</small></div>
+                <div class="annotation-card map-row-keep"><span>Action 2 · Agent</span><strong>Grep related symbols</strong><small>Useful exploration within the current phase</small></div>
+                <div class="annotation-card map-row-trigger"><span>Action 3 · Agent</span><strong>Inspect another file</strong><small>Localization is already complete</small></div>
+                <div class="annotation-card map-row-summary"><span>Action 4 · Generated summary</span><strong># Auto Context Summary</strong><small>Conclusion retained, but the exact target file is missing</small></div>
+                <div class="annotation-card map-row-continuation"><span>Action 5 · Agent</span><strong>Repeat repository search</strong><small>Fails to use the compacted working state</small></div>
+            </div>
         </section>
-        <div class="transfer-bridge" aria-hidden="true"><span>learned behavior</span><b>→</b></div>
-        <section class="trajectory-lane inference-lane" aria-label="Inference trajectory without judge">
-            <div class="lane-heading">
-                <span class="lane-number">Inference</span>
-                <strong>Trained agent acts alone</strong>
-                <span>No judge at runtime</span>
+        <section class="annotation-panel judge-panel" aria-label="Judge annotation decisions">
+            <div class="annotation-panel-head">
+                <span>Judge annotation</span>
+                <strong>A decision for each action</strong>
+                <small>Keep valid actions; replace or repair invalid ones</small>
             </div>
-            <ol class="trajectory-steps">
-                <li data-step="1"><span class="step-node">Agent</span><strong>Work normally</strong><small>localize the issue in the current phase</small></li>
-                <li data-step="2"><span class="step-node">Agent</span><strong>Recognize the transition</strong><small>decide when compacting will help</small></li>
-                <li data-step="3"><span class="step-node summary-node">Summary</span><strong>Call <code>compact()</code></strong><small>carry forward only the effective working state</small></li>
-                <li data-step="4"><span class="step-node">Agent</span><strong>Continue the task</strong><small>edit, verify, and finish from compacted context</small></li>
-            </ol>
+            <div class="annotation-mapped-stack">
+                <div class="judge-card map-row-keep"><span>Action 1 decision</span><strong>Appropriate exploration</strong><small>Leave the proposed action unchanged</small><b class="action-verdict">KEEP</b></div>
+                <div class="judge-card map-row-keep"><span>Action 2 decision</span><strong>Relevant evidence gathering</strong><small>Leave the proposed action unchanged</small><b class="action-verdict">KEEP</b></div>
+                <div class="judge-card map-row-trigger"><span>Action 3 decision</span><strong>Phase boundary detected</strong><small>Replace continued exploration with compaction</small><b class="action-verdict">REPLACE</b></div>
+                <div class="judge-card map-row-summary"><span>Action 4 decision</span><strong>Required state is missing</strong><small>Add the exact target file to the summary</small><b class="action-verdict">REPAIR</b></div>
+                <div class="judge-card map-row-continuation"><span>Action 5 decision</span><strong>Continuation is off track</strong><small>Use the summary and begin the localized edit</small><b class="action-verdict">REPAIR</b></div>
+            </div>
+        </section>
+        <section class="annotation-panel corrected-panel" aria-label="Corrected trajectory used for SFT">
+            <div class="annotation-panel-head">
+                <span>Annotated trajectory</span>
+                <strong>Action after Judge review</strong>
+                <small>Every row maps to the action on the left</small>
+            </div>
+            <div class="annotation-mapped-stack">
+                <div class="annotation-card annotated-result map-row-keep"><span>Action 1 result</span><strong>Inspect candidate files</strong><small>Passed through without modification</small></div>
+                <div class="annotation-card annotated-result map-row-keep"><span>Action 2 result</span><strong>Grep related symbols</strong><small>Passed through without modification</small></div>
+                <div class="annotation-card annotated-result map-row-trigger"><span>Action 3 result</span><strong><code>compact()</code></strong><small>Replaces “inspect another file”</small></div>
+                <div class="annotation-card annotated-result map-row-summary"><span>Action 4 result</span><strong># Auto Context Summary</strong><small>Objective, conclusion, <b>target file</b>, and next action</small></div>
+                <div class="annotation-card annotated-result map-row-continuation"><span>Action 5 result</span><strong>Edit the localized file</strong><small>Replaces repeated repository search</small></div>
+            </div>
         </section>
     </div>
-    <div class="visual-status" role="status" aria-live="polite">Step 1: both trajectories begin with an agent taking ordinary coding actions.</div>
+    <div class="annotation-decision-legend" aria-label="Judge decision legend"><span><i class="decision-keep"></i>KEEP · unchanged</span><span><i class="decision-replace"></i>REPLACE · new action</span><span><i class="decision-repair"></i>REPAIR · fix state or continuation</span></div>
+    <div class="annotation-output">
+        <div class="sft-output"><span>Accepted training example</span><strong>SFT dataset · 1,052 examples</strong><small>Original prefix + annotated action sequence</small><div class="sample-counts"><span>253 trigger</span><span>554 summary</span><span>245 continuation</span></div></div>
+        <div class="output-arrow" aria-hidden="true">→</div>
+        <div class="inference-result"><span>After SFT</span><strong>The trained agent acts without the judge</strong><small>It learns when to trigger <code>compact()</code>, what to preserve, and how to continue.</small></div>
+    </div>
+    <div class="step-interaction-hint"><span>Interactive</span><strong>Click any step below to inspect that annotation state</strong></div>
+    <div class="context-step-nav annotation-step-nav" role="group" aria-label="Annotation process steps">
+        <button class="context-step-button annotation-step-button is-active" type="button" data-step="1" aria-pressed="true"><span>Step 1</span><strong>Keep valid actions</strong><small>Two useful exploration actions pass unchanged</small></button>
+        <button class="context-step-button annotation-step-button" type="button" data-step="2" aria-pressed="false"><span>Step 2</span><strong>Replace trigger</strong><small>Change continued exploration to <code>compact()</code></small></button>
+        <button class="context-step-button annotation-step-button" type="button" data-step="3" aria-pressed="false"><span>Step 3</span><strong>Repair state</strong><small>Fix the summary and continuation actions</small></button>
+        <button class="context-step-button annotation-step-button" type="button" data-step="4" aria-pressed="false"><span>Step 4</span><strong>Save trajectory</strong><small>Use the full annotated sequence for SFT</small></button>
+    </div>
+    <div class="context-step-status annotation-step-status" role="status" aria-live="polite">Step 1: the judge keeps two valid exploration actions unchanged and advances through the rollout.</div>
 </figure>
 <p><em>Figure 2. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call </em><em><strong><code>compact()</code></strong></em><em> by itself.</em></p>
 <p>AutoCompact requires the model to learn three capabilities: when to invoke <code>compact()</code>, what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. As shown in Figure 2, we therefore introduce <strong>a judge model during data collection</strong>. Using only the history visible at the current step, the judge reviews each action proposed by the base model<span class="cite" data-key="annotation"></span>.</p>
-<p>When the judge identifies an appropriate phase transition, it can replace the model’s proposed action with <code>compact()</code>. If the resulting <code># Auto Context Summary</code> omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.</p>
+<p>If the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with <code>compact()</code>. If the resulting <code># Auto Context Summary</code> omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.</p>
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
 <p>Using 379 SWE-ReBench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
 <table><thead><tr><th>Sample type</th><th>Rows</th></tr></thead><tbody><tr><td>When to compact context</td><td>253</td></tr><tr><td>What to preserve in the summary</td><td>554</td></tr><tr><td>How to continue after compaction</td><td>245</td></tr><tr><td><strong>Total</strong></td><td><strong>1052</strong></td></tr></tbody></table>
-<h3>Beyond SFT: Refining AutoCompact with GRPO</h3>
+<h3>Beyond SFT: Refining <br class="heading-break-mobile">AutoCompact with GRPO</h3>
 <p>The SFT stage provides a cold start for the basic compaction behavior, but it only teaches the model to imitate judge-corrected trajectories. It does not directly optimize whether a compaction decision ultimately helps solve the task.</p>
 <p>Starting from the SFT checkpoint, we continue training with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span> tasks. For each task, <strong>we assign a binary outcome reward based on whether the final patch passes the test suite.</strong> Because <code>compact()</code> and the post-summary continuation are part of the same trajectory, this outcome reward provides an end-to-end training signal for when to compact, what state to preserve, and how to continue afterward.</p>
-<h2>Experiment: can AutoCompact solve more tasks under the same context budget?</h2>
+<h2>Experiment: can AutoCompact <br class="heading-break-mobile">solve more tasks <br class="heading-break-desktop">under the <br class="heading-break-mobile">same context budget?</h2>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual" data-window="16k">
     <div class="visual-heading">
         <div>
@@ -1452,7 +1756,7 @@ a:hover { color: var(--accent-hover); }
 <p><em>Figure 3. Submit-at-budget performance under 16k and 256k automatic compaction thresholds. The x-axis shows the cumulative context-processing budget (prompt + output tokens) per task. </em></p>
 <p>For evaluation, we compare AutoCompact-Qwen3 30B Coder (SFT) and AutoCompact-Qwen3 30B Coder (SFT+GRPO) against Qwen/Qwen3-Coder-30B-A3B-Instruct on SWE-bench Verified under identical scaffold and runtime settings<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span>. We test 16k and 256k automatic compaction thresholds. All models use rule-based compaction at the threshold, while the AutoCompact variants can also invoke <code>compact()</code> proactively. We measure submit-at-budget performance by stopping each run at fixed cumulative prompt + output token budgets and evaluating the current workspace patch.</p>
 <p>Figure 3 shows that across both compaction thresholds: 1) <strong>AutoCompact consistently solves more tasks than the baseline under the same context-processing budget</strong>. On average, the SFT model raises the absolute pass rate by <strong>2.6%</strong>, while the SFT+GRPO model raises it by <strong>10.2%; 2) AutoCompact uses the available context-processing budget more efficiently:</strong> to achieve the same pass rate, the baseline requires a larger token budget; and 3) <strong>the compaction policy benefits from outcome-based optimization</strong>. GRPO builds on the SFT cold start and delivers a further <strong>7.7%</strong> absolute pass-rate improvement over the SFT-only model.</p>
-<h3>Trajectory analysis: what did AutoCompact learn?</h3>
+<h3>Trajectory analysis: <br class="heading-break-mobile">what did AutoCompact learn?</h3>
 <p>Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after GRPO, this rises to <strong>58.5%</strong>, indicating that outcome-based optimization encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
             </div>
         </article>
@@ -1742,42 +2046,72 @@ window.BLOG_REFERENCES = {
 
     var trajectoryVisual = document.getElementById('trajectory-visual');
     if (trajectoryVisual) {
-        var trajectoryButtons = Array.prototype.slice.call(trajectoryVisual.querySelectorAll('.step-controls button'));
-        var trajectorySteps = Array.prototype.slice.call(trajectoryVisual.querySelectorAll('.trajectory-steps li'));
-        var trajectoryStatus = trajectoryVisual.querySelector('.visual-status');
+        var trajectoryAction = trajectoryVisual.querySelector('.trajectory-action');
+        var trajectoryButtons = Array.prototype.slice.call(trajectoryVisual.querySelectorAll('.annotation-step-button'));
+        var trajectoryStatus = trajectoryVisual.querySelector('.annotation-step-status');
+        var trajectoryTimers = [];
         var trajectoryMessages = isZh ? {
-            1: '步骤 1：两条轨迹都从 agent 执行普通 coding action 开始。',
-            2: '步骤 2：数据收集时由 judge 判断阶段边界，训练后的 agent 将自行完成该判断。',
-            3: '步骤 3：训练时 judge 检查摘要质量；推理时 agent 直接生成紧凑状态。',
-            4: '步骤 4：修正后的样本用于 SFT，使部署后的 agent 无需 judge 也能继续任务。'
+            1: '步骤 1：前两个探索 action 都有助于定位问题，Judge 将它们原样保留并继续检查 rollout。',
+            2: '步骤 2：第三个 action 在定位完成后仍继续探索，Judge 将它替换为 compact()。',
+            3: '步骤 3：Judge 分别修复缺少目标文件的摘要，以及重复搜索的后续 action。',
+            4: '步骤 4：包含 KEEP、REPLACE 和 REPAIR 决策的完整标注轨迹进入 SFT 数据集。'
         } : {
-            1: 'Step 1: both trajectories begin with an agent taking ordinary coding actions.',
-            2: 'Step 2: during collection, the judge supplies the phase-boundary decision that the trained agent later makes by itself.',
-            3: 'Step 3: the judge checks summary quality during training; at inference, the agent produces the compact state directly.',
-            4: 'Step 4: the corrected examples become SFT data, so the deployed agent can continue without a judge.'
+            1: 'Step 1: the judge keeps two useful exploration actions unchanged and advances through the rollout.',
+            2: 'Step 2: continued exploration after localization is replaced with compact().',
+            3: 'Step 3: the judge repairs a summary missing the target file and a continuation that repeats search.',
+            4: 'Step 4: the complete trajectory—with KEEP, REPLACE, and REPAIR decisions—enters the SFT dataset.'
         };
 
-        function setTrajectoryStep(step) {
+        function clearTrajectoryTimers() {
+            trajectoryTimers.forEach(function (timer) { window.clearTimeout(timer); });
+            trajectoryTimers = [];
+        }
+
+        function setTrajectoryStep(step, isPlaying) {
+            if (!isPlaying) clearTrajectoryTimers();
             trajectoryVisual.dataset.step = String(step);
             trajectoryButtons.forEach(function (button) {
                 var active = Number(button.dataset.step) === step;
                 button.classList.toggle('is-active', active);
                 button.setAttribute('aria-pressed', active ? 'true' : 'false');
             });
-            trajectorySteps.forEach(function (item) {
-                var itemStep = Number(item.dataset.step);
-                item.classList.toggle('is-current', itemStep === step);
-                item.classList.toggle('is-past', itemStep < step);
-            });
             trajectoryStatus.textContent = trajectoryMessages[step];
+
+            if (step === 4) {
+                trajectoryVisual.dataset.mode = 'after';
+                trajectoryAction.disabled = false;
+                trajectoryAction.setAttribute('aria-pressed', 'true');
+                return;
+            }
+
+            trajectoryVisual.dataset.mode = isPlaying ? 'running' : 'before';
+            trajectoryAction.disabled = Boolean(isPlaying);
+            trajectoryAction.setAttribute('aria-pressed', 'false');
+        }
+
+        function runTrajectoryDemo() {
+            clearTrajectoryTimers();
+            setTrajectoryStep(1, true);
+            trajectoryTimers.push(window.setTimeout(function () { setTrajectoryStep(2, true); }, 1200));
+            trajectoryTimers.push(window.setTimeout(function () { setTrajectoryStep(3, true); }, 2600));
+            trajectoryTimers.push(window.setTimeout(function () { setTrajectoryStep(4, true); }, 4400));
         }
 
         trajectoryButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                setTrajectoryStep(Number(button.dataset.step));
+                setTrajectoryStep(Number(button.dataset.step), false);
             });
         });
-        setTrajectoryStep(1);
+
+        trajectoryAction.addEventListener('click', function () {
+            if (trajectoryVisual.dataset.mode === 'after') {
+                setTrajectoryStep(1, false);
+            } else if (trajectoryVisual.dataset.mode === 'before') {
+                runTrajectoryDemo();
+            }
+        });
+
+        setTrajectoryStep(1, false);
     }
 
     var budgetVisual = document.getElementById('budget-visual');
