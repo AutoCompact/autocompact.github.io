@@ -1538,7 +1538,6 @@ a:hover { color: var(--accent-hover); }
 <ul><li>Average context-processing cost drops by <strong>15.4%</strong>.</li>
 <li>Across token-budget ranges, the absolute pass rate increases by <strong>10.2%</strong> on average, with a maximum improvement of <strong>14.3%</strong>.</li>
 </ul>
-<blockquote>Instead of remembering more, AutoCompact learns when to compact its context, what to drop, and how to carry the remaining state forward.</blockquote>
 </aside>
 <h2>Why coding agents need <br class="heading-break-mobile">context compaction</h2>
 <p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
