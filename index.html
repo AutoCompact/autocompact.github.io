@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="AutoCompact teaches coding agents when to compact long contexts, reducing context-processing cost while improving task completion under fixed token budgets.">
+    <meta name="description" content="AutoCompact teaches coding agents when to compact long contexts, reducing context-processing cost while improving task completion under fixed inference-cost budgets.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1333,7 +1333,7 @@ a:hover { color: var(--accent-hover); }
 .annotation-decision-legend .decision-replace { color: var(--viz-warm); background: #fff4e6; }
 .annotation-decision-legend .decision-repair { color: var(--viz-purple); background: #f5effa; }
 
-/* Figure 3: performance under equal token budgets chart */
+/* Figures 3–5: performance under equal inference-cost budgets */
 .budget-panels {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1368,12 +1368,6 @@ a:hover { color: var(--accent-hover); }
 
 .budget-chart .axis-title { font-size: 11px; font-weight: 600; }
 .budget-chart .axis-note { font-size: 10px; font-weight: 600; }
-.budget-chart .axis-break {
-    fill: none;
-    stroke: var(--text-secondary);
-    stroke-width: 1.5;
-}
-
 .chart-grid line {
     stroke: var(--divider);
     stroke-width: 1;
@@ -1791,30 +1785,31 @@ a:hover { color: var(--accent-hover); }
 </div>
 <h2>Long context alone does not remove the need for compaction</h2>
 <p>We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its Qwen3 30B Coder base model<span class="cite" data-key="qwen"></span> on <strong>SWE-bench Verified</strong><span class="cite" data-key="swebench-verified"></span> with a <strong>256k context window and no forced compaction</strong>. All models use the same scaffold<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span> and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
+<p>We evaluate runs at fixed inference-cost budgets, reported in USD per task. Costs are calculated according to the official <a href="https://www.alibabacloud.com/help/en/model-studio/model-pricing">Alibaba Cloud Model Studio pricing</a> for <code>qwen3-coder-30b-a3b-instruct</code>, then summed across requests within each task.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-sft">
     <div class="visual-heading">
         <div>
             <span class="visual-kicker">Long context · 256k · no forced compaction</span>
-            <strong>Learned compaction solves more tasks under the same token budget</strong>
+            <strong>Learned compaction solves more tasks under the same inference-cost budget</strong>
         </div>
     </div>
     <section class="budget-panel" data-window="256k" data-comparison="sft" aria-label="Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction">
         <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-gap"></i>SFT additional solved tasks</span></div>
         <div class="chart-wrap">
             <svg class="budget-chart" viewBox="0 35 700 335" role="img">
-                <title>Baseline versus AutoCompact SFT on SWE-bench Verified by cumulative tokens processed per task with a 256k context window and no forced compaction</title>
+                <title>Baseline versus AutoCompact SFT on SWE-bench Verified by inference-cost budget in USD per task with a 256k context window and no forced compaction</title>
                 <desc>AutoCompact SFT outperforms the baseline across all shown budgets in the 256k long-context regime.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="233.75" x2="650" y2="233.75"></line><line x1="68" y1="177.5" x2="650" y2="177.5"></line><line x1="68" y1="121.25" x2="650" y2="121.25"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
                 <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="239.75">20</text><text x="52" y="183.5">25</text><text x="52" y="127.25">30</text><text x="52" y="71">35</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
-                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
+                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">$0.10</text><text data-budget-index="1" y="325" text-anchor="middle">$0.20</text><text data-budget-index="2" y="325" text-anchor="middle">$0.40</text><text data-budget-index="3" y="325" text-anchor="middle">$0.80</text><text data-budget-index="4" y="325" text-anchor="middle">$1.20</text><text data-budget-index="5" y="325" text-anchor="middle">$4</text><text class="axis-note" x="350" y="354" text-anchor="middle">Inference-cost budget (USD per task)</text></g>
                 <g class="gap-layer" aria-hidden="true"></g><path class="series-line baseline-line" d=""></path><path class="series-line auto-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
                 <g class="end-labels" aria-hidden="true"><text class="auto-end" x="638" y="0" text-anchor="start"></text><text class="baseline-end" x="638" y="0" text-anchor="start"></text></g>
             </svg>
         </div>
     </section>
 </figure>
-<p><em>Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every token budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.</em></p>
-<p>AutoCompact-SFT consistently outperforms the baseline across every token budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.</p>
+<p><em>Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every inference-cost budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.</em></p>
+<p>AutoCompact-SFT consistently outperforms the baseline across every inference-cost budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.</p>
 
 <h2>Jointly train task solving and compaction with RL</h2>
 <p>The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether those decisions ultimately help solve the task.</p>
@@ -1824,26 +1819,26 @@ a:hover { color: var(--accent-hover); }
     <div class="visual-heading">
         <div>
             <span class="visual-kicker">RL · 256k · no forced compaction</span>
-            <strong>RL improves the SFT policy at every token budget</strong>
+            <strong>RL improves AutoCompact’s task performance at every inference-cost budget</strong>
         </div>
     </div>
     <section class="budget-panel" data-window="256k" data-comparison="rl" aria-label="AutoCompact SFT versus AutoCompact SFT plus RL on SWE-bench Verified with a 256k context window and no forced compaction">
         <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+RL)</span><span><i class="legend-gap"></i>RL additional solved tasks</span></div>
         <div class="chart-wrap">
             <svg class="budget-chart" viewBox="0 35 700 335" role="img">
-                <title>AutoCompact SFT versus AutoCompact SFT plus RL by cumulative tokens processed per task</title>
+                <title>AutoCompact SFT versus AutoCompact SFT plus RL by inference-cost budget in USD per task</title>
                 <desc>RL substantially improves over the SFT model across all shown budgets.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
                 <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
-                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
+                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">$0.10</text><text data-budget-index="1" y="325" text-anchor="middle">$0.20</text><text data-budget-index="2" y="325" text-anchor="middle">$0.40</text><text data-budget-index="3" y="325" text-anchor="middle">$0.80</text><text data-budget-index="4" y="325" text-anchor="middle">$1.20</text><text data-budget-index="5" y="325" text-anchor="middle">$4</text><text class="axis-note" x="350" y="354" text-anchor="middle">Inference-cost budget (USD per task)</text></g>
                 <g class="gap-layer" aria-hidden="true"></g><path class="series-line auto-line" d=""></path><path class="series-line grpo-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
                 <g class="end-labels" aria-hidden="true"><text class="grpo-end" x="638" y="0" text-anchor="start"></text><text class="auto-end" x="638" y="0" text-anchor="start"></text></g>
             </svg>
         </div>
     </section>
 </figure>
-<p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every token budget.</em></p>
-<p>The RL model substantially outperforms the SFT model across every budget, with the largest gains in the finite-compute regime. <strong>SFT establishes the compaction behavior, while RL improves how that behavior contributes to task completion.</strong></p>
+<p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.</em></p>
+<p>The RL model substantially outperforms the SFT model across every inference-cost budget, with the largest gains at lower inference-cost budgets. <strong>SFT establishes the compaction behavior, while RL further improves task performance.</strong></p>
 
 <p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after RL, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.</p>
 
@@ -1860,20 +1855,20 @@ a:hover { color: var(--accent-hover); }
         <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+RL)</span><span><i class="legend-gap"></i>Final-model additional solved tasks</span></div>
         <div class="chart-wrap">
             <svg class="budget-chart" viewBox="0 35 700 335" role="img">
-                <title>Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold</title>
+                <title>Baseline versus final AutoCompact model by inference-cost budget in USD per task on SWE-bench Verified when both use a 16k forced-compaction threshold</title>
                 <desc>The final AutoCompact model remains stronger than the baseline when the context limit is reached more often.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
                 <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
-                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
+                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">$0.10</text><text data-budget-index="1" y="325" text-anchor="middle">$0.20</text><text data-budget-index="2" y="325" text-anchor="middle">$0.40</text><text data-budget-index="3" y="325" text-anchor="middle">$0.80</text><text data-budget-index="4" y="325" text-anchor="middle">$1.20</text><text data-budget-index="5" y="325" text-anchor="middle">$4</text><text class="axis-note" x="350" y="354" text-anchor="middle">Inference-cost budget (USD per task)</text></g>
                 <g class="gap-layer" aria-hidden="true"></g><path class="series-line baseline-line" d=""></path><path class="series-line grpo-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
                 <g class="end-labels" aria-hidden="true"><text class="grpo-end" x="638" y="0" text-anchor="start"></text><text class="baseline-end" x="638" y="0" text-anchor="start"></text></g>
             </svg>
         </div>
     </section>
 </figure>
-<p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
+<p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
 <h2>Conclusion</h2>
-<p>AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same context-processing budget than both full-history and fixed-threshold baselines.</p>
+<p>AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same inference-cost budget than both full-history and fixed-threshold baselines.</p>
             </div>
         </article>
 
@@ -2234,28 +2229,28 @@ window.BLOG_REFERENCES = {
     if (budgetVisuals.length > 0) {
         var chartData = {
             '16k': {
-                baseline: [15.3, 20.2, 22.9, 25.5, 26.7, 28.8],
-                auto: [15.9, 23.1, 26.1, 27.8, 28.0, 29.2],
-                grpo: [24.7, 30.2, 32.7, 33.5, 35.3, 37.0],
-                extra: [3, 14, 16, 11, 6, 2],
-                extraGrpo: [46, 49, 48, 39, 42, 41]
+                baseline: [17.5, 22.4, 26.9, 28.1, 28.5, 29.4],
+                auto: [18.3, 26.7, 28.8, 29.4, 29.6, 29.8],
+                grpo: [29.8, 34.9, 37.3, 36.7, 37.6, 38.8],
+                extra: [4, 21, 9, 6, 5, 2],
+                extraGrpo: [60, 61, 51, 42, 44, 46],
+                extraRlOverSft: [56, 40, 42, 36, 39, 44]
             },
             '256k': {
-                baseline: [14.7, 19.8, 25.7, 26.5, 26.7, 30.4],
-                auto: [15.7, 23.4, 28.3, 30.4, 30.8, 32.2],
-                grpo: [24.1, 34.1, 36.5, 38.0, 37.6, 37.2],
-                extra: [5, 18, 13, 19, 20, 9],
-                extraGrpo: [46, 70, 53, 56, 53, 34]
+                baseline: [16.8, 25.0, 26.5, 29.3, 30.0, 31.2],
+                auto: [18.7, 27.1, 30.0, 32.4, 32.4, 33.1],
+                grpo: [29.4, 36.1, 38.6, 39.6, 39.0, 40.7],
+                extra: [9, 10, 17, 15, 12, 9],
+                extraGrpo: [61, 54, 59, 50, 44, 46],
+                extraRlOverSft: [52, 44, 42, 35, 32, 37]
             }
         };
-        var finiteBudgets = [250000, 500000, 1000000, 2000000, 5000000];
-        var logAxisStart = 82;
-        var logAxisEnd = 550;
-        var minLogBudget = Math.log10(finiteBudgets[0]);
-        var maxLogBudget = Math.log10(finiteBudgets[finiteBudgets.length - 1]);
-        var xPositions = finiteBudgets.map(function (budget) {
-            return logAxisStart + ((Math.log10(budget) - minLogBudget) / (maxLogBudget - minLogBudget)) * (logAxisEnd - logAxisStart);
-        }).concat(622);
+        var costBudgets = [0.10, 0.20, 0.40, 0.80, 1.20, 4.00];
+        var xAxisStart = 82;
+        var xAxisEnd = 622;
+        var xPositions = costBudgets.map(function (_, index) {
+            return xAxisStart + (index / (costBudgets.length - 1)) * (xAxisEnd - xAxisStart);
+        });
         var pointCount = xPositions.length;
         var svgNamespace = 'http://www.w3.org/2000/svg';
 
@@ -2292,7 +2287,7 @@ window.BLOG_REFERENCES = {
             var series;
             var extras;
             if (comparison === 'sft') { series = ['baseline','auto']; extras = data.extra; }
-            else if (comparison === 'rl') { series = ['auto','grpo']; extras = data.grpo.map(function(v,i){ return Math.round((v-data.auto[i])*500/100); }); }
+            else if (comparison === 'rl') { series = ['auto','grpo']; extras = data.extraRlOverSft; }
             else { series = ['baseline','grpo']; extras = data.extraGrpo; }
             var yMax = comparison === 'sft' ? 35 : 40;
 
@@ -2310,7 +2305,16 @@ window.BLOG_REFERENCES = {
                 var high = data[series[1]][i];
                 var x=xPositions[i], lowY=yPosition(low, yMax), highY=yPosition(high, yMax);
                 gapLayer.appendChild(createSvgElement('line', {'class':'gap-line',x1:x,x2:x,y1:highY+7,y2:lowY-7}));
-                gapLayer.appendChild(createSvgElement('text', {'class':'gap-label',x:x,y:Math.max(38,highY-12),'text-anchor':'middle'}, '+'+extras[i]));
+                var placeGapLabelBelow = highY < 90 && (lowY - highY) > 36;
+                var gapLabelX = x;
+                var gapLabelY = Math.max(38, highY - 12);
+                var gapLabelAnchor = 'middle';
+                if (placeGapLabelBelow) {
+                    gapLabelY = highY + 22;
+                    gapLabelX = i === pointCount - 1 ? x - 12 : x + 12;
+                    gapLabelAnchor = i === pointCount - 1 ? 'end' : 'start';
+                }
+                gapLayer.appendChild(createSvgElement('text', {'class':'gap-label',x:gapLabelX,y:gapLabelY,'text-anchor':gapLabelAnchor}, '+'+extras[i]));
                 var group=createSvgElement('g', {'class':'point-group'});
                 addPoint(group, series[0], x, lowY);
                 addPoint(group, series[1], x, highY);
