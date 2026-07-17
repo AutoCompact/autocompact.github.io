@@ -452,8 +452,7 @@ a:hover { color: var(--accent-hover); }
     text-transform: uppercase;
 }
 
-.visual-action,
-.window-controls button {
+.visual-action {
     padding: 0.45rem 0.7rem;
     border: 1px solid var(--divider);
     border-radius: 0;
@@ -1154,6 +1153,94 @@ a:hover { color: var(--accent-hover); }
 }
 .sft-output strong { display: block; font-size: 0.68rem; }
 .sft-output small { display: block; margin-top: 0.08rem; color: var(--text-secondary); font-size: 0.48rem; }
+
+.tldr-grid {
+    display: grid;
+    gap: 0.8rem;
+}
+.tldr-item {
+    display: grid;
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    gap: 0.85rem;
+    align-items: start;
+}
+.tldr-label {
+    padding-top: 0.12rem;
+    color: var(--accent);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+.tldr-item p { margin: 0; }
+.tldr-results { display: grid; gap: 0.38rem; }
+.tldr-result-line strong:first-child { display: inline-block; min-width: 3.2rem; }
+
+.sample-mix {
+    margin: 1.25rem 0;
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--text);
+    background: var(--card-bg);
+}
+.sample-mix-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+}
+.sample-mix-head strong { font-size: 0.9rem; }
+.sample-mix-head span {
+    color: var(--text-secondary);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+}
+.sample-bar {
+    display: flex;
+    height: 1.15rem;
+    overflow: hidden;
+    border: 1px solid var(--divider);
+}
+.sample-bar span { display: block; min-width: 2px; }
+.sample-trigger { width: 24.05%; background: var(--viz-blue); }
+.sample-summary { width: 52.66%; background: var(--viz-green); }
+.sample-continuation { width: 23.29%; background: var(--viz-purple); }
+.sample-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.65rem;
+}
+.sample-card {
+    padding: 0.6rem;
+    border: 1px solid var(--divider);
+}
+.sample-card span,
+.sample-card strong,
+.sample-card small { display: block; }
+.sample-card span {
+    font-size: 0.62rem;
+    font-weight: 600;
+}
+.sample-card strong {
+    margin-top: 0.08rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 1rem;
+}
+.sample-card small {
+    margin-top: 0.12rem;
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    line-height: 1.35;
+}
+.sample-card-trigger { border-top: 3px solid var(--viz-blue); }
+.sample-card-summary { border-top: 3px solid var(--viz-green); }
+.sample-card-continuation { border-top: 3px solid var(--viz-purple); }
+@media (max-width: 560px) {
+    .tldr-item { grid-template-columns: minmax(0, 1fr); gap: 0.18rem; }
+    .sample-cards { grid-template-columns: minmax(0, 1fr); }
+}
+
 .sample-counts { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-top: 0.32rem; }
 .sample-counts span { padding: 0.12rem 0.25rem; background: var(--card-bg); font-size: 0.43rem; }
 .output-arrow { color: var(--viz-green); font-size: 1.25rem; }
@@ -1264,11 +1351,49 @@ a:hover { color: var(--accent-hover); }
 .annotation-decision-legend .decision-replace { color: var(--viz-warm); background: #fff4e6; }
 .annotation-decision-legend .decision-repair { color: var(--viz-purple); background: #f5effa; }
 
-.window-controls { display: flex; align-items: center; gap: 0.3rem; }
-.window-controls button.is-active { border-color: var(--accent); background: var(--accent); color: #fff; }
+/* Figure 3: performance under equal token budgets chart */
+.budget-panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
 
-/* Figure 3: submit-at-budget chart */
-.window-controls button { white-space: nowrap; }
+.budget-panel {
+    min-width: 0;
+    padding: 0.7rem;
+    border: 1px solid var(--divider);
+    background: var(--card-bg);
+}
+
+.budget-panel-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--divider);
+}
+.budget-panel-heading > div { display: grid; gap: 0.08rem; }
+.budget-panel-heading span {
+    color: var(--text-secondary);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.budget-panel-heading strong { font-size: 0.76rem; line-height: 1.3; }
+.budget-panel-heading small { color: var(--text-secondary); font-size: 0.52rem; line-height: 1.3; }
+.budget-threshold {
+    flex: 0 0 auto;
+    padding: 0.18rem 0.38rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.56rem;
+    font-weight: 600;
+}
 
 .chart-wrap {
     position: relative;
@@ -1289,6 +1414,12 @@ a:hover { color: var(--accent-hover); }
 }
 
 .budget-chart .axis-title { font-size: 11px; font-weight: 600; }
+.budget-chart .axis-note { font-size: 10px; font-weight: 600; }
+.budget-chart .axis-break {
+    fill: none;
+    stroke: var(--text-secondary);
+    stroke-width: 1.5;
+}
 
 .chart-grid line {
     stroke: var(--divider);
@@ -1462,9 +1593,9 @@ a:hover { color: var(--accent-hover); }
     .output-arrow { justify-self: center; transform: rotate(90deg); }
     .inference-result { padding-top: 0.45rem; padding-left: 0; border-top: 1px solid #b9d8cc; border-left: 0; }
     .trajectory-visual[data-step="4"] .annotation-output { max-height: 280px; }
-    .window-controls { align-self: flex-start; }
-    .window-controls { width: 100%; }
-    .window-controls button { flex: 1 1 0; }
+    .budget-panels { grid-template-columns: minmax(0, 1fr); }
+    .budget-panel { padding: 0.5rem; }
+    .budget-panel-heading { align-items: flex-start; }
     .budget-chart text { font-size: 14px; }
     .budget-chart .axis-title { font-size: 13px; }
     .chart-legend {
@@ -1531,21 +1662,22 @@ a:hover { color: var(--accent-hover); }
         <article class="post">
             <div class="post-content">
 <h2>TL;DR</h2>
-<aside class="callout"><p><strong>For agentic models, longer context makes it harder to stay oriented throughout the task.</strong></p>
-<p>In a coding agent trajectory, the active context accumulates failed greps, irrelevant file reads, reverted edits, and hypotheses the agent has already abandoned. Although most of this history no longer helps, it still sits in the model’s working state and adds noise.</p>
-<p>AutoCompact augments the agent’s action space with <code>compact()</code>, <strong>allowing the model to decide when to compact its context.</strong> Specifically, at natural transition points in the task, when earlier details no longer need to be carried forward, the model can invoke <code>compact()</code> to compress the accumulated history into a summary for the next step, and then continue from there.</p>
-<p>Using only 379 SWE-ReBench tasks, we collected 1,052 SFT examples for cold-start training, then further optimized the model with GRPO. Evaluated on SWE-bench Verified<span class="cite" data-key="swebench-verified"></span>, <strong>AutoCompact-Qwen3 30B Coder</strong> improves over the Qwen/Qwen3-Coder-30B-A3B-Instruct baseline<span class="cite" data-key="qwen"></span>:</p>
-<ul><li>Average context-processing cost drops by <strong>15.4%</strong>.</li>
-<li>Across token-budget ranges, the absolute pass rate increases by <strong>10.2%</strong> on average, with a maximum improvement of <strong>14.3%</strong>.</li>
+<aside class="callout">
+<p><strong>Motivation:</strong> Long coding trajectories accumulate failed attempts, irrelevant tool output, and outdated hypotheses that make it harder for the agent to focus on what matters next.</p>
+<p><strong>Idea:</strong> AutoCompact lets the model call <code>compact()</code> at a natural phase boundary, replacing noisy history with a clean, compact context for the next step.</p>
+<p><strong>Results:</strong></p>
+<ul>
+<li><strong>Data:</strong> 379 SWE-ReBench tasks produce 1,052 judge-corrected SFT examples.</li>
+<li><strong>SFT:</strong> Learned compaction improves task completion even with a 256k context threshold.</li>
+<li><strong>RL:</strong> RL further improves pass rate; the final model reduces context-processing cost by <strong>15.4%</strong> and raises pass rate by <strong>10.2%</strong> on average across token budgets.</li>
 </ul>
-<blockquote>Instead of remembering more, AutoCompact learns when to compact its context, what to drop, and how to carry the remaining state forward.</blockquote>
 </aside>
-<h2>Why coding agents need <br class="heading-break-mobile">context compaction</h2>
+<h2>Long trajectories bury useful state in noisy history</h2>
 <p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
 <p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
-<p><strong>This raises the central question: can the model determine when the full history of its prior work is no longer needed and compact its context accordingly?</strong> This is not just cutting off old content. The model needs to keep the working state needed for the next step: which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
-<p>AutoCompact learns this transition from the full trajectory to a compact working state for the next phase.</p>
-<h2>The core idea behind AutoCompact</h2>
+<p><strong>The agent must recognize when prior history is no longer needed and compact it without losing the working state.</strong> This is not just cutting off old content. The model needs to keep the working state needed for the next step: which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
+<p>AutoCompact learns to replace the full trajectory with a clean, compact context for the next phase.</p>
+<h2>AutoCompact replaces noisy history with a clean context for the next step</h2>
 <figure class="article-figure autocompact-visual context-rewrite-visual" id="context-rewrite-visual" data-mode="before">
     <div class="visual-heading">
         <div>
@@ -1600,7 +1732,7 @@ a:hover { color: var(--accent-hover); }
     <div class="context-legend" aria-label="Compaction disposition legend">
         <span><i class="legend-keep"></i>Keep verbatim</span>
         <span><i class="legend-summary"></i>Summarize</span>
-        <span><i class="legend-drop"></i>Drop as expired noise</span>
+        <span><i class="legend-drop"></i>Drop as outdated noise</span>
     </div>
     <div class="step-interaction-hint"><span>Interactive</span><strong>Click any step below to jump to that state</strong></div>
     <div class="context-step-nav" role="group" aria-label="Compaction demo steps">
@@ -1622,7 +1754,7 @@ a:hover { color: var(--accent-hover); }
 <p><em>Figure 1. When the model decides that the current context should be cleaned up, it calls </em><em><strong><code>compact()</code></strong></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><strong><code># Auto Context Summary</code></strong></em><em>, instead of the full history.</em></p>
 <p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>compact()</code>.</p>
 <p>When <code>compact()</code> is invoked, the runtime compacts the current context into a <code># Auto Context Summary</code>. The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with &quot;original task + recent turns + summary.&quot;</p>
-<h3>Cold-start SFT data: collecting compact behavior in real rollouts</h3>
+<h2>Judge-guided data collection creates SFT examples for when, what, and how to compact</h2>
 <figure class="article-figure autocompact-visual trajectory-visual" id="trajectory-visual" data-step="1" data-mode="before">
     <div class="visual-heading">
         <div>
@@ -1681,7 +1813,7 @@ a:hover { color: var(--accent-hover); }
     </div>
     <div class="annotation-decision-legend" aria-label="Judge decision legend"><span><i class="decision-keep"></i>KEEP · unchanged</span><span><i class="decision-replace"></i>REPLACE · new action</span><span><i class="decision-repair"></i>REPAIR · fix state or continuation</span></div>
     <div class="annotation-output">
-        <div class="sft-output"><span>Accepted training example</span><strong>SFT dataset · 1,052 examples</strong><small>Original prefix + annotated action sequence</small><div class="sample-counts"><span>253 trigger</span><span>554 summary</span><span>245 continuation</span></div></div>
+        <div class="sft-output"><span>Accepted training example</span><strong>SFT dataset · 1,052 examples</strong><small>Original prefix + annotated action sequence</small><div class="sample-counts"><span>24% trigger</span><span>53% summary</span><span>23% continuation</span></div></div>
         <div class="output-arrow" aria-hidden="true">→</div>
         <div class="inference-result"><span>After SFT</span><strong>The trained agent acts without the judge</strong><small>It learns when to trigger <code>compact()</code>, what to preserve, and how to continue.</small></div>
     </div>
@@ -1699,65 +1831,101 @@ a:hover { color: var(--accent-hover); }
 <p>If the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with <code>compact()</code>. If the resulting <code># Auto Context Summary</code> omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.</p>
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
 <p>Using 379 SWE-ReBench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
-<table><thead><tr><th>Sample type</th><th>Rows</th></tr></thead><tbody><tr><td>When to compact context</td><td>253</td></tr><tr><td>What to preserve in the summary</td><td>554</td></tr><tr><td>How to continue after compaction</td><td>245</td></tr><tr><td><strong>Total</strong></td><td><strong>1052</strong></td></tr></tbody></table>
-<h3>Beyond SFT: Refining <br class="heading-break-mobile">AutoCompact with GRPO</h3>
-<p>The SFT stage provides a cold start for the basic compaction behavior, but it only teaches the model to imitate judge-corrected trajectories. It does not directly optimize whether a compaction decision ultimately helps solve the task.</p>
-<p>Starting from the SFT checkpoint, we continue training with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span> tasks. For each task, <strong>we assign a binary outcome reward based on whether the final patch passes the test suite.</strong> Because <code>compact()</code> and the post-summary continuation are part of the same trajectory, this outcome reward provides an end-to-end training signal for when to compact, what state to preserve, and how to continue afterward.</p>
-<h2>Experiment: can AutoCompact <br class="heading-break-mobile">solve more tasks <br class="heading-break-desktop">under the <br class="heading-break-mobile">same context budget?</h2>
-<figure class="article-figure autocompact-visual budget-visual" id="budget-visual" data-window="16k">
+<div class="sample-mix" role="img" aria-label="The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.">
+<div class="sample-mix-head"><strong>1,052 cold-start examples cover the full compaction loop</strong><span>100%</span></div>
+<div class="sample-bar" aria-hidden="true"><span class="sample-trigger"></span><span class="sample-summary"></span><span class="sample-continuation"></span></div>
+<div class="sample-cards">
+<div class="sample-card sample-card-trigger"><span>When to compact</span><strong>24%</strong><small>Identify the phase boundary and call <code>compact()</code></small></div>
+<div class="sample-card sample-card-summary"><span>What to preserve</span><strong>53%</strong><small>Produce a complete summary of the state needed next</small></div>
+<div class="sample-card sample-card-continuation"><span>How to continue</span><strong>23%</strong><small>Act correctly from the compacted context</small></div>
+</div>
+</div>
+<h2>Learned compaction helps even with long context</h2>
+<p>We first evaluate AutoCompact with a <strong>256k context threshold</strong>. This long-context setting makes forced compaction much less likely to explain the gains, allowing us to test whether proactive compaction still helps when the trajectory can remain in context for much longer.</p>
+<figure class="article-figure autocompact-visual budget-visual" id="budget-visual-sft">
     <div class="visual-heading">
         <div>
-            <span class="visual-kicker">Submit-at-budget</span>
-            <strong>Same processing budget, more solved tasks</strong>
-        </div>
-        <div class="window-controls" role="group" aria-label="Automatic compaction threshold">
-            <button type="button" class="is-active" aria-pressed="true" data-window="16k">Max 16k</button>
-            <button type="button" aria-pressed="false" data-window="256k">Max 256k</button>
+            <span class="visual-kicker">Long context · 256k threshold</span>
+            <strong>Learned compaction solves more tasks under the same token budget</strong>
         </div>
     </div>
-    <div class="chart-wrap">
-        <svg class="budget-chart" viewBox="0 0 700 360" role="img" aria-labelledby="budget-chart-title budget-chart-desc">
-            <title id="budget-chart-title">Pass rate by cumulative context-processing budget</title>
-            <desc id="budget-chart-desc">At the 16k automatic compaction threshold, the SFT and SFT+GRPO AutoCompact models both outperform the baseline under fixed context-processing budgets.</desc>
-            <g class="chart-grid" aria-hidden="true">
-                <line x1="68" y1="290" x2="650" y2="290"></line>
-                <line x1="68" y1="245" x2="650" y2="245"></line>
-                <line x1="68" y1="200" x2="650" y2="200"></line>
-                <line x1="68" y1="155" x2="650" y2="155"></line>
-                <line x1="68" y1="110" x2="650" y2="110"></line>
-                <line x1="68" y1="65" x2="650" y2="65"></line>
-            </g>
-            <g class="y-labels" aria-hidden="true">
-                <text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text>
-                <text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text>
-            </g>
-            <g class="x-labels" aria-hidden="true">
-                <text x="82" y="325">250k</text><text x="190" y="325">500k</text><text x="298" y="325">1M</text><text x="406" y="325">2M</text><text x="514" y="325">5M</text><text x="622" y="325">∞</text>
-            </g>
-            <g class="gap-layer" aria-hidden="true"></g>
-            <path class="series-line baseline-line" d=""></path>
-            <path class="series-line auto-line" d=""></path>
-            <path class="series-line grpo-line" d=""></path>
-            <g class="point-layer" aria-hidden="true"></g>
-            <g class="end-labels" aria-hidden="true">
-                <text class="grpo-end" x="638" y="0" text-anchor="start"></text>
-                <text class="auto-end" x="638" y="0" text-anchor="start"></text>
-                <text class="baseline-end" x="638" y="0" text-anchor="start"></text>
-            </g>
-        </svg>
-    </div>
-    <div class="chart-legend" aria-label="Chart legend">
-        <span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span>
-        <span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span>
-        <span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span>
-        <span><i class="legend-gap"></i>SFT+GRPO additional solved tasks</span>
-    </div>
+    <section class="budget-panel" data-window="256k" data-comparison="sft" aria-label="Baseline versus AutoCompact SFT with a 256k context threshold">
+        <div class="budget-panel-heading"><div><span>Figure 3</span><strong>Long-context regime</strong><small>Baseline versus the SFT cold start</small></div><b class="budget-threshold">Context 256k</b></div>
+        <div class="chart-wrap">
+            <svg class="budget-chart" viewBox="0 0 700 370" role="img">
+                <title>Baseline versus AutoCompact SFT by cumulative tokens processed per task with a 256k context threshold</title>
+                <desc>AutoCompact SFT outperforms the baseline across all shown budgets in the 256k long-context regime.</desc>
+                <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
+                <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
+                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
+                <g class="gap-layer" aria-hidden="true"></g><path class="series-line baseline-line" d=""></path><path class="series-line auto-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
+                <g class="end-labels" aria-hidden="true"><text class="auto-end" x="638" y="0" text-anchor="start"></text><text class="baseline-end" x="638" y="0" text-anchor="start"></text></g>
+            </svg>
+        </div>
+        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-gap"></i>SFT additional solved tasks</span></div>
+    </section>
 </figure>
-<p><em>Figure 3. Submit-at-budget performance under 16k and 256k automatic compaction thresholds. The x-axis shows the cumulative context-processing budget (prompt + output tokens) per task. </em></p>
-<p>For evaluation, we compare AutoCompact-Qwen3 30B Coder (SFT) and AutoCompact-Qwen3 30B Coder (SFT+GRPO) against Qwen/Qwen3-Coder-30B-A3B-Instruct on SWE-bench Verified under identical scaffold and runtime settings<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span>. We test 16k and 256k automatic compaction thresholds. All models use rule-based compaction at the threshold, while the AutoCompact variants can also invoke <code>compact()</code> proactively. We measure submit-at-budget performance by stopping each run at fixed cumulative prompt + output token budgets and evaluating the current workspace patch.</p>
-<p>Figure 3 shows that across both compaction thresholds: 1) <strong>AutoCompact consistently solves more tasks than the baseline under the same context-processing budget</strong>. On average, the SFT model raises the absolute pass rate by <strong>2.6%</strong>, while the SFT+GRPO model raises it by <strong>10.2%; 2) AutoCompact uses the available context-processing budget more efficiently:</strong> to achieve the same pass rate, the baseline requires a larger token budget; and 3) <strong>the compaction policy benefits from outcome-based optimization</strong>. GRPO builds on the SFT cold start and delivers a further <strong>7.7%</strong> absolute pass-rate improvement over the SFT-only model.</p>
-<h3>Trajectory analysis: <br class="heading-break-mobile">what did AutoCompact learn?</h3>
-<p>Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after GRPO, this rises to <strong>58.5%</strong>, indicating that outcome-based optimization encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
+<p><em>Figure 3. With a 256k context threshold, the SFT model solves more tasks than the baseline under every token budget. This isolates the value of learned compaction before RL.</em></p>
+<p>AutoCompact-SFT consistently outperforms the baseline across every token budget. The gain remains visible even at the unlimited-budget endpoint, indicating that compaction is useful not only as an emergency response to context overflow. A trajectory may be large enough to fit in context while still containing enough expired exploration to impair subsequent reasoning.</p>
+
+<h2>RL further improves the learned compaction policy</h2>
+<p>The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether each decision helps produce a correct patch.</p>
+<p>Starting from the SFT checkpoint, we train with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span>. Each trajectory receives a binary reward based on whether the final patch passes the test suite, allowing RL to jointly improve when to compact, what to preserve, and how to continue. We compare the SFT model with the RL model under the same 256k evaluation setting.</p>
+<figure class="article-figure autocompact-visual budget-visual" id="budget-visual-rl">
+    <div class="visual-heading">
+        <div>
+            <span class="visual-kicker">RL · 256k threshold</span>
+            <strong>RL improves the SFT policy at every token budget</strong>
+        </div>
+    </div>
+    <section class="budget-panel" data-window="256k" data-comparison="rl" aria-label="AutoCompact SFT versus AutoCompact SFT plus GRPO at the 256k threshold">
+        <div class="budget-panel-heading"><div><span>Figure 4</span><strong>Incremental gain from RL</strong><small>SFT model versus RL model</small></div><b class="budget-threshold">Context 256k</b></div>
+        <div class="chart-wrap">
+            <svg class="budget-chart" viewBox="0 0 700 370" role="img">
+                <title>AutoCompact SFT versus AutoCompact SFT plus GRPO by cumulative tokens processed per task</title>
+                <desc>RL substantially improves over the SFT model across all shown budgets.</desc>
+                <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
+                <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
+                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
+                <g class="gap-layer" aria-hidden="true"></g><path class="series-line auto-line" d=""></path><path class="series-line grpo-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
+                <g class="end-labels" aria-hidden="true"><text class="grpo-end" x="638" y="0" text-anchor="start"></text><text class="auto-end" x="638" y="0" text-anchor="start"></text></g>
+            </svg>
+        </div>
+        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>RL additional solved tasks</span></div>
+    </section>
+</figure>
+<p><em>Figure 4. Under the same 256k context threshold, RL improves over the SFT model at every token budget.</em></p>
+<p>The RL model substantially outperforms the SFT model across every budget, with the largest gains in the finite-compute regime. <strong>SFT establishes the compaction behavior, while RL improves how that behavior contributes to task completion.</strong></p>
+
+<p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after GRPO, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
+
+<h2>AutoCompact remains effective with limited context</h2>
+<p>Finally, we evaluate the final SFT+GRPO model with a much smaller <strong>16k context threshold</strong>, where all models reach the context limit more often.</p>
+<figure class="article-figure autocompact-visual budget-visual" id="budget-visual-robustness">
+    <div class="visual-heading">
+        <div>
+            <span class="visual-kicker">Limited context · 16k threshold</span>
+            <strong>AutoCompact still solves more tasks with a 16k context limit</strong>
+        </div>
+    </div>
+    <section class="budget-panel" data-window="16k" data-comparison="final" aria-label="Baseline versus final AutoCompact model at the 16k threshold">
+        <div class="budget-panel-heading"><div><span>Figure 5</span><strong>Limited-context regime</strong><small>Baseline versus the final SFT+GRPO model</small></div><b class="budget-threshold">Context 16k</b></div>
+        <div class="chart-wrap">
+            <svg class="budget-chart" viewBox="0 0 700 370" role="img">
+                <title>Baseline versus final AutoCompact model by cumulative tokens processed per task at the 16k threshold</title>
+                <desc>The final AutoCompact model remains stronger than the baseline when the context limit is reached more often.</desc>
+                <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
+                <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
+                <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
+                <g class="gap-layer" aria-hidden="true"></g><path class="series-line baseline-line" d=""></path><path class="series-line grpo-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
+                <g class="end-labels" aria-hidden="true"><text class="grpo-end" x="638" y="0" text-anchor="start"></text><text class="baseline-end" x="638" y="0" text-anchor="start"></text></g>
+            </svg>
+        </div>
+        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>Final-model additional solved tasks</span></div>
+    </section>
+</figure>
+<p><em>Figure 5. Performance under equal token budgets performance with a 16k context threshold. The final AutoCompact model remains effective when context pressure is high and the context limit is reached more often.</em></p>
+<p>The gains persist under the smaller threshold, showing that AutoCompact is useful in both long-context and limited-context regimes. Together, the experiments establish three distinct claims: learned compaction itself helps, RL adds substantial value, and the final result is robust across context limits.</p>
             </div>
         </article>
 
@@ -2114,8 +2282,8 @@ window.BLOG_REFERENCES = {
         setTrajectoryStep(1, false);
     }
 
-    var budgetVisual = document.getElementById('budget-visual');
-    if (budgetVisual) {
+    var budgetVisuals = Array.prototype.slice.call(document.querySelectorAll('.budget-visual'));
+    if (budgetVisuals.length > 0) {
         var chartData = {
             '16k': {
                 baseline: [15.3, 20.2, 22.9, 25.5, 26.7, 28.8],
@@ -2132,141 +2300,82 @@ window.BLOG_REFERENCES = {
                 extraGrpo: [46, 70, 53, 56, 53, 34]
             }
         };
-        var svg = budgetVisual.querySelector('.budget-chart');
-        var gapLayer = svg.querySelector('.gap-layer');
-        var pointLayer = svg.querySelector('.point-layer');
-        var baselineLine = svg.querySelector('.baseline-line');
-        var autoLine = svg.querySelector('.auto-line');
-        var grpoLine = svg.querySelector('.grpo-line');
-        var baselineEnd = svg.querySelector('.baseline-end');
-        var autoEnd = svg.querySelector('.auto-end');
-        var grpoEnd = svg.querySelector('.grpo-end');
-        var hasGrpo = Boolean(grpoLine && grpoEnd);
-        var budgetLabels = hasGrpo ? ['250k', '500k', '1M', '2M', '5M', '∞'] : ['250k', '500k', '1M', '2M', '5M'];
-        var xPositions = hasGrpo ? [82, 190, 298, 406, 514, 622] : [90, 225, 360, 495, 630];
-        var pointCount = budgetLabels.length;
-        var chartDescription = svg.querySelector('#budget-chart-desc');
-        var windowButtons = Array.prototype.slice.call(budgetVisual.querySelectorAll('.window-controls button'));
+        var finiteBudgets = [250000, 500000, 1000000, 2000000, 5000000];
+        var logAxisStart = 82;
+        var logAxisEnd = 550;
+        var minLogBudget = Math.log10(finiteBudgets[0]);
+        var maxLogBudget = Math.log10(finiteBudgets[finiteBudgets.length - 1]);
+        var xPositions = finiteBudgets.map(function (budget) {
+            return logAxisStart + ((Math.log10(budget) - minLogBudget) / (maxLogBudget - minLogBudget)) * (logAxisEnd - logAxisStart);
+        }).concat(622);
+        var pointCount = xPositions.length;
         var svgNamespace = 'http://www.w3.org/2000/svg';
 
-        function yPosition(value) {
-            return hasGrpo ? 425 - (value * 9) : 305 - ((value - 14) * 15);
-        }
-
+        function yPosition(value) { return 425 - (value * 9); }
         function createSvgElement(name, attributes, text) {
             var element = document.createElementNS(svgNamespace, name);
-            Object.keys(attributes).forEach(function (key) {
-                element.setAttribute(key, attributes[key]);
-            });
-            if (text !== undefined) {
-                element.textContent = text;
-            }
+            Object.keys(attributes).forEach(function (key) { element.setAttribute(key, attributes[key]); });
+            if (text !== undefined) element.textContent = text;
             return element;
         }
-
         function linePath(values) {
             return values.map(function (value, index) {
                 return (index === 0 ? 'M' : 'L') + xPositions[index] + ' ' + yPosition(value);
             }).join(' ');
         }
-
-        function renderBudgetChart() {
-            var windowName = budgetVisual.dataset.window;
-            var data = chartData[windowName];
-
-            baselineLine.setAttribute('d', linePath(data.baseline.slice(0, pointCount)));
-            autoLine.setAttribute('d', linePath(data.auto.slice(0, pointCount)));
-            if (hasGrpo) {
-                grpoLine.setAttribute('d', linePath(data.grpo));
+        function addPoint(group, series, x, y) {
+            if (series === 'baseline') {
+                group.appendChild(createSvgElement('circle', {'class':'point-baseline', cx:x, cy:y, r:5}));
+            } else if (series === 'auto') {
+                group.appendChild(createSvgElement('rect', {'class':'point-auto', x:x-5, y:y-5, width:10, height:10, rx:2}));
+            } else {
+                group.appendChild(createSvgElement('circle', {'class':'point-grpo', cx:x, cy:y, r:5}));
             }
+        }
+        function renderBudgetChart(panel) {
+            var windowName = panel.dataset.window;
+            var comparison = panel.dataset.comparison;
+            var data = chartData[windowName];
+            var svg = panel.querySelector('.budget-chart');
+            var gapLayer = svg.querySelector('.gap-layer');
+            var pointLayer = svg.querySelector('.point-layer');
+            var series;
+            var extras;
+            if (comparison === 'sft') { series = ['baseline','auto']; extras = data.extra; }
+            else if (comparison === 'rl') { series = ['auto','grpo']; extras = data.grpo.map(function(v,i){ return Math.round((v-data.auto[i])*500/100); }); }
+            else { series = ['baseline','grpo']; extras = data.extraGrpo; }
+
+            Array.prototype.forEach.call(svg.querySelectorAll('[data-budget-index]'), function (label) {
+                label.setAttribute('x', xPositions[Number(label.dataset.budgetIndex)]);
+            });
+            series.forEach(function(name){
+                var path = svg.querySelector('.' + (name === 'baseline' ? 'baseline-line' : name === 'auto' ? 'auto-line' : 'grpo-line'));
+                if (path) path.setAttribute('d', linePath(data[name]));
+            });
             gapLayer.replaceChildren();
             pointLayer.replaceChildren();
-
-            data.baseline.slice(0, pointCount).forEach(function (baselineValue, index) {
-                var autoValue = data.auto[index];
-                var comparisonValue = hasGrpo ? data.grpo[index] : autoValue;
-                var x = xPositions[index];
-                var baselineY = yPosition(baselineValue);
-                var autoY = yPosition(autoValue);
-                var comparisonY = yPosition(comparisonValue);
-                var group = createSvgElement('g', {
-                    'class': 'point-group'
-                });
-
-                gapLayer.appendChild(createSvgElement('line', {
-                    'class': 'gap-line',
-                    x1: x,
-                    x2: x,
-                    y1: comparisonY + 7,
-                    y2: baselineY - 7
-                }));
-                gapLayer.appendChild(createSvgElement('text', {
-                    'class': 'gap-label',
-                    x: x,
-                    y: Math.max(38, comparisonY - 12),
-                    'text-anchor': 'middle'
-                }, '+' + (hasGrpo ? data.extraGrpo[index] : data.extra[index])));
-
-                group.appendChild(createSvgElement('circle', {
-                    'class': 'point-baseline',
-                    cx: x,
-                    cy: baselineY,
-                    r: 5
-                }));
-                group.appendChild(createSvgElement('rect', {
-                    'class': 'point-auto',
-                    x: x - 5,
-                    y: autoY - 5,
-                    width: 10,
-                    height: 10,
-                    rx: 2
-                }));
-                if (hasGrpo) {
-                    group.appendChild(createSvgElement('circle', {
-                        'class': 'point-grpo',
-                        cx: x,
-                        cy: comparisonY,
-                        r: 5
-                    }));
-                }
+            for (var i=0;i<pointCount;i++) {
+                var low = data[series[0]][i];
+                var high = data[series[1]][i];
+                var x=xPositions[i], lowY=yPosition(low), highY=yPosition(high);
+                gapLayer.appendChild(createSvgElement('line', {'class':'gap-line',x1:x,x2:x,y1:highY+7,y2:lowY-7}));
+                gapLayer.appendChild(createSvgElement('text', {'class':'gap-label',x:x,y:Math.max(38,highY-12),'text-anchor':'middle'}, '+'+extras[i]));
+                var group=createSvgElement('g', {'class':'point-group'});
+                addPoint(group, series[0], x, lowY);
+                addPoint(group, series[1], x, highY);
                 pointLayer.appendChild(group);
-            });
-
-            var endIndex = pointCount - 1;
-            var autoEndY = yPosition(data.auto[endIndex]) + 4;
-            var baselineEndY = yPosition(data.baseline[endIndex]) + 4;
-            if (Math.abs(autoEndY - baselineEndY) < 14) {
-                autoEndY -= 6;
-                baselineEndY += 8;
             }
-            autoEnd.setAttribute('y', autoEndY);
-            autoEnd.textContent = data.auto[endIndex].toFixed(1) + '%';
-            baselineEnd.setAttribute('y', baselineEndY);
-            baselineEnd.textContent = data.baseline[endIndex].toFixed(1) + '%';
-            if (hasGrpo) {
-                grpoEnd.setAttribute('y', yPosition(data.grpo[endIndex]) + 4);
-                grpoEnd.textContent = data.grpo[endIndex].toFixed(1) + '%';
-                chartDescription.textContent = 'At the maximum ' + windowName + ' automatic compaction threshold, both AutoCompact variants outperform the baseline across the shown fixed budgets.';
-            } else {
-                chartDescription.textContent = isZh
-                ? '在最大 ' + windowName + ' 自动压缩阈值下，AutoCompact 在所有展示的固定预算上都优于 baseline。'
-                : 'At the maximum ' + windowName + ' automatic compaction threshold, AutoCompact has a higher pass rate than the baseline at every shown fixed budget.';
-            }
-
-            windowButtons.forEach(function (button) {
-                var active = button.dataset.window === windowName;
-                button.classList.toggle('is-active', active);
-                button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            series.forEach(function(name){
+                var label = svg.querySelector('.' + (name === 'baseline' ? 'baseline-end' : name === 'auto' ? 'auto-end' : 'grpo-end'));
+                if (label) {
+                    label.setAttribute('y', yPosition(data[name][pointCount-1]) + (name === series[0] ? 10 : -4));
+                    label.textContent = data[name][pointCount-1].toFixed(1) + '%';
+                }
             });
         }
-
-        windowButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                budgetVisual.dataset.window = button.dataset.window;
-                renderBudgetChart();
-            });
+        budgetVisuals.forEach(function(visual){
+            Array.prototype.forEach.call(visual.querySelectorAll('.budget-panel'), renderBudgetChart);
         });
-        renderBudgetChart();
     }
 }());
 
