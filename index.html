@@ -1190,21 +1190,6 @@ a:hover { color: var(--accent-hover); }
     margin-bottom: 0.65rem;
 }
 .sample-mix-head strong { font-size: 0.9rem; }
-.sample-mix-head span {
-    color: var(--text-secondary);
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 0.68rem;
-}
-.sample-bar {
-    display: flex;
-    height: 1.15rem;
-    overflow: hidden;
-    border: 1px solid var(--divider);
-}
-.sample-bar span { display: block; min-width: 2px; }
-.sample-trigger { width: 24.05%; background: var(--viz-blue); }
-.sample-summary { width: 52.66%; background: var(--viz-green); }
-.sample-continuation { width: 23.29%; background: var(--viz-purple); }
 .sample-cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1233,9 +1218,6 @@ a:hover { color: var(--accent-hover); }
     font-size: 0.68rem;
     line-height: 1.35;
 }
-.sample-card-trigger { border-top: 3px solid var(--viz-blue); }
-.sample-card-summary { border-top: 3px solid var(--viz-green); }
-.sample-card-continuation { border-top: 3px solid var(--viz-purple); }
 @media (max-width: 560px) {
     .tldr-item { grid-template-columns: minmax(0, 1fr); gap: 0.18rem; }
     .sample-cards { grid-template-columns: minmax(0, 1fr); }
@@ -1360,39 +1342,9 @@ a:hover { color: var(--accent-hover); }
 
 .budget-panel {
     min-width: 0;
-    padding: 0.7rem;
-    border: 1px solid var(--divider);
-    background: var(--card-bg);
-}
-
-.budget-panel-heading {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.35rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--divider);
-}
-.budget-panel-heading > div { display: grid; gap: 0.08rem; }
-.budget-panel-heading span {
-    color: var(--text-secondary);
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 0.5rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-.budget-panel-heading strong { font-size: 0.76rem; line-height: 1.3; }
-.budget-panel-heading small { color: var(--text-secondary); font-size: 0.52rem; line-height: 1.3; }
-.budget-threshold {
-    flex: 0 0 auto;
-    padding: 0.18rem 0.38rem;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 0.56rem;
-    font-weight: 600;
+    padding: 0;
+    border: 0;
+    background: transparent;
 }
 
 .chart-wrap {
@@ -1594,8 +1546,6 @@ a:hover { color: var(--accent-hover); }
     .inference-result { padding-top: 0.45rem; padding-left: 0; border-top: 1px solid #b9d8cc; border-left: 0; }
     .trajectory-visual[data-step="4"] .annotation-output { max-height: 280px; }
     .budget-panels { grid-template-columns: minmax(0, 1fr); }
-    .budget-panel { padding: 0.5rem; }
-    .budget-panel-heading { align-items: flex-start; }
     .budget-chart text { font-size: 14px; }
     .budget-chart .axis-title { font-size: 13px; }
     .chart-legend {
@@ -1668,16 +1618,16 @@ a:hover { color: var(--accent-hover); }
 <p><strong>Results:</strong></p>
 <ul>
 <li><strong>Data:</strong> 379 SWE-ReBench tasks produce 1,052 judge-corrected SFT examples.</li>
-<li><strong>SFT:</strong> Learned compaction improves task completion even with a 256k context threshold.</li>
-<li><strong>RL:</strong> RL further improves pass rate; the final model reduces context-processing cost by <strong>15.4%</strong> and raises pass rate by <strong>10.2%</strong> on average across token budgets.</li>
+<li><strong>SFT:</strong> On SWE-bench Verified, learned compaction improves task completion even with a 256k context window and no forced compaction.</li>
+<li><strong>RL:</strong> RL further improves pass rate; the final model reduces context-processing cost by <strong>15.4%</strong> and raises pass rate by <strong>10.2%</strong> on average across token budgets on SWE-bench Verified.</li>
 </ul>
 </aside>
-<h2>Long trajectories bury useful state in noisy history</h2>
+<h2>Long-horizon coding agents accumulate context they no longer need</h2>
 <p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
 <p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
 <p><strong>The agent must recognize when prior history is no longer needed and compact it without losing the working state.</strong> This is not just cutting off old content. The model needs to keep the working state needed for the next step: which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
 <p>AutoCompact learns to replace the full trajectory with a clean, compact context for the next phase.</p>
-<h2>AutoCompact replaces noisy history with a clean context for the next step</h2>
+<h2>AutoCompact lets agents decide when to compact the context</h2>
 <figure class="article-figure autocompact-visual context-rewrite-visual" id="context-rewrite-visual" data-mode="before">
     <div class="visual-heading">
         <div>
@@ -1754,7 +1704,7 @@ a:hover { color: var(--accent-hover); }
 <p><em>Figure 1. When the model decides that the current context should be cleaned up, it calls </em><em><strong><code>compact()</code></strong></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><strong><code># Auto Context Summary</code></strong></em><em>, instead of the full history.</em></p>
 <p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>compact()</code>.</p>
 <p>When <code>compact()</code> is invoked, the runtime compacts the current context into a <code># Auto Context Summary</code>. The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with &quot;original task + recent turns + summary.&quot;</p>
-<h2>Judge-guided data collection creates SFT examples for when, what, and how to compact</h2>
+<h2>Judge-guided on-policy rollouts teach when and what to compact</h2>
 <figure class="article-figure autocompact-visual trajectory-visual" id="trajectory-visual" data-step="1" data-mode="before">
     <div class="visual-heading">
         <div>
@@ -1832,28 +1782,26 @@ a:hover { color: var(--accent-hover); }
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
 <p>Using 379 SWE-ReBench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
 <div class="sample-mix" role="img" aria-label="The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.">
-<div class="sample-mix-head"><strong>1,052 cold-start examples cover the full compaction loop</strong><span>100%</span></div>
-<div class="sample-bar" aria-hidden="true"><span class="sample-trigger"></span><span class="sample-summary"></span><span class="sample-continuation"></span></div>
+<div class="sample-mix-head"><strong>1,052 cold-start examples cover the full compaction loop</strong></div>
 <div class="sample-cards">
 <div class="sample-card sample-card-trigger"><span>When to compact</span><strong>24%</strong><small>Identify the phase boundary and call <code>compact()</code></small></div>
 <div class="sample-card sample-card-summary"><span>What to preserve</span><strong>53%</strong><small>Produce a complete summary of the state needed next</small></div>
 <div class="sample-card sample-card-continuation"><span>How to continue</span><strong>23%</strong><small>Act correctly from the compacted context</small></div>
 </div>
 </div>
-<h2>Learned compaction helps even with long context</h2>
-<p>We first evaluate AutoCompact with a <strong>256k context threshold</strong>. This long-context setting makes forced compaction much less likely to explain the gains, allowing us to test whether proactive compaction still helps when the trajectory can remain in context for much longer.</p>
+<h2>Long context alone does not remove the need for compaction</h2>
+<p>We first evaluate on <strong>SWE-bench Verified</strong> with a <strong>256k context window and no forced compaction</strong>. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-sft">
     <div class="visual-heading">
         <div>
-            <span class="visual-kicker">Long context · 256k threshold</span>
+            <span class="visual-kicker">Long context · 256k · no forced compaction</span>
             <strong>Learned compaction solves more tasks under the same token budget</strong>
         </div>
     </div>
-    <section class="budget-panel" data-window="256k" data-comparison="sft" aria-label="Baseline versus AutoCompact SFT with a 256k context threshold">
-        <div class="budget-panel-heading"><div><span>Figure 3</span><strong>Long-context regime</strong><small>Baseline versus the SFT cold start</small></div><b class="budget-threshold">Context 256k</b></div>
+    <section class="budget-panel" data-window="256k" data-comparison="sft" aria-label="Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction">
         <div class="chart-wrap">
             <svg class="budget-chart" viewBox="0 0 700 370" role="img">
-                <title>Baseline versus AutoCompact SFT by cumulative tokens processed per task with a 256k context threshold</title>
+                <title>Baseline versus AutoCompact SFT on SWE-bench Verified by cumulative tokens processed per task with a 256k context window and no forced compaction</title>
                 <desc>AutoCompact SFT outperforms the baseline across all shown budgets in the 256k long-context regime.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
                 <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
@@ -1865,21 +1813,21 @@ a:hover { color: var(--accent-hover); }
         <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-gap"></i>SFT additional solved tasks</span></div>
     </section>
 </figure>
-<p><em>Figure 3. With a 256k context threshold, the SFT model solves more tasks than the baseline under every token budget. This isolates the value of learned compaction before RL.</em></p>
-<p>AutoCompact-SFT consistently outperforms the baseline across every token budget. The gain remains visible even at the unlimited-budget endpoint, indicating that compaction is useful not only as an emergency response to context overflow. A trajectory may be large enough to fit in context while still containing enough expired exploration to impair subsequent reasoning.</p>
+<p><em>Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every token budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.</em></p>
+<p>AutoCompact-SFT consistently outperforms the baseline across every token budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.</p>
 
-<h2>RL further improves the learned compaction policy</h2>
-<p>The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether each decision helps produce a correct patch.</p>
-<p>Starting from the SFT checkpoint, we train with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span>. Each trajectory receives a binary reward based on whether the final patch passes the test suite, allowing RL to jointly improve when to compact, what to preserve, and how to continue. We compare the SFT model with the RL model under the same 256k evaluation setting.</p>
+<h2>Jointly train task solving and compaction with RL</h2>
+<p>The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether those decisions ultimately help solve the task.</p>
+<p>Starting from the SFT checkpoint, we develop a fully asynchronous RL system and train the agent with GRPO on SWE-Gym<span class="cite" data-key="swe-gym"></span>. Each rollout receives a binary outcome reward based on whether its final patch passes the test suite. GRPO converts this outcome into a trajectory-level advantage and applies the same advantage to every model-generated token in that trajectory—including regular coding actions, the decision to call <code>compact()</code>, the generated context summary, and the continuation after compaction.</p>
+<p>Compaction is therefore not trained as a separate auxiliary task. The agent jointly learns to solve the software-engineering problem and manage its context whenever doing so improves the final task outcome. Useful compaction is reinforced when it contributes to a successful trajectory, while unnecessary or lossy compaction is discouraged when it harms task completion. We compare the SFT model with the RL model under the same 256k evaluation setting.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-rl">
     <div class="visual-heading">
         <div>
-            <span class="visual-kicker">RL · 256k threshold</span>
+            <span class="visual-kicker">RL · 256k · no forced compaction</span>
             <strong>RL improves the SFT policy at every token budget</strong>
         </div>
     </div>
-    <section class="budget-panel" data-window="256k" data-comparison="rl" aria-label="AutoCompact SFT versus AutoCompact SFT plus GRPO at the 256k threshold">
-        <div class="budget-panel-heading"><div><span>Figure 4</span><strong>Incremental gain from RL</strong><small>SFT model versus RL model</small></div><b class="budget-threshold">Context 256k</b></div>
+    <section class="budget-panel" data-window="256k" data-comparison="rl" aria-label="AutoCompact SFT versus AutoCompact SFT plus GRPO on SWE-bench Verified with a 256k context window and no forced compaction">
         <div class="chart-wrap">
             <svg class="budget-chart" viewBox="0 0 700 370" role="img">
                 <title>AutoCompact SFT versus AutoCompact SFT plus GRPO by cumulative tokens processed per task</title>
@@ -1894,25 +1842,24 @@ a:hover { color: var(--accent-hover); }
         <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>RL additional solved tasks</span></div>
     </section>
 </figure>
-<p><em>Figure 4. Under the same 256k context threshold, RL improves over the SFT model at every token budget.</em></p>
+<p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every token budget.</em></p>
 <p>The RL model substantially outperforms the SFT model across every budget, with the largest gains in the finite-compute regime. <strong>SFT establishes the compaction behavior, while RL improves how that behavior contributes to task completion.</strong></p>
 
 <p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after GRPO, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
 
-<h2>AutoCompact remains effective with limited context</h2>
-<p>Finally, we evaluate the final SFT+GRPO model with a much smaller <strong>16k context threshold</strong>, where all models reach the context limit more often.</p>
+<h2>Fixed-budget compaction is not enough</h2>
+<p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context threshold</strong>. Both AutoCompact and the baseline use the same threshold-based forced compaction when the context limit is reached. The comparison therefore tests whether a fixed-budget compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-robustness">
     <div class="visual-heading">
         <div>
-            <span class="visual-kicker">Limited context · 16k threshold</span>
-            <strong>AutoCompact still solves more tasks with a 16k context limit</strong>
+            <span class="visual-kicker">Limited context · 16k forced-compaction threshold</span>
+            <strong>Adaptive compaction still helps beyond a fixed 16k threshold</strong>
         </div>
     </div>
-    <section class="budget-panel" data-window="16k" data-comparison="final" aria-label="Baseline versus final AutoCompact model at the 16k threshold">
-        <div class="budget-panel-heading"><div><span>Figure 5</span><strong>Limited-context regime</strong><small>Baseline versus the final SFT+GRPO model</small></div><b class="budget-threshold">Context 16k</b></div>
+    <section class="budget-panel" data-window="16k" data-comparison="final" aria-label="Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold">
         <div class="chart-wrap">
             <svg class="budget-chart" viewBox="0 0 700 370" role="img">
-                <title>Baseline versus final AutoCompact model by cumulative tokens processed per task at the 16k threshold</title>
+                <title>Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold</title>
                 <desc>The final AutoCompact model remains stronger than the baseline when the context limit is reached more often.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
                 <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
@@ -1924,8 +1871,8 @@ a:hover { color: var(--accent-hover); }
         <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>Final-model additional solved tasks</span></div>
     </section>
 </figure>
-<p><em>Figure 5. Performance under equal token budgets performance with a 16k context threshold. The final AutoCompact model remains effective when context pressure is high and the context limit is reached more often.</em></p>
-<p>The gains persist under the smaller threshold, showing that AutoCompact is useful in both long-context and limited-context regimes. Together, the experiments establish three distinct claims: learned compaction itself helps, RL adds substantial value, and the final result is robust across context limits.</p>
+<p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-budget trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
+<p>The gains persist under the smaller threshold even though both models already receive threshold-based compaction. Together, the experiments establish three distinct claims: long context alone does not eliminate the need for compaction, RL improves the learned policy, and fixed-budget compaction is still weaker than adaptive AutoCompact.</p>
             </div>
         </article>
 
