@@ -1790,7 +1790,7 @@ a:hover { color: var(--accent-hover); }
 </div>
 </div>
 <h2>Long context alone does not remove the need for compaction</h2>
-<p>We first evaluate on <strong>SWE-bench Verified</strong> with a <strong>256k context window and no forced compaction</strong>. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
+<p>We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its Qwen3 30B Coder base model<span class="cite" data-key="qwen"></span> on <strong>SWE-bench Verified</strong><span class="cite" data-key="swebench-verified"></span> with a <strong>256k context window and no forced compaction</strong>. All models use the same scaffold<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span> and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-sft">
     <div class="visual-heading">
         <div>
