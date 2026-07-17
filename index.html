@@ -1617,8 +1617,8 @@ a:hover { color: var(--accent-hover); }
 <p>AutoCompact teaches the model to <strong>adaptively compact the context</strong> when necessary, i.e., replacing noisy history with a clean context for the next step.</p>
 <p><strong>Results:</strong></p>
 <ul>
-<li><strong>Data:</strong> We collect 1,052 <strong>judge-guided on-policy SFT examples</strong> on SWE-rebench.</li>
-<li><strong>SFT:</strong> AutoCompact outperforms baselines with a long-context window or naive fixed-budget compaction.</li>
+<li><strong>Data:</strong> We collect 1,052 <strong>judge-guided on-policy SFT examples</strong> on SWE-ReBench.</li>
+<li><strong>SFT:</strong> AutoCompact outperforms baselines with a long-context window or naive fixed-threshold compaction.</li>
 <li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL.</li>
 </ul>
 </aside>
@@ -1780,7 +1780,7 @@ a:hover { color: var(--accent-hover); }
 <p>AutoCompact requires the model to learn three capabilities: when to invoke <code>compact()</code>, what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. As shown in Figure 2, we therefore introduce <strong>a judge model during data collection</strong>. Using only the history visible at the current step, the judge reviews each action proposed by the base model<span class="cite" data-key="annotation"></span>.</p>
 <p>If the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with <code>compact()</code>. If the resulting <code># Auto Context Summary</code> omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.</p>
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
-<p>Using 379 SWE-rebench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
+<p>Using 379 SWE-ReBench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
 <div class="sample-mix" role="img" aria-label="The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.">
 <div class="sample-mix-head"><strong>1,052 cold-start examples cover the full compaction loop</strong></div>
 <div class="sample-cards">
@@ -1847,13 +1847,13 @@ a:hover { color: var(--accent-hover); }
 
 <p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after RL, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.</p>
 
-<h2>Fixed-budget compaction is not enough</h2>
-<p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context window</strong>. Both AutoCompact and the baseline use the same fixed-budget forced compaction when the context limit is reached. The comparison therefore tests whether a fixed-budget compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.</p>
+<h2>Fixed-threshold compaction is not enough</h2>
+<p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context window</strong>. Both AutoCompact and the baseline are forcibly compacted at the same 16k context threshold. The comparison therefore tests whether a fixed-threshold compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-robustness">
     <div class="visual-heading">
         <div>
             <span class="visual-kicker">Limited context · 16k forced-compaction threshold</span>
-            <strong>Adaptive compaction outperforms fixed-budget compaction</strong>
+            <strong>Adaptive compaction outperforms fixed-threshold compaction</strong>
         </div>
     </div>
     <section class="budget-panel" data-window="16k" data-comparison="final" aria-label="Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold">
@@ -1871,8 +1871,8 @@ a:hover { color: var(--accent-hover); }
         </div>
     </section>
 </figure>
-<p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-budget trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
-<p>The gains persist under the smaller context window even though both models use fixed-budget compaction. Together, the experiments establish three distinct claims: long context alone does not eliminate the need for compaction, RL improves the learned policy, and fixed-budget compaction is still weaker than adaptive AutoCompact.</p>
+<p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
+<p>The gains persist under the smaller context window even though both models use fixed-threshold compaction. Together, the experiments establish three distinct claims: long context alone does not eliminate the need for compaction, RL improves the learned policy, and fixed-threshold compaction is still weaker than adaptive AutoCompact.</p>
             </div>
         </article>
 
@@ -1901,7 +1901,7 @@ window.BLOG_REFERENCES = {
         url: "https://terminal-agent.github.io/blog/tool/"
     },
     "swe-rebench": {
-        label: "SWE-rebench: An Automated Pipeline for Task Collection and Decontaminated Evaluation of Software Engineering Agents (Badertdinov et al., 2025)",
+        label: "SWE-ReBench: An Automated Pipeline for Task Collection and Decontaminated Evaluation of Software Engineering Agents (Badertdinov et al., 2025)",
         url: "https://arxiv.org/abs/2505.20411"
     },
     "swe-gym": {
