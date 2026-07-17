@@ -1611,9 +1611,9 @@ a:hover { color: var(--accent-hover); }
 <p>AutoCompact teaches the model to <strong>adaptively compact the context</strong> when necessary, i.e., replacing noisy history with a clean context for the next step.</p>
 <p><strong>Results:</strong></p>
 <ul>
-<li><strong>Data:</strong> We collect 1,052 <strong>judge-guided on-policy SFT examples</strong> on SWE-ReBench.</li>
+<li><strong>Data:</strong> We collect 1,052 <strong>judge-guided on-policy SFT examples</strong> on SWE-rebench.</li>
 <li><strong>SFT:</strong> AutoCompact outperforms baselines with a long-context window or naive fixed-threshold compaction.</li>
-<li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL.</li>
+<li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).</li>
 </ul>
 </aside>
 <h2>Long-horizon coding agents accumulate context they no longer need</h2>
@@ -1774,7 +1774,7 @@ a:hover { color: var(--accent-hover); }
 <p>AutoCompact requires the model to learn three capabilities: when to invoke <code>compact()</code>, what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. As shown in Figure 2, we therefore introduce <strong>a judge model during data collection</strong>. Using only the history visible at the current step, the judge reviews each action proposed by the base model<span class="cite" data-key="annotation"></span>.</p>
 <p>If the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with <code>compact()</code>. If the resulting <code># Auto Context Summary</code> omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.</p>
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
-<p>Using 379 SWE-ReBench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
+<p>Using 379 SWE-rebench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
 <div class="sample-mix" role="img" aria-label="The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.">
 <div class="sample-mix-head"><strong>1,052 cold-start examples cover the full compaction loop</strong></div>
 <div class="sample-cards">
@@ -1897,7 +1897,7 @@ window.BLOG_REFERENCES = {
         url: "https://terminal-agent.github.io/blog/tool/"
     },
     "swe-rebench": {
-        label: "SWE-ReBench: An Automated Pipeline for Task Collection and Decontaminated Evaluation of Software Engineering Agents (Badertdinov et al., 2025)",
+        label: "SWE-rebench: An Automated Pipeline for Task Collection and Decontaminated Evaluation of Software Engineering Agents (Badertdinov et al., 2025)",
         url: "https://arxiv.org/abs/2505.20411"
     },
     "swe-gym": {
