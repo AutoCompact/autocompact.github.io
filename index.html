@@ -1350,6 +1350,7 @@ a:hover { color: var(--accent-hover); }
 .chart-wrap {
     position: relative;
     width: 100%;
+    margin-top: -1rem;
 }
 
 .budget-chart {
@@ -1441,7 +1442,7 @@ a:hover { color: var(--accent-hover); }
     justify-content: center;
     gap: 0.85rem;
     flex-wrap: wrap;
-    margin-top: -0.2rem;
+    margin-bottom: 0;
     color: var(--text-secondary);
     font-size: 0.59rem;
 }
@@ -1799,18 +1800,18 @@ a:hover { color: var(--accent-hover); }
         </div>
     </div>
     <section class="budget-panel" data-window="256k" data-comparison="sft" aria-label="Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction">
+        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-gap"></i>SFT additional solved tasks</span></div>
         <div class="chart-wrap">
-            <svg class="budget-chart" viewBox="0 0 700 370" role="img">
+            <svg class="budget-chart" viewBox="0 35 700 335" role="img">
                 <title>Baseline versus AutoCompact SFT on SWE-bench Verified by cumulative tokens processed per task with a 256k context window and no forced compaction</title>
                 <desc>AutoCompact SFT outperforms the baseline across all shown budgets in the 256k long-context regime.</desc>
-                <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
-                <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="251">20</text><text x="52" y="206">25</text><text x="52" y="161">30</text><text x="52" y="116">35</text><text x="52" y="71">40</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
+                <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="233.75" x2="650" y2="233.75"></line><line x1="68" y1="177.5" x2="650" y2="177.5"></line><line x1="68" y1="121.25" x2="650" y2="121.25"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
+                <g class="y-labels" aria-hidden="true"><text x="52" y="296">15</text><text x="52" y="239.75">20</text><text x="52" y="183.5">25</text><text x="52" y="127.25">30</text><text x="52" y="71">35</text><text class="axis-title" transform="translate(17 180) rotate(-90)">Pass rate (%)</text></g>
                 <g class="x-labels" aria-hidden="true"><text data-budget-index="0" y="325" text-anchor="middle">250k</text><text data-budget-index="1" y="325" text-anchor="middle">500k</text><text data-budget-index="2" y="325" text-anchor="middle">1M</text><text data-budget-index="3" y="325" text-anchor="middle">2M</text><text data-budget-index="4" y="325" text-anchor="middle">5M</text><text data-budget-index="5" y="325" text-anchor="middle">∞</text><path class="axis-break" d="M 575 298 l 6 9 M 584 298 l 6 9"></path><text class="axis-note" x="350" y="354" text-anchor="middle">Cumulative tokens processed per task (log scale)</text></g>
                 <g class="gap-layer" aria-hidden="true"></g><path class="series-line baseline-line" d=""></path><path class="series-line auto-line" d=""></path><g class="point-layer" aria-hidden="true"></g>
                 <g class="end-labels" aria-hidden="true"><text class="auto-end" x="638" y="0" text-anchor="start"></text><text class="baseline-end" x="638" y="0" text-anchor="start"></text></g>
             </svg>
         </div>
-        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-gap"></i>SFT additional solved tasks</span></div>
     </section>
 </figure>
 <p><em>Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every token budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.</em></p>
@@ -1828,8 +1829,9 @@ a:hover { color: var(--accent-hover); }
         </div>
     </div>
     <section class="budget-panel" data-window="256k" data-comparison="rl" aria-label="AutoCompact SFT versus AutoCompact SFT plus GRPO on SWE-bench Verified with a 256k context window and no forced compaction">
+        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>RL additional solved tasks</span></div>
         <div class="chart-wrap">
-            <svg class="budget-chart" viewBox="0 0 700 370" role="img">
+            <svg class="budget-chart" viewBox="0 35 700 335" role="img">
                 <title>AutoCompact SFT versus AutoCompact SFT plus GRPO by cumulative tokens processed per task</title>
                 <desc>RL substantially improves over the SFT model across all shown budgets.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
@@ -1839,7 +1841,6 @@ a:hover { color: var(--accent-hover); }
                 <g class="end-labels" aria-hidden="true"><text class="grpo-end" x="638" y="0" text-anchor="start"></text><text class="auto-end" x="638" y="0" text-anchor="start"></text></g>
             </svg>
         </div>
-        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark auto-mark"></i>AutoCompact-Qwen3 30B Coder (SFT)</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>RL additional solved tasks</span></div>
     </section>
 </figure>
 <p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every token budget.</em></p>
@@ -1857,8 +1858,9 @@ a:hover { color: var(--accent-hover); }
         </div>
     </div>
     <section class="budget-panel" data-window="16k" data-comparison="final" aria-label="Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold">
+        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>Final-model additional solved tasks</span></div>
         <div class="chart-wrap">
-            <svg class="budget-chart" viewBox="0 0 700 370" role="img">
+            <svg class="budget-chart" viewBox="0 35 700 335" role="img">
                 <title>Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold</title>
                 <desc>The final AutoCompact model remains stronger than the baseline when the context limit is reached more often.</desc>
                 <g class="chart-grid" aria-hidden="true"><line x1="68" y1="290" x2="650" y2="290"></line><line x1="68" y1="245" x2="650" y2="245"></line><line x1="68" y1="200" x2="650" y2="200"></line><line x1="68" y1="155" x2="650" y2="155"></line><line x1="68" y1="110" x2="650" y2="110"></line><line x1="68" y1="65" x2="650" y2="65"></line></g>
@@ -1868,7 +1870,6 @@ a:hover { color: var(--accent-hover); }
                 <g class="end-labels" aria-hidden="true"><text class="grpo-end" x="638" y="0" text-anchor="start"></text><text class="baseline-end" x="638" y="0" text-anchor="start"></text></g>
             </svg>
         </div>
-        <div class="chart-legend" aria-label="Chart legend"><span><i class="legend-mark baseline-mark"></i>Qwen3 30B Coder</span><span><i class="legend-mark grpo-mark"></i>AutoCompact-Qwen3 30B Coder (SFT+GRPO)</span><span><i class="legend-gap"></i>Final-model additional solved tasks</span></div>
     </section>
 </figure>
 <p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-budget trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
@@ -2258,16 +2259,18 @@ window.BLOG_REFERENCES = {
         var pointCount = xPositions.length;
         var svgNamespace = 'http://www.w3.org/2000/svg';
 
-        function yPosition(value) { return 425 - (value * 9); }
+        function yPosition(value, yMax) {
+            return 290 - ((value - 15) / (yMax - 15)) * 225;
+        }
         function createSvgElement(name, attributes, text) {
             var element = document.createElementNS(svgNamespace, name);
             Object.keys(attributes).forEach(function (key) { element.setAttribute(key, attributes[key]); });
             if (text !== undefined) element.textContent = text;
             return element;
         }
-        function linePath(values) {
+        function linePath(values, yMax) {
             return values.map(function (value, index) {
-                return (index === 0 ? 'M' : 'L') + xPositions[index] + ' ' + yPosition(value);
+                return (index === 0 ? 'M' : 'L') + xPositions[index] + ' ' + yPosition(value, yMax);
             }).join(' ');
         }
         function addPoint(group, series, x, y) {
@@ -2291,20 +2294,21 @@ window.BLOG_REFERENCES = {
             if (comparison === 'sft') { series = ['baseline','auto']; extras = data.extra; }
             else if (comparison === 'rl') { series = ['auto','grpo']; extras = data.grpo.map(function(v,i){ return Math.round((v-data.auto[i])*500/100); }); }
             else { series = ['baseline','grpo']; extras = data.extraGrpo; }
+            var yMax = comparison === 'sft' ? 35 : 40;
 
             Array.prototype.forEach.call(svg.querySelectorAll('[data-budget-index]'), function (label) {
                 label.setAttribute('x', xPositions[Number(label.dataset.budgetIndex)]);
             });
             series.forEach(function(name){
                 var path = svg.querySelector('.' + (name === 'baseline' ? 'baseline-line' : name === 'auto' ? 'auto-line' : 'grpo-line'));
-                if (path) path.setAttribute('d', linePath(data[name]));
+                if (path) path.setAttribute('d', linePath(data[name], yMax));
             });
             gapLayer.replaceChildren();
             pointLayer.replaceChildren();
             for (var i=0;i<pointCount;i++) {
                 var low = data[series[0]][i];
                 var high = data[series[1]][i];
-                var x=xPositions[i], lowY=yPosition(low), highY=yPosition(high);
+                var x=xPositions[i], lowY=yPosition(low, yMax), highY=yPosition(high, yMax);
                 gapLayer.appendChild(createSvgElement('line', {'class':'gap-line',x1:x,x2:x,y1:highY+7,y2:lowY-7}));
                 gapLayer.appendChild(createSvgElement('text', {'class':'gap-label',x:x,y:Math.max(38,highY-12),'text-anchor':'middle'}, '+'+extras[i]));
                 var group=createSvgElement('g', {'class':'point-group'});
@@ -2315,7 +2319,7 @@ window.BLOG_REFERENCES = {
             series.forEach(function(name){
                 var label = svg.querySelector('.' + (name === 'baseline' ? 'baseline-end' : name === 'auto' ? 'auto-end' : 'grpo-end'));
                 if (label) {
-                    label.setAttribute('y', yPosition(data[name][pointCount-1]) + (name === series[0] ? 10 : -4));
+                    label.setAttribute('y', yPosition(data[name][pointCount-1], yMax) + (name === series[0] ? 10 : -4));
                     label.textContent = data[name][pointCount-1].toFixed(1) + '%';
                 }
             });
