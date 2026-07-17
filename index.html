@@ -1468,7 +1468,6 @@ a:hover { color: var(--accent-hover); }
     width: 12px;
     height: 12px;
     border-left: 1px dashed #aaaaa5;
-    border-right: 1px dashed #aaaaa5;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1846,7 +1845,7 @@ a:hover { color: var(--accent-hover); }
 <p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every token budget.</em></p>
 <p>The RL model substantially outperforms the SFT model across every budget, with the largest gains in the finite-compute regime. <strong>SFT establishes the compaction behavior, while RL improves how that behavior contributes to task completion.</strong></p>
 
-<p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after RL, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.</p>
+<p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after RL, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.</p>
 
 <h2>Fixed-budget compaction is not enough</h2>
 <p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context window</strong>. Both AutoCompact and the baseline use the same fixed-budget forced compaction when the context limit is reached. The comparison therefore tests whether a fixed-budget compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.</p>
