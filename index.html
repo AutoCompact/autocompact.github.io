@@ -1872,7 +1872,8 @@ a:hover { color: var(--accent-hover); }
     </section>
 </figure>
 <p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
-<p>The gains persist under the smaller context window even though both models use fixed-threshold compaction. Together, the experiments establish three distinct claims: long context alone does not eliminate the need for compaction, RL improves the learned policy, and fixed-threshold compaction is still weaker than adaptive AutoCompact.</p>
+<h2>Conclusion</h2>
+<p>AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same context-processing budget than both full-history and fixed-threshold baselines.</p>
             </div>
         </article>
 
