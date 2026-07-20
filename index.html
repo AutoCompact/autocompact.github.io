@@ -1649,7 +1649,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <p><strong>Results:</strong></p>
 <ul>
 <li><strong>Data:</strong> We collect 1,052 <strong>judge-guided on-policy SFT examples</strong> on SWE-rebench.</li>
-<li><strong>SFT:</strong> AutoCompact outperforms baselines with a long-context window or naive fixed-threshold compaction.</li>
+<li><strong>SFT:</strong> AutoCompact solves more tasks with less context processing, outperforming the long-context baseline and naive fixed-threshold compaction.</li>
 <li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).</li>
 </ul>
 </aside>
@@ -1925,7 +1925,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "When":"",
         "is invoked, the runtime compacts the current context into a":"被调用后，runtime 会将当前 context 压缩为",
         ". The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with \"original task + recent turns + summary.\"":"。该摘要保留下一阶段所需的工作状态，并从上下文中移除中间探索细节。之后，模型基于“原始任务 + 最近对话 + 摘要”继续执行。",
-        "AutoCompact outperforms baselines with a long-context window or naive fixed-threshold compaction.":"AutoCompact 优于 long-context baseline model 和 naive fixed-threshold compaction。",
+        "AutoCompact solves more tasks with less context processing, outperforming the long-context baseline and naive fixed-threshold compaction.":"AutoCompact 用更少的 context processing 解决更多任务，优于 long-context baseline model 和 naive fixed-threshold compaction。",
         "We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).":"我们进一步通过端到端 RL 联合提升任务求解与自动上下文压缩，在 SWE-bench Verified 上平均提升 10.6%。",
         "Even with a sufficiently long context window, retaining the full history is not the optimal strategy.":"即使 context window 足够长，保留完整历史也不是最优策略",
         "We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against the baseline model":"我们首先比较 AutoCompact-Qwen3 30B Coder（SFT）与 baseline model",
