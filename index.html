@@ -1821,7 +1821,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 </div>
 <h2>Even with a sufficiently long context window, retaining the full history is not the optimal strategy.</h2>
-<p>We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its baseline model<span class="cite" data-key="qwen"></span> on <strong>SWE-bench Verified</strong><span class="cite" data-key="swebench-verified"></span> with a <strong>256k context window</strong>. Every task finishes before reaching this threshold, so threshold-based compaction is never triggered. All models use the same scaffold<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span> and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
+<p>We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against the baseline model <a href="https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct">Qwen/Qwen3-Coder-30B-A3B-Instruct</a><span class="cite" data-key="qwen"></span> on <strong>SWE-bench Verified</strong><span class="cite" data-key="swebench-verified"></span> with a <strong>256k context window</strong>. Every task finishes before reaching this threshold, so threshold-based compaction is never triggered. All models use the same scaffold<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span> and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
 <p>We evaluate runs at fixed inference-cost budgets, reported in USD per task. Costs are calculated according to the official <a href="https://www.alibabacloud.com/help/en/model-studio/model-pricing">Alibaba Cloud Model Studio pricing</a> for <code>qwen3-coder-30b-a3b-instruct</code>, then summed across requests within each task.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-sft">
 <div class="visual-heading">
@@ -1925,7 +1925,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "AutoCompact outperforms baselines with a long-context window or naive fixed-threshold compaction.":"AutoCompact 优于 long-context baseline 和 naive fixed-threshold compaction。",
         "We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).":"我们进一步通过端到端 RL 联合提升任务求解与自动上下文压缩，在 SWE-bench Verified 上平均提升 10.6%。",
         "Even with a sufficiently long context window, retaining the full history is not the optimal strategy.":"即使 context window 足够长，保留完整历史也不是最优策略",
-        "We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its baseline model":"我们首先比较 AutoCompact-Qwen3 30B Coder（SFT）与其 baseline model",
+        "We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against the baseline model":"我们首先比较 AutoCompact-Qwen3 30B Coder（SFT）与 baseline model",
         "on":"在",
         "with a":"上的表现，使用",
         "256k context window":"256k context window",
