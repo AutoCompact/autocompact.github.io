@@ -2007,11 +2007,13 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
     var ATTR_EN = {};
     Object.keys(TEXT_ZH).forEach(function (english) {
         var chinese = TEXT_ZH[english];
-        if (!Object.prototype.hasOwnProperty.call(TEXT_EN, chinese)) TEXT_EN[chinese] = english;
+        var normalizedChinese = normalize(chinese);
+        if (!Object.prototype.hasOwnProperty.call(TEXT_EN, normalizedChinese)) TEXT_EN[normalizedChinese] = english;
     });
     Object.keys(ATTR_ZH).forEach(function (english) {
         var chinese = ATTR_ZH[english];
-        if (!Object.prototype.hasOwnProperty.call(ATTR_EN, chinese)) ATTR_EN[chinese] = english;
+        var normalizedChinese = normalize(chinese);
+        if (!Object.prototype.hasOwnProperty.call(ATTR_EN, normalizedChinese)) ATTR_EN[normalizedChinese] = english;
     });
 
     function normalize(value) {
@@ -2047,7 +2049,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
             var trailing = (node.nodeValue.match(/\s*$/) || [''])[0];
             /* Avoid an artificial space before Chinese punctuation when a
                sentence is split across inline elements such as <strong>. */
-            if (/^[，。；：！？、）]/.test(dictionary[key])) leading = '';
+            if (/^[,.;:!?，。；：！？、）]/.test(dictionary[key])) leading = '';
             node.nodeValue = leading + dictionary[key] + trailing;
         });
     }
