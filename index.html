@@ -1820,14 +1820,14 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <div class="sample-card sample-card-continuation"><span>How to continue</span><strong>23%</strong><small>Act correctly from the compacted context</small></div>
 </div>
 </div>
-<h2>Long context alone does not remove the need for compaction</h2>
-<p>We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its Qwen3 30B Coder base model<span class="cite" data-key="qwen"></span> on <strong>SWE-bench Verified</strong><span class="cite" data-key="swebench-verified"></span> with a <strong>256k context window and no forced compaction</strong>. All models use the same scaffold<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span> and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
+<h2>Even with a sufficiently long context window, retaining the full history is not the optimal strategy.</h2>
+<p>We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its baseline model<span class="cite" data-key="qwen"></span> on <strong>SWE-bench Verified</strong><span class="cite" data-key="swebench-verified"></span> with a <strong>256k context window and no forced compaction</strong>. All models use the same scaffold<span class="cite" data-key="mini-swe-agent"></span><span class="cite" data-key="tty-use"></span> and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.</p>
 <p>We evaluate runs at fixed inference-cost budgets, reported in USD per task. Costs are calculated according to the official <a href="https://www.alibabacloud.com/help/en/model-studio/model-pricing">Alibaba Cloud Model Studio pricing</a> for <code>qwen3-coder-30b-a3b-instruct</code>, then summed across requests within each task.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-sft">
 <div class="visual-heading">
 <div>
 <span class="visual-kicker">Long context · 256k · no forced compaction</span>
-<strong>Learned compaction solves more tasks under the same inference-cost budget</strong>
+<strong>AutoCompact solves more tasks under the same inference-cost budget</strong>
 </div>
 </div>
 <section aria-label="Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction" class="budget-panel" data-comparison="sft" data-window="256k">
@@ -1924,13 +1924,14 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         ". The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with \"original task + recent turns + summary.\"":"。这个摘要保留了下一阶段所需的工作状态，同时从上下文中移除中间探索细节。之后模型conditioned on “原始任务 + 最近对话 + 摘要”继续执行。",
         "AutoCompact outperforms baselines with a long-context window or naive fixed-threshold compaction.":"AutoCompact 优于 long-context baseline 和 naive fixed-threshold compaction。",
         "We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).":"我们进一步通过端到端 RL 联合提升任务求解与自动上下文压缩，在 SWE-bench Verified 上平均提升 10.6%。",
-        "We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its Qwen3 30B Coder base model":"我们首先比较 AutoCompact-Qwen3 30B Coder（SFT）及其 Qwen3 30B Coder 基础模型",
+        "Even with a sufficiently long context window, retaining the full history is not the optimal strategy.":"即使 context window 足够长，保留完整历史也不是最优策略",
+        "We first evaluate AutoCompact-Qwen3 30B Coder (SFT) against its baseline model":"我们首先比较 AutoCompact-Qwen3 30B Coder（SFT）及其 baseline model",
         "All models use the same scaffold":"所有模型使用相同的 scaffold",
-        "and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.":"和运行时设置。基线模型保留完整轨迹，而 AutoCompact 仅在模型判断有用时才进行压缩。该设置直接检验：仅依靠长上下文是否已经足够，还是主动移除过期历史仍能改善推理。",
+        "and runtime settings. The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.":"和运行时设置。baseline模型保留完整轨迹，而 AutoCompact 会在模型判断需要压缩上下文时进行压缩。这个setting可以告诉我们：如果context window 足够长，是不是不再需要compaction，还是说主动移除过期历史仍能改善推理",
         "We evaluate runs at fixed inference-cost budgets, reported in USD per task. Costs are calculated according to the official":"我们在固定推理成本预算下评测，并以每个任务的美元成本报告结果。成本依据官方",
         "for":"针对",
         "then summed across requests within each task.":"计算，并对每个任务内的所有请求求和。",
-        "Learned compaction solves more tasks under the same inference-cost budget":"在相同推理成本预算下，学习得到的压缩行为能够解决更多任务",
+        "AutoCompact solves more tasks under the same inference-cost budget":"在相同推理成本预算下，AutoCompact能够解决更多任务",
         "Inference-cost budget (USD per task)":"推理成本预算（美元/任务）",
         "Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every inference-cost budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.":"图 3。在 SWE-bench Verified 上，当上下文窗口为 256k 且不进行强制压缩时，AutoCompact-SFT 在每个推理成本预算下解决的任务都多于基线模型。因此，仅有长上下文并不足够；自适应压缩仍然有帮助。",
         "AutoCompact-SFT consistently outperforms the baseline across every inference-cost budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.":"AutoCompact-SFT 在所有推理成本预算下都持续优于基线。由于该设置中两个模型都不会被强制压缩，这一结果表明，压缩并不只是应对上下文溢出的紧急措施。一条轨迹即使能容纳在 256k token 内，也可能包含足够多的过期探索，从而干扰后续推理。",
