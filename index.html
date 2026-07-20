@@ -1875,7 +1875,12 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </figure>
 <p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.</em></p>
 <p>The RL model substantially outperforms the SFT model across every inference-cost budget, with the largest gains at lower inference-cost budgets. <strong>SFT establishes the compaction behavior, while RL further improves task performance.</strong></p>
-<p><strong>RL also changes how the model uses compaction.</strong> Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after RL, this rises to <strong>58.5%</strong>, indicating that RL encourages more active context management. The generated summaries remain highly informative: <strong>99.8%</strong> retain relevant task and workspace state, and <strong>97.8%</strong> specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.</p>
+<p><strong>RL not only improves task performance but also makes context management more active:</strong></p>
+<ul>
+<li><strong>More active compaction.</strong> After SFT, the model proactively invokes <code>compact()</code> in <strong>44.3%</strong> of tasks; after RL, this rises to <strong>58.5%</strong>.</li>
+<li><strong>High-quality summaries.</strong> <strong>99.8%</strong> retain relevant task and workspace state; <strong>97.8%</strong> specify a next action.</li>
+<li><strong>Trigger timing can still improve.</strong> Many summaries are generated only after the agent has begun testing or validating its code changes. This suggests that the model is more reliable at what to preserve than when to compact.</li>
+</ul>
 <h2>Fixed-threshold compaction is not enough</h2>
 <p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context window</strong>. Both AutoCompact and the baseline are forcibly compacted at the same 16k context threshold. The comparison therefore tests whether a fixed-threshold compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-robustness">
@@ -1951,6 +1956,14 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.":"图 4。在 SWE-bench Verified 上，在相同的 256k 上下文窗口且无强制压缩的条件下，RL 在每个推理成本预算下都优于 SFT 模型。",
         "The RL model substantially outperforms the SFT model across every inference-cost budget, with the largest gains at lower inference-cost budgets.":"RL 模型在所有推理成本预算下都显著优于 SFT 模型，并且在较低成本预算下提升最大。",
         "SFT establishes the compaction behavior, while RL further improves task performance.":"SFT 让模型学会 context compaction，RL 则进一步提升任务表现。",
+        "RL not only improves task performance but also makes context management more active:":"RL 不仅提升任务表现，也让模型更主动地管理上下文：",
+        "More active compaction.":"更主动地触发 context compaction。",
+        "After SFT, the model proactively invokes":"完成 SFT 后，模型会主动调用",
+        "High-quality summaries.":"生成的摘要质量很高。",
+        "retain relevant task and workspace state;":"的摘要保留了相关任务与工作区状态，",
+        "specify a next action.":"的摘要明确指出了下一步动作。",
+        "Trigger timing can still improve.":"触发时机仍有改进空间。",
+        "Many summaries are generated only after the agent has begun testing or validating its code changes. This suggests that the model is more reliable at what to preserve than when to compact.":"许多摘要在 agent 已经开始测试或验证代码修改后才生成，说明模型对“保留什么”的掌握比对“何时压缩”更稳定。",
         "Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes":"从生成轨迹中可以看到：AutoCompact 在“保留什么”上表现得更加稳定，而“何时压缩”仍有改进空间。完成 SFT 后，模型会主动调用",
         "specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.":"的摘要明确指出了下一步动作。不过，许多摘要仍在 agent 开始测试或验证代码修改后才触发，说明触发时机仍有改进空间。",
         "Fixed-threshold compaction is not enough":"Fixed-threshold compaction 并不够",
