@@ -2278,6 +2278,13 @@ window.BLOG_REFERENCES = {
         node.replaceWith(ref);
     });
 
+    let alignFrame = 0;
+
+    function queueAlignNotes() {
+        window.cancelAnimationFrame(alignFrame);
+        alignFrame = window.requestAnimationFrame(alignNotes);
+    }
+
     function alignNotes() {
         const refs = Array.from(content.querySelectorAll('.sidenote-ref[id]'));
         if (refs.length === 0 || window.matchMedia('(max-width: 1040px)').matches) {
@@ -2289,23 +2296,37 @@ window.BLOG_REFERENCES = {
         }
 
         notes.style.height = content.scrollHeight + 'px';
+        const notesTop = notes.getBoundingClientRect().top;
         let previousBottom = 0;
         refs.forEach((ref) => {
             const note = document.getElementById(ref.id.replace('ref-', 'note-'));
             if (!note) return;
-            const naturalOffset = ref.getBoundingClientRect().top - content.getBoundingClientRect().top;
+            const naturalOffset = ref.getBoundingClientRect().top - notesTop;
             const offset = Math.max(naturalOffset, previousBottom + 6);
             note.style.top = Math.max(0, offset) + 'px';
             previousBottom = offset + note.offsetHeight;
         });
     }
 
-    alignNotes();
-    window.addEventListener('load', alignNotes);
-    window.addEventListener('resize', alignNotes);
+    queueAlignNotes();
+    window.addEventListener('load', queueAlignNotes);
+    window.addEventListener('resize', queueAlignNotes);
+    window.addEventListener('autocompact:languagechange', queueAlignNotes);
+
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(queueAlignNotes);
+    }
+
+    if (window.ResizeObserver) {
+        const noteResizeObserver = new ResizeObserver(queueAlignNotes);
+        noteResizeObserver.observe(content);
+        Array.from(notes.children).forEach((note) => {
+            noteResizeObserver.observe(note);
+        });
+    }
 
     if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
-        window.MathJax.startup.promise.then(alignNotes);
+        window.MathJax.startup.promise.then(queueAlignNotes);
     }
 })();
 
