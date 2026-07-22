@@ -8,6 +8,7 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
 <meta content="AutoCompact teaches coding agents when to compact long contexts, reducing context-processing cost while improving task completion under fixed inference-cost budgets." name="description"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Inter+Tight:wght@400;500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
@@ -15,20 +16,20 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-    --bg: #f7f7f5;
-    --text: #111111;
-    --text-secondary: #686864;
-    --accent: #3c5cff;
-    --accent-hover: #263ec7;
-    --card-bg: #ffffff;
-    --divider: #d8d8d3;
-    --tag-bg: #efefec;
+    --bg: #f7f5f0;
+    --text: #0a0a0a;
+    --text-secondary: #686863;
+    --accent: #0a0a0a;
+    --accent-hover: #3f3f3b;
+    --card-bg: #fffefa;
+    --divider: #d8d4cc;
+    --tag-bg: #eeeeea;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif;
     font-size: 16px;
     line-height: 1.7;
     color: var(--text);
@@ -107,7 +108,7 @@ a:hover { color: var(--accent-hover); }
 
 .article-layout {
     display: grid;
-    grid-template-columns: minmax(150px, 190px) minmax(0, 720px) minmax(220px, 260px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
     align-items: start;
     gap: clamp(1.5rem, 3vw, 2.25rem);
 }
@@ -136,6 +137,7 @@ a:hover { color: var(--accent-hover); }
 .reference-list {
     position: relative;
     min-height: 100%;
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif;
 }
 
 .reference-list li {
@@ -148,7 +150,7 @@ a:hover { color: var(--accent-hover); }
 .reference-list a,
 .reference-list span {
     display: block;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif;
     font-size: 0.75rem;
     line-height: 1.35;
     color: var(--text-secondary);
@@ -275,6 +277,7 @@ a:hover { color: var(--accent-hover); }
 
 .post-content {
     max-width: 720px;
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif;
 }
 
 .post-content p {
@@ -290,7 +293,7 @@ a:hover { color: var(--accent-hover); }
 .post-content h2 {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
-    font-family: "Inter Tight", "Inter", sans-serif;
+    font-family: inherit;
     font-size: 1.45rem;
     font-weight: 500;
     letter-spacing: -0.025em;
@@ -299,7 +302,7 @@ a:hover { color: var(--accent-hover); }
 .post-content h3 {
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    font-family: "Inter Tight", "Inter", sans-serif;
+    font-family: inherit;
     font-size: 1.12rem;
     font-weight: 500;
     line-height: 1.35;
