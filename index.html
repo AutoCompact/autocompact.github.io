@@ -237,10 +237,58 @@ a:hover { color: var(--accent-hover); }
 }
 
 .post-byline {
-    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.2rem 0.55rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.2rem;
     font-size: 1.05rem;
     font-weight: 500;
     color: var(--text);
+}
+
+.post-byline a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.post-byline a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+}
+
+.post-byline sup {
+    position: relative;
+    top: -0.35em;
+    font-size: 0.62em;
+}
+
+.post-author-notes,
+.post-author-contacts {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.2rem 0.65rem;
+    flex-wrap: wrap;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.post-author-notes {
+    margin-bottom: 0.1rem;
+}
+
+.post-author-contacts {
+    margin-bottom: 0.4rem;
+}
+
+.post-author-contacts a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.18em;
 }
 
 .dot-sep {
@@ -1625,6 +1673,27 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </nav>
 <header class="post-header">
 <h1>AutoCompact: Learning <br class="title-break-mobile"/>When to Compact Context <br/>in Long-Horizon <br class="title-break-mobile"/>Coding Agents</h1>
+<div aria-label="Authors" class="post-byline">
+<a href="mailto:xuanzhang826@gmail.com">Xuan Zhang<sup>*</sup></a>
+<span aria-hidden="true">·</span>
+<a href="mailto:ltzheng01@gmail.com">Longtao Zheng<sup>*</sup></a>
+<span aria-hidden="true">·</span>
+<span>Cunxiao Du<sup>†</sup></span>
+<span aria-hidden="true">·</span>
+<span>Bo An</span>
+<span aria-hidden="true">·</span>
+<span>Xin Dong</span>
+</div>
+<div class="post-author-notes">
+<span>* Equal contribution</span>
+<span aria-hidden="true">·</span>
+<span>† Corresponding author</span>
+</div>
+<div aria-label="Author contact" class="post-author-contacts">
+<a href="mailto:xuanzhang826@gmail.com">xuanzhang826@gmail.com</a>
+<span aria-hidden="true">·</span>
+<a href="mailto:ltzheng01@gmail.com">ltzheng01@gmail.com</a>
+</div>
 <div class="post-meta-row">
 <div class="post-meta">
 <span>First published: </span><time datetime="2026-07-13T00:00:00+08:00">July 13, 2026</time>
