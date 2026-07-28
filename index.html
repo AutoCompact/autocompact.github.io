@@ -267,6 +267,11 @@ a:hover { color: var(--accent-hover); }
 }
 
 .post-author-notes {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.25rem 0.9rem;
+    flex-wrap: wrap;
     margin-bottom: 0.55rem;
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.7rem;
@@ -276,6 +281,18 @@ a:hover { color: var(--accent-hover); }
 .post-author-notes .author-sep {
     margin: 0 0.32rem;
     color: var(--divider);
+}
+
+.post-author-notes a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.18em;
+}
+
+.post-author-note-group,
+.post-author-contact {
+    white-space: nowrap;
 }
 
 .dot-sep {
@@ -1663,7 +1680,10 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <div aria-label="Authors" class="post-byline">
 <a href="mailto:xuanzhang826@gmail.com" title="Email Xuan Zhang">Xuan Zhang<sup>*</sup></a><span aria-hidden="true" class="author-sep">·</span><a href="mailto:ltzheng01@gmail.com" title="Email Longtao Zheng">Longtao Zheng<sup>*</sup></a><span aria-hidden="true" class="author-sep">·</span><span>Cunxiao Du<sup>†</sup></span><span aria-hidden="true" class="author-sep">·</span><span>Bo An</span><span aria-hidden="true" class="author-sep">·</span><span>Xin Dong</span>
 </div>
-<div class="post-author-notes">* Equal contribution<span aria-hidden="true" class="author-sep">·</span>† Corresponding author</div>
+<div class="post-author-notes">
+<span class="post-author-note-group">* Equal contribution<span aria-hidden="true" class="author-sep">·</span>† Corresponding author</span>
+<span class="post-author-contact">Contact: <a href="mailto:xuanzhang826@gmail.com">xuanzhang826@gmail.com</a><span aria-hidden="true" class="author-sep">·</span><a href="mailto:ltzheng01@gmail.com">ltzheng01@gmail.com</a></span>
+</div>
 <div class="post-meta-row">
 <div class="post-meta">
 <span>First published: </span><time datetime="2026-07-13T00:00:00+08:00">July 13, 2026</time>
