@@ -1970,6 +1970,15 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
 <h2>Conclusion</h2>
 <p>AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same inference-cost budget than both full-history and fixed-threshold baselines.</p>
+<h2>Citation</h2>
+<pre><code>@misc{zhang2026autocompact,
+  title  = {AutoCompact: Learning When to Compact Context
+            in Long-Horizon Coding Agents},
+  author = {Zhang, Xuan and Zheng, Longtao and Du, Cunxiao
+            and An, Bo and Dong, Xin},
+  year   = {2026},
+  url    = {https://autocompact.github.io/}
+}</code></pre>
 </div>
 </article>
 <aside aria-label="References and notes" class="refs-sidebar">
@@ -2035,7 +2044,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         ". Both AutoCompact and the baseline are forcibly compacted at the same 16k context threshold. The comparison therefore tests whether a fixed-threshold compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.":"。AutoCompact 与 baseline model 都会在相同的 16k context threshold 处被强制压缩。这个实验想回答的是：固定阈值触发是否已经足够，还是让 AutoCompact 在达到阈值前自行决定何时压缩上下文仍然更有效。",
         "Adaptive compaction outperforms fixed-threshold compaction":"Adaptive compaction 优于 fixed-threshold compaction",
         "Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.":"图 5。在 SWE-bench Verified 上，两个模型都会在 16k threshold 处进行 forced compaction，但在相同推理成本预算下，AutoCompact 的表现仍然更好。这说明，只依靠固定阈值触发还不够；让模型自行决定何时压缩上下文能够带来额外价值。",
-        "Conclusion":"结论",
+        "Conclusion":"结论","Citation":"引用",
         "AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same inference-cost budget than both full-history and fixed-threshold baselines.":"AutoCompact 不再把 context compaction 当作固定的 runtime rule，而是让 agent 学会何时压缩上下文、保留哪些信息，以及如何从压缩后的状态继续完成任务。通过 judge-guided SFT 和 outcome-based RL，AutoCompact 在 SWE-bench Verified 上以相同的推理成本解决了比 full-history baseline model 和 fixed-threshold baseline model 更多的任务。"
     });
     var ATTR_ZH = {"Primary":"主导航","Table of contents":"目录","Noisy context compared with the compact working context produced by a model-triggered action":"对比嘈杂上下文与模型触发压缩后生成的紧凑工作上下文","Noisy active context before compaction":"压缩前嘈杂的活动上下文","The model proactively triggers compaction":"模型主动触发上下文压缩","Clean working context after compaction":"压缩后的干净工作上下文","Compaction disposition legend":"上下文压缩处理方式图例","Compaction demo steps":"上下文压缩演示步骤","Original base-agent rollout":"基础 agent 的原始轨迹","Judge annotation decisions":"评审模型的标注决策","Corrected trajectory used for SFT":"用于 SFT 的修正轨迹","Judge decision legend":"评审模型决策图例","Annotation process steps":"标注流程步骤","The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.":"SFT 数据集包含 24% 的压缩触发样本、 53% 的摘要样本和 23% 的后续动作样本。","Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction":"在 256k 上下文窗口且无强制压缩条件下，比较 SWE-bench Verified 上的 baseline model 与 AutoCompact SFT","Chart legend":"图表图例","AutoCompact SFT versus AutoCompact SFT plus RL on SWE-bench Verified with a 256k context window and no forced compaction":"在 256k 上下文窗口且无强制压缩条件下，比较 SWE-bench Verified 上的 AutoCompact SFT 与 SFT+RL","Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold":"当两者均使用 16k 强制压缩阈值时，比较 SWE-bench Verified 上的 baseline model 与最终 AutoCompact 模型","References and notes":"参考文献与注释"};
