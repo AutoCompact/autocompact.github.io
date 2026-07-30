@@ -597,7 +597,7 @@ a:hover { color: var(--accent-hover); }
     text-align: center;
 }
 
-/* Figure 1: persistent before/after comparison */
+/* Figure 2: persistent before/after comparison */
 .context-compare {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 118px minmax(0, 1fr);
@@ -954,7 +954,7 @@ a:hover { color: var(--accent-hover); }
     text-align: center;
 }
 
-/* Figure 2: judge-guided rollout annotation */
+/* Figure 3: judge-guided rollout annotation */
 .annotation-flow {
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 0.95fr) minmax(0, 1.1fr);
@@ -1292,7 +1292,7 @@ a:hover { color: var(--accent-hover); }
 .annotation-step-button:nth-child(3) { --step-color: var(--viz-purple); --step-bg: #f5effa; }
 .annotation-step-button:nth-child(4) { --step-color: var(--viz-green); --step-bg: var(--viz-green-soft); }
 
-/* Figure 2 action-by-action mapping */
+/* Figure 3 action-by-action mapping */
 .annotation-mapped-stack {
     display: grid;
     grid-template-rows: 58px 58px 66px 78px 66px;
@@ -1521,6 +1521,204 @@ a:hover { color: var(--accent-hover); }
     border-right: 1px dashed #aaaaa5;
 }
 
+/* Fixed-threshold versus model-triggered compaction */
+.compaction-comparison {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.compaction-strategy {
+    padding: 0.9rem;
+    border: 1px solid var(--divider);
+    background: #fff;
+}
+
+.strategy-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+}
+
+.strategy-heading > div {
+    display: grid;
+    gap: 0.12rem;
+}
+
+.strategy-heading strong {
+    font-family: "Inter Tight", "Inter", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.strategy-diagram {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr) 34px minmax(0, 1fr);
+    align-items: end;
+    gap: 0.25rem;
+    min-width: 0;
+    padding: 1.45rem 0 0.15rem;
+}
+
+.strategy-adaptive .strategy-diagram {
+    align-items: start;
+}
+
+.strategy-threshold {
+    position: absolute;
+    right: -0.9rem;
+    bottom: 0.45rem;
+    left: -0.9rem;
+    border-top: 1px dotted var(--text);
+    text-align: center;
+    transform: translateY(1.15rem);
+}
+
+.strategy-threshold span {
+    position: relative;
+    top: -0.7em;
+    padding: 0 0.35rem;
+    background: #fff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.strategy-adaptive .strategy-threshold {
+    border-color: var(--divider);
+}
+
+.strategy-adaptive .strategy-threshold span {
+    color: var(--text-secondary);
+}
+
+.context-window {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: 0;
+    height: 220px;
+    margin-bottom: 1.45rem;
+    overflow: hidden;
+    border: 1px solid var(--text);
+    border-radius: 3px;
+    background: #f3f6fd;
+}
+
+.context-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0.18rem 0.2rem;
+    border-top: 1px solid var(--text);
+    background: #e9eefb;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(0.43rem, 1.15vw, 0.55rem);
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    line-height: 1.08;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.context-window .context-block:first-child {
+    border-top: 0;
+}
+
+.context-block.reasoning {
+    flex: 1 1 auto;
+    min-height: 34px;
+    background: #f3f6fd;
+}
+
+.context-block.reasoning.short {
+    flex: 0 0 42px;
+}
+
+.context-block.tool {
+    flex: 0 0 19px;
+}
+
+.context-block.prompt {
+    flex: 0 0 21px;
+    background: #b9ccfa;
+}
+
+.context-block.summary {
+    flex: 0 0 50px;
+    background-color: #b9ccfa;
+    background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, rgba(64, 90, 162, 0.14) 6px, rgba(64, 90, 162, 0.14) 8px);
+}
+
+.strategy-adaptive .context-block.prompt,
+.strategy-adaptive .context-block.summary {
+    background-color: #f3c5b5;
+}
+
+.strategy-adaptive .context-block.summary {
+    background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, rgba(154, 71, 46, 0.13) 6px, rgba(154, 71, 46, 0.13) 8px);
+}
+
+.strategy-adaptive .context-window.is-early {
+    height: 155px;
+}
+
+.strategy-adaptive .context-window.is-mid {
+    height: 185px;
+}
+
+.strategy-adaptive .context-block.reasoning.short {
+    flex-basis: 32px;
+}
+
+.context-block.compact-call {
+    flex: 0 0 24px;
+    background: #fff8f5;
+    color: #9c462f;
+}
+
+.context-block.final {
+    flex: 0 0 21px;
+}
+
+.diagram-arrow {
+    position: relative;
+    align-self: center;
+    height: 1px;
+    margin-bottom: 1.65rem;
+    background: var(--text);
+}
+
+.diagram-arrow::after {
+    position: absolute;
+    top: 50%;
+    right: -1px;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid var(--text);
+    border-right: 1px solid var(--text);
+    content: "";
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.diagram-arrow.arrow-early {
+    align-self: start;
+    margin-top: 5.9rem;
+    margin-bottom: 0;
+}
+
+.diagram-arrow.arrow-mid {
+    align-self: start;
+    margin-top: 5.9rem;
+    margin-bottom: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .autocompact-visual *,
     .autocompact-visual *::before,
@@ -1606,6 +1804,18 @@ a:hover { color: var(--accent-hover); }
         padding-left: 0.45rem;
         font-size: 0.66rem;
     }
+    .compaction-strategy { padding: 0.7rem; }
+    .strategy-heading { flex-direction: column; gap: 0.45rem; }
+    .strategy-diagram {
+        grid-template-columns: minmax(82px, 1fr) 22px minmax(82px, 1fr) 22px minmax(82px, 1fr);
+        gap: 0.15rem;
+        margin-right: -0.25rem;
+        margin-left: -0.25rem;
+    }
+    .context-window { height: 200px; }
+    .strategy-adaptive .context-window.is-early { height: 155px; }
+    .strategy-adaptive .context-window.is-mid { height: 185px; }
+    .context-block { font-size: 0.39rem; }
 }
 
 @media (max-width: 1040px) {
@@ -1688,9 +1898,9 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <div class="post-meta">
 <span>First published: </span><time datetime="2026-07-13T00:00:00+08:00">July 13, 2026</time>
 <span class="dot-sep">·</span>
-<span>Last update: </span><time datetime="2026-07-27T00:00:00+08:00">July 27, 2026</time>
+<span>Last update: </span><time datetime="2026-07-30T00:00:00+08:00">July 30, 2026</time>
 <span class="dot-sep">·</span>
-<span>7 min read</span>
+<span>8 min read</span>
 </div>
 <div aria-label="Language switcher" class="language-switcher" role="group">
 <button aria-pressed="false" data-lang="en" type="button">English</button>
@@ -1715,6 +1925,74 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).</li>
 </ul>
 </aside>
+<h2>From a fixed runtime threshold to a learned model decision</h2>
+<p>OpenAI describes retaining private reasoning and summarizing conversations once they grow too long as the way its models are trained and deployed in ChatGPT and Codex<span class="cite" data-key="openai-compaction"></span>. In that production pattern, context length determines when compaction happens. AutoCompact keeps the same basic summarize-and-continue structure, but adds an earlier learned action: the model can call <code>compact()</code> before the fixed limit, whenever the current task state makes compaction useful.</p>
+<figure class="article-figure autocompact-visual compaction-comparison" id="compaction-comparison">
+<section aria-label="GPT-5.6 Sol and Codex use fixed-threshold compaction" class="compaction-strategy strategy-fixed">
+<div class="strategy-heading">
+<div><strong>GPT-5.6 Sol / Codex use fixed-threshold compaction</strong></div>
+</div>
+<div class="strategy-diagram">
+<div aria-label="Context grows to the compaction limit" class="context-window">
+<div class="context-block prompt">User prompt</div>
+<div class="context-block reasoning">Reasoning</div>
+<div class="context-block tool">Tool call</div>
+<div class="context-block tool">Tool result</div>
+<div class="context-block reasoning short">Reasoning</div>
+<div class="context-block tool">Tool call</div>
+<div class="context-block tool">Tool result</div>
+<div class="context-block reasoning short">Reasoning</div>
+</div>
+<div aria-hidden="true" class="diagram-arrow"></div>
+<div aria-label="Context after threshold-triggered compaction" class="context-window">
+<div class="context-block summary">Compressed<br/>summary</div>
+<div class="context-block reasoning">Reasoning</div>
+<div class="context-block tool">Tool call</div>
+<div class="context-block tool">Tool result</div>
+<div class="context-block reasoning short">Reasoning</div>
+</div>
+<div aria-hidden="true" class="diagram-arrow"></div>
+<div aria-label="Task completes after another threshold-triggered compaction" class="context-window">
+<div class="context-block summary">Compressed<br/>summary</div>
+<div class="context-block reasoning">Reasoning</div>
+<div class="context-block final">Final answer</div>
+</div>
+<div class="strategy-threshold"><span>Compaction limit</span></div>
+</div>
+</section>
+<section aria-label="AutoCompact lets the model trigger compaction before reaching the context limit" class="compaction-strategy strategy-adaptive">
+<div class="strategy-heading">
+<div><strong>AutoCompact lets the model decide when to compact</strong></div>
+</div>
+<div class="strategy-diagram">
+<div aria-label="The model proactively compacts a shorter context before it reaches the limit" class="context-window is-early">
+<div class="context-block prompt">User prompt</div>
+<div class="context-block reasoning">Reasoning</div>
+<div class="context-block tool">Tool call</div>
+<div class="context-block tool">Tool result</div>
+<div class="context-block reasoning short">Reasoning</div>
+<div class="context-block compact-call">Model calls compact()</div>
+</div>
+<div aria-hidden="true" class="diagram-arrow arrow-early"></div>
+<div aria-label="The model again compacts before the context reaches the limit" class="context-window is-mid">
+<div class="context-block summary">AutoCompact<br/>summary</div>
+<div class="context-block reasoning">Reasoning</div>
+<div class="context-block tool">Tool call</div>
+<div class="context-block tool">Tool result</div>
+<div class="context-block reasoning short">Reasoning</div>
+<div class="context-block compact-call">Model calls compact()</div>
+</div>
+<div aria-hidden="true" class="diagram-arrow arrow-mid"></div>
+<div aria-label="The task completes from a compact working state" class="context-window">
+<div class="context-block summary">AutoCompact<br/>summary</div>
+<div class="context-block reasoning">Reasoning</div>
+<div class="context-block final">Final answer</div>
+</div>
+<div class="strategy-threshold"><span>Fallback compaction limit</span></div>
+</div>
+</section>
+</figure>
+<p><em>Figure 1. Fixed-threshold compaction summarizes only at a context limit. AutoCompact keeps the same summarize-and-continue structure, but lets the model proactively choose earlier, task-aware compaction points. Diagram structure adapted from OpenAI<span class="cite" data-key="openai-compaction"></span>.</em></p>
 <h2>Long-horizon coding agents accumulate context they no longer need</h2>
 <p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
 <p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
@@ -1794,8 +2072,8 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 <div aria-live="polite" class="context-step-status" role="status">Step 1: exploration keeps accumulating; the context approaches capacity and becomes increasingly noisy.</div>
 </figure>
-<p><em>Figure 1. When the model decides that the current context should be cleaned up, it calls </em><em><strong><code>compact()</code></strong></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><strong><code># Auto Context Summary</code></strong></em><em>, instead of the full history.</em></p>
-<p>Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>compact()</code>.</p>
+<p><em>Figure 2. When the model decides that the current context should be cleaned up, it calls </em><em><strong><code>compact()</code></strong></em><em> to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted </em><em><strong><code># Auto Context Summary</code></strong></em><em>, instead of the full history.</em></p>
+<p>Figure 2 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke <code>compact()</code>.</p>
 <p>When <code class="invocation-prefix-code">compact()</code> is invoked, the runtime compacts the current context into a <code># Auto Context Summary</code>. The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with "original task + recent turns + summary."</p>
 <h2>Judge-guided on-policy rollouts teach when and what to compact</h2>
 <figure class="article-figure autocompact-visual trajectory-visual" data-mode="before" data-step="1" id="trajectory-visual">
@@ -1869,8 +2147,8 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 <div aria-live="polite" class="context-step-status annotation-step-status" role="status">Step 1: the judge keeps two valid exploration actions unchanged and advances through the rollout.</div>
 </figure>
-<p><em>Figure 2. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call </em><em><strong><code>compact()</code></strong></em><em> by itself.</em></p>
-<p>AutoCompact requires the model to learn three capabilities: when to invoke <code>compact()</code>, what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. Even when explicitly instructed how and when to use <code>compact()</code>, they rarely invoke it proactively, possibly because such behavior is uncommon in their training data. As shown in Figure 2, we therefore introduce a judge during data collection. Given only the history visible at the current step and explicit knowledge of <code>compact()</code>, the judge evaluates and, when necessary, revises the base model’s action, summary, or continuation<span class="cite" data-key="annotation"></span>. This turns autonomous management of the full compaction process into step-level evaluation and correction under explicit criteria, which can be performed more reliably by human annotators or a well-prompted LLM.</p>
+<p><em>Figure 3. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call </em><em><strong><code>compact()</code></strong></em><em> by itself.</em></p>
+<p>AutoCompact requires the model to learn three capabilities: when to invoke <code>compact()</code>, what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. Even when explicitly instructed how and when to use <code>compact()</code>, they rarely invoke it proactively, possibly because such behavior is uncommon in their training data. As shown in Figure 3, we therefore introduce a judge during data collection. Given only the history visible at the current step and explicit knowledge of <code>compact()</code>, the judge evaluates and, when necessary, revises the base model’s action, summary, or continuation<span class="cite" data-key="annotation"></span>. This turns autonomous management of the full compaction process into step-level evaluation and correction under explicit criteria, which can be performed more reliably by human annotators or a well-prompted LLM.</p>
 <p>More specifically, if the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with <code>compact()</code>. If the resulting <code># Auto Context Summary</code> omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.</p>
 <p>The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke <code>compact()</code> and continues from the compacted context on its own.</p>
 <p>Using 379 SWE-rebench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
@@ -1907,7 +2185,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 </section>
 </figure>
-<p><em>Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every inference-cost budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.</em></p>
+<p><em>Figure 4. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every inference-cost budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.</em></p>
 <p>AutoCompact-SFT consistently outperforms the baseline across every inference-cost budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.</p>
 <h2>Jointly train task solving and compaction with RL</h2>
 <p>The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether those decisions ultimately help solve the task.</p>
@@ -1935,7 +2213,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 </section>
 </figure>
-<p><em>Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.</em></p>
+<p><em>Figure 5. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.</em></p>
 <p>The RL model substantially outperforms the SFT model across every inference-cost budget, with the largest gains at lower inference-cost budgets. <strong>SFT establishes the compaction behavior, while RL further improves task performance.</strong></p>
 <p><strong>RL not only improves task performance but also makes context management more active:</strong></p>
 <ul>
@@ -1944,7 +2222,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <li><strong>Trigger timing can still improve.</strong> Many summaries are generated only after the agent has begun testing or validating its code changes. This suggests that the model is more reliable at what to preserve than when to compact.</li>
 </ul>
 <h2>Fixed-threshold compaction is not enough</h2>
-<p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context window</strong>, where AutoCompact and the baseline are forcibly compacted at the same threshold. However, a fixed token threshold may not align with the task trajectory: by the time the threshold is reached, the accumulated context may be harder to summarize, or compaction may interrupt an ongoing reasoning, debugging, or editing phase. This comparison therefore tests whether fixed-threshold compaction is sufficient, or whether AutoCompact still benefits from choosing when to compact before the threshold. As shown in Figure 5, AutoCompact consistently outperforms the fixed-threshold baseline, supporting the intuition that compaction timing should depend on the current task state rather than context length alone.</p>
+<p>Finally, we evaluate on <strong>SWE-bench Verified</strong> with a much smaller <strong>16k context window</strong>, where AutoCompact and the baseline are forcibly compacted at the same threshold. However, a fixed token threshold may not align with the task trajectory: by the time the threshold is reached, the accumulated context may be harder to summarize, or compaction may interrupt an ongoing reasoning, debugging, or editing phase. This comparison therefore tests whether fixed-threshold compaction is sufficient, or whether AutoCompact still benefits from choosing when to compact before the threshold. As shown in Figure 6, AutoCompact consistently outperforms the fixed-threshold baseline, supporting the intuition that compaction timing should depend on the current task state rather than context length alone.</p>
 <figure class="article-figure autocompact-visual budget-visual" id="budget-visual-robustness">
 <div class="visual-heading">
 <div>
@@ -1967,7 +2245,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 </section>
 </figure>
-<p><em>Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
+<p><em>Figure 6. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.</em></p>
 <h2>Conclusion</h2>
 <p>AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same inference-cost budget than both full-history and fixed-threshold baselines.</p>
 <h2>Citation</h2>
@@ -2037,17 +2315,60 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "Many summaries are generated only after the agent has begun testing or validating its code changes. This suggests that the model is more reliable at what to preserve than when to compact.":"许多摘要在 agent 已经开始测试或验证代码修改后才生成，说明模型对“保留什么”的掌握比对“何时压缩”更稳定。",
         "Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes":"从生成轨迹中可以看到：AutoCompact 在“保留什么”上表现得更加稳定，而“何时压缩”仍有改进空间。完成 SFT 后，模型会主动调用",
         "specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.":"的摘要明确指出了下一步动作。不过，许多摘要仍在 agent 开始测试或验证代码修改后才触发，说明触发时机仍有改进空间。",
+        "July 30, 2026":"2026 年 7 月 30 日",
+        "8 min read":"阅读约 8 分钟",
+        "From a fixed runtime threshold to a learned model decision":"从固定运行时阈值到模型学习到的决策",
+        "OpenAI describes retaining private reasoning and summarizing conversations once they grow too long as the way its models are trained and deployed in ChatGPT and Codex":"OpenAI 将保留私有推理、并在对话过长时进行摘要，描述为其模型的训练方式，以及在 ChatGPT 和 Codex 中的部署方式",
+        ". In that production pattern, context length determines when compaction happens. AutoCompact keeps the same basic summarize-and-continue structure, but adds an earlier learned action: the model can call":"。在这种生产机制中，上下文长度决定何时压缩。AutoCompact 保留相同的“摘要后继续”结构，但加入了一个更早触发的学习行为：模型可以调用",
+        "before the fixed limit, whenever the current task state makes compaction useful.":"，在固定上限前根据当前任务状态主动压缩。",
+        "GPT-5.6 Sol / Codex use fixed-threshold compaction":"GPT-5.6 Sol / Codex 使用固定阈值压缩",
+        "User prompt":"用户提示",
+        "Reasoning":"推理",
+        "Tool call":"工具调用",
+        "Tool result":"工具结果",
+        "Compressed":"压缩后的",
+        "summary":"摘要",
+        "Final answer":"最终回答",
+        "Compaction limit":"压缩上限",
+        "AutoCompact lets the model decide when to compact":"AutoCompact 让模型自行决定何时压缩",
+        "The model chooses a useful phase boundary before the limit":"模型在达到上限前选择合适的阶段边界",
+        "Localization complete":"定位完成",
+        "Model calls":"模型调用",
+        "Auto context":"自动上下文",
+        "Edit reasoning":"编辑推理",
+        "Verification plan":"验证计划",
+        "Verification":"验证",
+        "Fallback compaction limit":"兜底压缩上限",
+        "Figure 1. Fixed-threshold compaction summarizes only at a context limit. AutoCompact keeps the same summarize-and-continue structure, but lets the model proactively choose earlier, task-aware compaction points. Diagram structure adapted from OpenAI":"图 1。固定阈值压缩只在达到上下文上限时进行摘要。AutoCompact 保留相同的“摘要后继续”结构，但允许模型更早地主动选择与任务状态匹配的压缩点。图示结构改编自 OpenAI",
+        "Figure 2. When the model decides that the current context should be cleaned up, it calls":"图 2。当模型判断当前上下文需要清理时，它会调用",
+        "Figure 2 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke":"图 2 展示了 AutoCompact 的核心机制。大多数时候，模型仍像普通 agent 一样工作：读取文件、编辑代码并执行验证。在合适的阶段转换点，例如完成问题定位之后、开始编辑之前，模型可以主动调用",
+        "Figure 3. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call":"图 3。在 data collection 期间，judge model 在 TUI 中逐步检查原始 agent 动作，并将关键分支修正为可用于 SFT 的有效轨迹。在 inference，judge model 被移除；训练后的 agent 自行决定何时调用",
+        ", they rarely invoke it proactively, possibly because such behavior is uncommon in their training data. As shown in Figure 3, we therefore introduce a judge during data collection. Given only the history visible at the current step and explicit knowledge of":"，模型也很少主动调用它。我们推测，这可能是因为训练数据中缺少类似行为。因此，如图 3 所示，我们在数据收集阶段引入 judge。judge 只能看到当前步骤可见的历史信息，并知道",
+        "Figure 4. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every inference-cost budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.":"图 4。在 SWE-bench Verified 上，当 context window 为 256k 且不会触发 threshold-based compaction 时，AutoCompact-SFT 在每个推理成本预算下解决的任务都多于 baseline model。这说明，即使 context window 足够长，adaptive compaction 仍然有帮助。",
+        "Figure 5. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.":"图 5。在 SWE-bench Verified 上，在相同的 256k 上下文窗口且无强制压缩的条件下，RL 在每个推理成本预算下都优于 SFT 模型。",
         "Fixed-threshold compaction is not enough":"Fixed-threshold compaction 并不够",
+        "Finally, we evaluate on SWE-bench Verified with a much smaller 16k context window, where AutoCompact and the baseline are forcibly compacted at the same threshold. However, a fixed token threshold may not align with the task trajectory: by the time the threshold is reached, the accumulated context may be harder to summarize, or compaction may interrupt an ongoing reasoning, debugging, or editing phase. This comparison therefore tests whether fixed-threshold compaction is sufficient, or whether AutoCompact still benefits from choosing when to compact before the threshold. As shown in Figure 6, AutoCompact consistently outperforms the fixed-threshold baseline, supporting the intuition that compaction timing should depend on the current task state rather than context length alone.":"最后，我们在 SWE-bench Verified 上使用更小的 16k context window 进行评测，AutoCompact 与 baseline 都会在相同阈值处被强制压缩。不过，固定 token 阈值未必与任务进程一致：达到阈值时，累积的上下文可能已经更难摘要，压缩也可能打断正在进行的推理、调试或编辑阶段。因此，这一对比检验固定阈值压缩是否已经足够，还是 AutoCompact 在达到阈值前自主选择时机仍能获益。如图 6 所示，AutoCompact 始终优于固定阈值 baseline，说明压缩时机应取决于当前任务状态，而不只是上下文长度。",
         "Finally, we evaluate on":"最后，我们在",
         "with a much smaller":"上进行评测，上下文窗口仅为",
         "16k context window":"16k",
+        ", where AutoCompact and the baseline are forcibly compacted at the same threshold. However, a fixed token threshold may not align with the task trajectory: by the time the threshold is reached, the accumulated context may be harder to summarize, or compaction may interrupt an ongoing reasoning, debugging, or editing phase. This comparison therefore tests whether fixed-threshold compaction is sufficient, or whether AutoCompact still benefits from choosing when to compact before the threshold. As shown in Figure 6, AutoCompact consistently outperforms the fixed-threshold baseline, supporting the intuition that compaction timing should depend on the current task state rather than context length alone.":"。在这一设置下，AutoCompact 和 baseline 都会在相同阈值处被强制压缩。不过，固定 token 阈值未必与任务进程一致：达到阈值时，累积的上下文可能已经更难摘要，压缩也可能打断正在进行的推理、调试或编辑阶段。因此，这一对比检验固定阈值压缩是否已经足够，还是 AutoCompact 在达到阈值前自主选择时机仍能获益。如图 6 所示，AutoCompact 始终优于固定阈值 baseline，说明压缩时机应取决于当前任务状态，而不只是上下文长度。",
         ". Both AutoCompact and the baseline are forcibly compacted at the same 16k context threshold. The comparison therefore tests whether a fixed-threshold compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.":"。AutoCompact 与 baseline model 都会在相同的 16k context threshold 处被强制压缩。这个实验想回答的是：固定阈值触发是否已经足够，还是让 AutoCompact 在达到阈值前自行决定何时压缩上下文仍然更有效。",
         "Adaptive compaction outperforms fixed-threshold compaction":"Adaptive compaction 优于 fixed-threshold compaction",
-        "Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.":"图 5。在 SWE-bench Verified 上，两个模型都会在 16k threshold 处进行 forced compaction，但在相同推理成本预算下，AutoCompact 的表现仍然更好。这说明，只依靠固定阈值触发还不够；让模型自行决定何时压缩上下文能够带来额外价值。",
+        "Figure 6. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal inference-cost budgets. A fixed-threshold trigger is therefore not enough; deciding adaptively when to compact adds value.":"图 6。在 SWE-bench Verified 上，两个模型都会在 16k threshold 处进行 forced compaction，但在相同推理成本预算下，AutoCompact 的表现仍然更好。这说明，只依靠固定阈值触发还不够；让模型自行决定何时压缩上下文能够带来额外价值。",
         "Conclusion":"结论","Citation":"引用",
         "AutoCompact turns context compaction from a fixed runtime rule into a learned agent behavior. With judge-guided SFT and outcome-based RL, coding agents learn when to compact, what to preserve, and how to continue from the compacted state. On SWE-bench Verified, AutoCompact solves more tasks under the same inference-cost budget than both full-history and fixed-threshold baselines.":"AutoCompact 不再把 context compaction 当作固定的 runtime rule，而是让 agent 学会何时压缩上下文、保留哪些信息，以及如何从压缩后的状态继续完成任务。通过 judge-guided SFT 和 outcome-based RL，AutoCompact 在 SWE-bench Verified 上以相同的推理成本解决了比 full-history baseline model 和 fixed-threshold baseline model 更多的任务。"
     });
     var ATTR_ZH = {"Primary":"主导航","Table of contents":"目录","Noisy context compared with the compact working context produced by a model-triggered action":"对比嘈杂上下文与模型触发压缩后生成的紧凑工作上下文","Noisy active context before compaction":"压缩前嘈杂的活动上下文","The model proactively triggers compaction":"模型主动触发上下文压缩","Clean working context after compaction":"压缩后的干净工作上下文","Compaction disposition legend":"上下文压缩处理方式图例","Compaction demo steps":"上下文压缩演示步骤","Original base-agent rollout":"基础 agent 的原始轨迹","Judge annotation decisions":"评审模型的标注决策","Corrected trajectory used for SFT":"用于 SFT 的修正轨迹","Judge decision legend":"评审模型决策图例","Annotation process steps":"标注流程步骤","The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.":"SFT 数据集包含 24% 的压缩触发样本、 53% 的摘要样本和 23% 的后续动作样本。","Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction":"在 256k 上下文窗口且无强制压缩条件下，比较 SWE-bench Verified 上的 baseline model 与 AutoCompact SFT","Chart legend":"图表图例","AutoCompact SFT versus AutoCompact SFT plus RL on SWE-bench Verified with a 256k context window and no forced compaction":"在 256k 上下文窗口且无强制压缩条件下，比较 SWE-bench Verified 上的 AutoCompact SFT 与 SFT+RL","Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold":"当两者均使用 16k 强制压缩阈值时，比较 SWE-bench Verified 上的 baseline model 与最终 AutoCompact 模型","References and notes":"参考文献与注释"};
+    Object.assign(ATTR_ZH, {
+        "GPT-5.6 Sol and Codex use fixed-threshold compaction":"GPT-5.6 Sol 和 Codex 使用固定阈值压缩",
+        "Context grows to the compaction limit":"上下文增长至压缩上限",
+        "Context after threshold-triggered compaction":"固定阈值触发压缩后的上下文",
+        "Task completes after another threshold-triggered compaction":"再次由固定阈值触发压缩后完成任务",
+        "AutoCompact lets the model trigger compaction before reaching the context limit":"AutoCompact 让模型在达到上下文上限前主动触发压缩",
+        "The model proactively compacts a shorter context before it reaches the limit":"模型在较短上下文达到上限前主动压缩",
+        "The model again compacts before the context reaches the limit":"模型再次在上下文达到上限前主动压缩",
+        "The task completes from a compact working state":"任务从紧凑的工作状态完成"
+    });
     var PAGE_TITLE = {
         en: 'AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents',
         zh: 'AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents'
@@ -2231,6 +2552,10 @@ window.BLOG_REFERENCES = {
     "swebench-verified": {
         label: "Introducing SWE-bench Verified (OpenAI, 2024; research report)",
         url: "https://openai.com/index/introducing-swe-bench-verified/"
+    },
+    "openai-compaction": {
+        label: "How enabling two settings tripled our scores on the ARC-AGI-3 benchmark (OpenAI, 2026; research report)",
+        url: "https://openai.com/index/how-two-settings-tripled-our-arc-agi-3-scores/"
     }
 };
 
