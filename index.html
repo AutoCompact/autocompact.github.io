@@ -2571,6 +2571,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
     var currentLanguage = 'en';
     var translationObserver = null;
     var observerQueued = false;
+    var originalWhitespaceByNode = new WeakMap();
 
     /* Status text is created dynamically by the interactive demos, so include it
        in the same reversible dictionary used by the static page. */
@@ -2779,11 +2780,19 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         nodes.forEach(function (node, index) {
             var key = normalize(node.nodeValue);
             if (!Object.prototype.hasOwnProperty.call(dictionary, key)) return;
-            var leading = (node.nodeValue.match(/^\s*/) || [''])[0];
-            var trailing = (node.nodeValue.match(/\s*$/) || [''])[0];
+            var originalWhitespace = originalWhitespaceByNode.get(node);
+            if (!originalWhitespace) {
+                originalWhitespace = {
+                    leading: (node.nodeValue.match(/^\s*/) || [''])[0],
+                    trailing: (node.nodeValue.match(/\s*$/) || [''])[0]
+                };
+                originalWhitespaceByNode.set(node, originalWhitespace);
+            }
+            var leading = originalWhitespace.leading;
+            var trailing = originalWhitespace.trailing;
             /* Avoid an artificial space before Chinese punctuation when a
                sentence is split across inline elements such as <strong>. */
-            if (/^[,.;:!?，。；：！？、）]/.test(dictionary[key])) leading = '';
+            if (lang === 'zh' && /^[,.;:!?，。；：！？、）]/.test(dictionary[key])) leading = '';
             if (lang === 'zh' && /[\u3400-\u9fff，。；：！？、）]$/.test(dictionary[key])) {
                 var nextText = '';
                 if (index + 1 < nodes.length) {
