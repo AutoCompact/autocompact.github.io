@@ -90,6 +90,12 @@ a:hover { color: var(--accent-hover); }
 .post-content h3 {
     text-wrap: balance;
 }
+.post-content .rollouts-heading {
+    font-size: 1.37rem;
+    white-space: nowrap;
+    text-wrap: nowrap;
+}
+
 .title-break-mobile,
 .heading-break-mobile {
     display: none;
@@ -1742,6 +1748,10 @@ a:hover { color: var(--accent-hover); }
 }
 
 @media (max-width: 560px) {
+    .post-content .rollouts-heading {
+        white-space: normal;
+        text-wrap: balance;
+    }
     .title-break-mobile,
     .heading-break-mobile {
         display: initial;
@@ -1868,6 +1878,165 @@ html[lang^="zh"] .trajectory-visual[data-step="4"] .proposal-badge::before { con
 html[lang^="zh"] .outcome-correct::after { content: "本示例"; }
 html[lang^="zh"] .annotated-result.map-row-keep strong::after { content: " · 未修改"; }
 html[lang^="zh"] .invocation-prefix-code { display: none; }
+
+/* Readability pass: keep navigation, metadata, and figure copy legible at 100% zoom. */
+.top-nav a { font-size: 0.75rem; }
+#toc a,
+.reference-list a,
+.reference-list span { font-size: 0.8125rem; line-height: 1.45; }
+#toc .toc-h3 a { font-size: 0.78rem; }
+.post-author-notes,
+.post-meta-row { font-size: 0.78rem; }
+
+.visual-kicker { font-size: 0.75rem; }
+.visual-action { font-size: 0.8125rem; }
+.visual-status,
+.context-step-status { font-size: 0.78rem; }
+
+.context-panel { padding: 0.75rem; }
+.context-panel-head { min-height: 3.2rem; }
+.context-panel-head strong { font-size: 0.78rem; }
+.context-panel-head small,
+.context-token-count { font-size: 0.68rem; }
+.context-stack { gap: 0.45rem; }
+.context-item {
+    min-height: 4rem;
+    padding: 0.55rem 3.65rem 0.55rem 0.58rem;
+}
+.context-item span { font-size: 0.625rem; }
+.context-item strong { font-size: 0.75rem; line-height: 1.4; }
+.context-item small { font-size: 0.68rem; line-height: 1.4; }
+.context-disposition {
+    top: 0.42rem;
+    right: 0.42rem;
+    padding: 0.12rem 0.28rem;
+    font-size: 0.625rem;
+}
+.decision-label { font-size: 0.625rem; }
+.decision-card { padding: 0.7rem 0.4rem; }
+.decision-card strong { font-size: 0.78rem; }
+.decision-card small { font-size: 0.66rem; line-height: 1.4; }
+.post-content .decision-card code { font-size: 0.76rem; }
+.context-after .context-placeholder { font-size: 0.68rem; }
+.context-rewrite-visual[data-mode="after"] .context-after .context-continue {
+    max-height: 120px;
+}
+.context-legend { font-size: 0.68rem; }
+.step-interaction-hint { font-size: 0.7rem; }
+.step-interaction-hint span { font-size: 0.62rem; }
+.autocompact-visual .context-step-button {
+    min-height: 6.35rem;
+    padding: 0.62rem;
+}
+.context-step-button span { font-size: 0.625rem; }
+.context-step-button strong { font-size: 0.75rem; line-height: 1.35; }
+.context-step-button small { font-size: 0.68rem; line-height: 1.4; }
+
+.annotation-panel { padding: 0.7rem; }
+.annotation-panel-head { min-height: 3.6rem; }
+.annotation-panel-head span,
+.annotation-card span,
+.judge-card > span,
+.sft-output > span { font-size: 0.625rem; }
+.annotation-panel-head strong { font-size: 0.78rem; line-height: 1.35; }
+.annotation-panel-head small { font-size: 0.68rem; line-height: 1.4; }
+.annotation-card,
+.judge-card { padding: 0.55rem; }
+.annotation-card strong,
+.judge-card strong { font-size: 0.75rem; line-height: 1.4; }
+.annotation-card small,
+.judge-card small { font-size: 0.68rem; line-height: 1.4; }
+.proposal-badge,
+.judge-eye,
+.post-content .protocol-list li,
+.action-diff,
+.judge-outcome b,
+.judge-outcome span,
+.judge-check,
+.summary-checklist { font-size: 0.625rem; }
+.judge-outcome small { font-size: 0.58rem; line-height: 1.4; }
+.outcome-correct::after { font-size: 0.5rem; }
+.corrected-placeholder { font-size: 0.68rem; }
+.post-content .corrected-trigger code { font-size: 0.72rem; }
+.sft-output strong { font-size: 0.78rem; }
+.sft-output small { font-size: 0.68rem; }
+.sample-counts span { font-size: 0.6rem; }
+.inference-result span { font-size: 0.625rem; }
+.inference-result strong { font-size: 0.75rem; }
+.inference-result small { font-size: 0.68rem; }
+.annotation-mapped-stack {
+    grid-template-rows: minmax(78px, auto) minmax(78px, auto) minmax(92px, auto) minmax(108px, auto) minmax(92px, auto);
+}
+.action-verdict { font-size: 0.625rem; }
+.annotated-result.map-row-keep strong::after { font-size: 0.625rem; }
+.annotation-decision-legend { font-size: 0.68rem; }
+.trajectory-visual[data-step="4"] .annotation-output { max-height: 220px; }
+
+.budget-chart text { font-size: 14px; }
+.budget-chart .axis-title { font-size: 13px; }
+.budget-chart .axis-note { font-size: 12px; }
+.gap-label { font-size: 13px !important; }
+.end-labels text { font-size: 14px; }
+.chart-legend { font-size: 0.75rem; }
+
+.strategy-threshold span { font-size: 0.68rem; }
+.strategy-threshold {
+    right: 0;
+    bottom: 0.65rem;
+    left: 0;
+    transform: translateY(0.55rem);
+}
+.strategy-diagram { padding-bottom: 2.35rem; }
+.context-block { font-size: clamp(0.58rem, 1.35vw, 0.68rem); }
+
+@media (max-width: 760px) {
+    .post-content .rollouts-heading {
+        white-space: normal;
+        text-wrap: balance;
+    }
+    .annotation-flow { grid-template-columns: minmax(0, 1fr); }
+    .annotation-panel-head { min-height: 0; }
+    .annotation-mapped-stack {
+        grid-template-rows: repeat(5, minmax(84px, auto));
+    }
+    .trajectory-visual[data-step="4"] .annotation-output { max-height: 360px; }
+}
+
+@media (max-width: 560px) {
+    .post-author-note-group,
+    .post-author-contact { white-space: normal; }
+    .post-author-contact a { overflow-wrap: anywhere; }
+    .context-panel-head { min-height: 0; }
+    .context-item { min-height: 0; }
+    .compact-decision {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 140px) 1.2rem;
+        gap: 0.15rem;
+    }
+    .decision-arrow {
+        display: grid;
+        width: 1.2rem;
+        height: 1.2rem;
+        place-items: center;
+    }
+    .autocompact-visual .context-step-button { min-height: 6.5rem; }
+    .compaction-strategy { padding: 0.4rem 0; }
+    .strategy-diagram {
+        grid-template-columns: minmax(78px, 1fr) 20px minmax(78px, 1fr) 20px minmax(78px, 1fr);
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .context-window { height: 280px; }
+    .strategy-adaptive .context-window.is-early { height: 210px; }
+    .strategy-adaptive .context-window.is-mid { height: 245px; }
+    .context-block { font-size: 0.625rem; line-height: 1.2; }
+    .context-block.reasoning { min-height: 48px; }
+    .context-block.reasoning.short { flex-basis: 52px; }
+    .context-block.tool { flex-basis: 32px; }
+    .context-block.prompt,
+    .context-block.final { flex-basis: 36px; }
+    .context-block.compact-call { flex-basis: 40px; }
+    .context-block.summary { flex-basis: 68px; }
+}
 </style>
 </head>
 <body>
