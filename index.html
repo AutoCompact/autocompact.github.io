@@ -440,9 +440,9 @@ a:hover { color: var(--accent-hover); }
 }
 .post-content .article-figure img {
     height: auto;
-    border: 1px solid var(--divider);
+    border: 0;
     border-radius: 0;
-    background: var(--card-bg);
+    background: transparent;
 }
 .post-content .article-figure + p {
     margin-top: 0;
@@ -463,10 +463,10 @@ a:hover { color: var(--accent-hover); }
     --viz-neutral-soft: #efefec;
     position: relative;
     overflow: hidden;
-    padding: 1rem;
-    border: 1px solid var(--text);
+    padding: 0;
+    border: 0;
     border-radius: 0;
-    background: var(--card-bg);
+    background: transparent;
     box-shadow: none;
 }
 
@@ -1236,8 +1236,8 @@ a:hover { color: var(--accent-hover); }
 .sample-mix {
     margin: 1.25rem 0;
     padding: 1rem 1.05rem;
-    border: 1px solid var(--text);
-    background: var(--card-bg);
+    border: 0;
+    background: transparent;
 }
 .sample-mix-head {
     display: flex;
@@ -1528,9 +1528,9 @@ a:hover { color: var(--accent-hover); }
 }
 
 .compaction-strategy {
-    padding: 0.9rem;
-    border: 1px solid var(--divider);
-    background: #fff;
+    padding: 0;
+    border: 0;
+    background: transparent;
 }
 
 .strategy-heading {
@@ -1581,7 +1581,7 @@ a:hover { color: var(--accent-hover); }
     position: relative;
     top: -0.7em;
     padding: 0 0.35rem;
-    background: #fff;
+    background: var(--bg);
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.52rem;
     font-weight: 600;
@@ -1765,9 +1765,9 @@ a:hover { color: var(--accent-hover); }
         white-space: nowrap;
     }
     .post-content .autocompact-visual {
-        margin-right: -0.35rem;
-        margin-left: -0.35rem;
-        padding: 0.8rem;
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0;
     }
     .visual-heading {
         align-items: stretch;
@@ -1925,7 +1925,12 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).</li>
 </ul>
 </aside>
-<h2>From a fixed runtime threshold to a learned model decision</h2>
+<h2>Long-horizon coding agents accumulate context they no longer need</h2>
+<p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
+<p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
+<p><strong>The agent must recognize when prior history is no longer needed and compact it without losing the working state, and all relevant information necessary to successfully complete current and future tasks.</strong> This is not just condensing old content. The model needs to keep the working state needed for the next step, for example, which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
+<p>AutoCompact learns to replace the full trajectory with a clean, compact context for the next phase.</p>
+<h2>AutoCompact lets agents decide when to compact the context</h2>
 <p>OpenAI describes retaining private reasoning and summarizing conversations once they grow too long as the way its models are trained and deployed in ChatGPT and Codex<span class="cite" data-key="openai-compaction"></span>. In that production pattern, context length determines when compaction happens. AutoCompact keeps the same basic summarize-and-continue structure, but adds an earlier learned action: the model can call <code>compact()</code> before the fixed limit, whenever the current task state makes compaction useful.</p>
 <figure class="article-figure autocompact-visual compaction-comparison" id="compaction-comparison">
 <section aria-label="GPT-5.6 Sol and Codex use fixed-threshold compaction" class="compaction-strategy strategy-fixed">
@@ -1992,13 +1997,8 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </div>
 </section>
 </figure>
-<p><em>Figure 1. Fixed-threshold compaction summarizes only at a context limit. AutoCompact keeps the same summarize-and-continue structure, but lets the model proactively choose earlier, task-aware compaction points. Diagram structure adapted from OpenAI<span class="cite" data-key="openai-compaction"></span>.</em></p>
-<h2>Long-horizon coding agents accumulate context they no longer need</h2>
-<p>AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.</p>
-<p>But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.</p>
-<p><strong>The agent must recognize when prior history is no longer needed and compact it without losing the working state, and all relevant information necessary to successfully complete current and future tasks.</strong> This is not just condensing old content. The model needs to keep the working state needed for the next step, for example, which paths have been ruled out, which files have been changed, and what needs to be verified next.</p>
-<p>AutoCompact learns to replace the full trajectory with a clean, compact context for the next phase.</p>
-<h2>AutoCompact lets agents decide when to compact the context</h2>
+<p><em>Figure 1. Fixed-threshold compaction summarizes only at a context limit. AutoCompact keeps the same summarize-and-continue structure, but lets the model proactively choose earlier, task-aware compaction points.</em></p>
+<p>Figure 1 highlights the difference in trigger timing. Figure 2 then zooms into a single AutoCompact event, showing what the model preserves, summarizes, and removes before continuing.</p>
 <figure class="article-figure autocompact-visual context-rewrite-visual" data-mode="before" id="context-rewrite-visual">
 <div class="visual-heading">
 <div>
@@ -2317,7 +2317,6 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "specify a next action. However, many summaries are still triggered only after the agent has begun testing or validating its code changes, suggesting that trigger timing can still improve.":"的摘要明确指出了下一步动作。不过，许多摘要仍在 agent 开始测试或验证代码修改后才触发，说明触发时机仍有改进空间。",
         "July 30, 2026":"2026 年 7 月 30 日",
         "8 min read":"阅读约 8 分钟",
-        "From a fixed runtime threshold to a learned model decision":"从固定运行时阈值到模型学习到的决策",
         "OpenAI describes retaining private reasoning and summarizing conversations once they grow too long as the way its models are trained and deployed in ChatGPT and Codex":"OpenAI 将保留私有推理、并在对话过长时进行摘要，描述为其模型的训练方式，以及在 ChatGPT 和 Codex 中的部署方式",
         ". In that production pattern, context length determines when compaction happens. AutoCompact keeps the same basic summarize-and-continue structure, but adds an earlier learned action: the model can call":"。在这种生产机制中，上下文长度决定何时压缩。AutoCompact 保留相同的“摘要后继续”结构，但加入了一个更早触发的学习行为：模型可以调用",
         "before the fixed limit, whenever the current task state makes compaction useful.":"，在固定上限前根据当前任务状态主动压缩。",
@@ -2339,7 +2338,8 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "Verification plan":"验证计划",
         "Verification":"验证",
         "Fallback compaction limit":"兜底压缩上限",
-        "Figure 1. Fixed-threshold compaction summarizes only at a context limit. AutoCompact keeps the same summarize-and-continue structure, but lets the model proactively choose earlier, task-aware compaction points. Diagram structure adapted from OpenAI":"图 1。固定阈值压缩只在达到上下文上限时进行摘要。AutoCompact 保留相同的“摘要后继续”结构，但允许模型更早地主动选择与任务状态匹配的压缩点。图示结构改编自 OpenAI",
+        "Figure 1. Fixed-threshold compaction summarizes only at a context limit. AutoCompact keeps the same summarize-and-continue structure, but lets the model proactively choose earlier, task-aware compaction points.":"图 1。固定阈值压缩只在达到上下文上限时进行摘要。AutoCompact 保留相同的“摘要后继续”结构，但允许模型更早地主动选择与任务状态匹配的压缩点。",
+        "Figure 1 highlights the difference in trigger timing. Figure 2 then zooms into a single AutoCompact event, showing what the model preserves, summarizes, and removes before continuing.":"图 1 展示两种方法在触发时机上的区别。图 2 进一步展开一次 AutoCompact 过程，说明模型在继续执行前会保留、概括和移除哪些上下文。",
         "Figure 2. When the model decides that the current context should be cleaned up, it calls":"图 2。当模型判断当前上下文需要清理时，它会调用",
         "Figure 2 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke":"图 2 展示了 AutoCompact 的核心机制。大多数时候，模型仍像普通 agent 一样工作：读取文件、编辑代码并执行验证。在合适的阶段转换点，例如完成问题定位之后、开始编辑之前，模型可以主动调用",
         "Figure 3. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call":"图 3。在 data collection 期间，judge model 在 TUI 中逐步检查原始 agent 动作，并将关键分支修正为可用于 SFT 的有效轨迹。在 inference，judge model 被移除；训练后的 agent 自行决定何时调用",
