@@ -984,8 +984,10 @@ a:hover { color: var(--accent-hover); }
 }
 
 .annotation-panel-head {
-    min-height: 2.65rem;
+    height: 4rem;
+    min-height: 4rem;
     padding-bottom: 0.45rem;
+    box-sizing: border-box;
     border-bottom: 1px solid var(--divider);
 }
 .annotation-panel-head span,
@@ -1028,6 +1030,42 @@ a:hover { color: var(--accent-hover); }
 .corrected-panel { background: #f6faf8; }
 
 .original-panel .annotation-card { border-color: #d9deed; }
+.execution-badge,
+.target-badge {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.32rem;
+    padding: 0.07rem 0.2rem;
+    border: 1px solid currentColor;
+    background: var(--card-bg);
+    font-size: 0.39rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+.execution-badge { color: var(--viz-green); }
+.execution-badge.is-observed { color: var(--viz-blue); }
+.execution-badge.is-not-executed {
+    border-style: dashed;
+    color: #a76012;
+    background: #fffaf2;
+}
+.target-badge { color: var(--viz-purple); }
+.target-badge.is-not-executed {
+    border-style: dashed;
+    color: #a76012;
+    background: #fffaf2;
+}
+.source-observation {
+    padding-top: 0.1rem;
+    border-top: 1px solid color-mix(in srgb, var(--viz-green) 22%, transparent);
+}
+.source-observation::before {
+    content: "↳ ";
+    color: var(--viz-green);
+    font-weight: 700;
+}
+.not-executed-target { border-style: dashed; }
 .original-panel .proposal-action {
     border-color: var(--accent);
     background: var(--viz-blue-soft);
@@ -1309,7 +1347,7 @@ a:hover { color: var(--accent-hover); }
 /* Figure 3 action-by-action mapping */
 .annotation-mapped-stack {
     display: grid;
-    grid-template-rows: 58px 58px 66px 78px 66px;
+    grid-template-rows: 72px 72px 80px 80px 80px;
     gap: 0.34rem;
     padding-top: 0.5rem;
 }
@@ -1324,6 +1362,11 @@ a:hover { color: var(--accent-hover); }
 
 .annotation-mapped-stack .annotation-card span,
 .annotation-mapped-stack .judge-card > span { padding-right: 2.4rem; }
+
+.original-panel .annotation-mapped-stack .annotation-card span { padding-right: 0; }
+
+.annotation-mapped-stack .annotation-card:has(.target-badge.is-not-executed) span,
+.annotation-mapped-stack .annotation-card:has(.execution-badge) span { padding-right: 4.8rem; }
 
 .action-verdict {
     position: absolute;
@@ -1356,12 +1399,6 @@ a:hover { color: var(--accent-hover); }
 }
 
 .action-verdict { color: var(--row-color); }
-.annotated-result.map-row-keep strong::after {
-    content: " · unchanged";
-    color: var(--viz-blue);
-    font-size: 0.45rem;
-    font-weight: 500;
-}
 
 .trajectory-visual[data-step="1"] .map-row-keep,
 .trajectory-visual[data-step="2"] .map-row-trigger,
@@ -1933,7 +1970,10 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 .context-step-button small { font-size: 0.68rem; line-height: 1.4; }
 
 .annotation-panel { padding: 0.7rem; }
-.annotation-panel-head { min-height: 3.6rem; }
+.annotation-panel-head {
+    height: 4.75rem;
+    min-height: 4.75rem;
+}
 .annotation-panel-head span,
 .annotation-card span,
 .judge-card > span,
@@ -1947,6 +1987,8 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 .annotation-card small,
 .judge-card small { font-size: 0.68rem; line-height: 1.4; }
 .proposal-badge,
+.execution-badge,
+.target-badge,
 .judge-eye,
 .post-content .protocol-list li,
 .action-diff,
@@ -1965,7 +2007,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 .inference-result strong { font-size: 0.75rem; }
 .inference-result small { font-size: 0.68rem; }
 .annotation-mapped-stack {
-    grid-template-rows: minmax(78px, auto) minmax(78px, auto) minmax(92px, auto) minmax(108px, auto) minmax(92px, auto);
+    grid-template-rows: minmax(92px, auto) minmax(92px, auto) minmax(106px, auto) minmax(92px, auto) minmax(106px, auto);
 }
 .action-verdict { font-size: 0.625rem; }
 .annotated-result.map-row-keep strong::after { font-size: 0.625rem; }
@@ -1995,9 +2037,12 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         text-wrap: balance;
     }
     .annotation-flow { grid-template-columns: minmax(0, 1fr); }
-    .annotation-panel-head { min-height: 0; }
+    .annotation-panel-head {
+        height: auto;
+        min-height: 0;
+    }
     .annotation-mapped-stack {
-        grid-template-rows: repeat(5, minmax(84px, auto));
+        grid-template-rows: minmax(104px, auto) minmax(104px, auto) minmax(104px, auto) minmax(90px, auto) minmax(104px, auto);
     }
     .trajectory-visual[data-step="4"] .annotation-output { max-height: 360px; }
 }
@@ -2077,7 +2122,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <p>AutoCompact teaches the model to <strong>adaptively compact the context</strong> when necessary, i.e., replacing noisy history with a clean context for the next step.</p>
 <p><strong>Results:</strong></p>
 <ul>
-<li><strong>Data:</strong> We collect 1,052 <strong>judge-guided on-policy SFT examples</strong> on SWE-rebench.</li>
+<li><strong>Data:</strong> We collect 1,052 <strong>SFT examples from judge-guided on-policy rollouts</strong> on SWE-rebench.</li>
 <li><strong>SFT:</strong> AutoCompact solves more tasks with less context processing, outperforming long-context models and baselines that compact at fixed thresholds.</li>
 <li><strong>RL:</strong> We further improve task solving and auto-compaction jointly via end-to-end RL (+10.6% on average on SWE-bench Verified).</li>
 </ul>
@@ -2239,7 +2284,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <div class="visual-heading">
 <div>
 <span class="visual-kicker">Interactive annotation demo</span>
-<strong>How a judge turns a rollout into SFT data</strong>
+<strong>What the model proposed—and what the environment executed</strong>
 </div>
 <button aria-pressed="false" class="visual-action trajectory-action" type="button">
 <span class="action-run">Run demo <span aria-hidden="true" class="action-icon">→</span></span>
@@ -2248,70 +2293,70 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 </button>
 </div>
 <div class="annotation-flow">
-<section aria-label="Original base-agent rollout" class="annotation-panel original-panel">
+<section aria-label="Base-model proposals before Judge review" class="annotation-panel original-panel">
 <div class="annotation-panel-head">
-<span>Original rollout</span>
-<strong>Different actions from one rollout</strong>
-<small>Judge reviews them sequentially in the TUI</small>
+<span>Base-model proposal</span>
+<strong>Actions before Judge review</strong>
+<small>Candidate action at each step</small>
 </div>
 <div class="annotation-mapped-stack">
-<div class="annotation-card map-row-keep"><span>Action 1 · Agent</span><strong>Inspect candidate files</strong><small>Localization is still in progress</small></div>
-<div class="annotation-card map-row-keep"><span>Action 2 · Agent</span><strong>Grep related symbols</strong><small>Useful exploration within the current phase</small></div>
-<div class="annotation-card map-row-trigger"><span>Action 3 · Agent</span><strong>Inspect another file</strong><small>Localization is already complete</small></div>
-<div class="annotation-card map-row-summary"><span>Action 4 · Generated summary</span><strong># Auto Context Summary</strong><small>Conclusion retained, but the exact target file is missing</small></div>
-<div class="annotation-card map-row-continuation"><span>Action 5 · Agent</span><strong>Repeat repository search</strong><small>Fails to use the compacted working state</small></div>
+<div class="annotation-card map-row-keep"><span>Action 1 · Agent proposal</span><strong>Inspect candidate files</strong><small>Localization is still in progress</small></div>
+<div class="annotation-card map-row-keep"><span>Action 2 · Agent proposal</span><strong>Grep related symbols</strong><small>Useful exploration within the current phase of the task</small></div>
+<div class="annotation-card map-row-trigger"><span>Action 3 · Agent proposal</span><strong>Inspect another file</strong><small>Localization is already complete</small></div>
+<div class="annotation-card map-row-summary"><span>Action 4 · Summary</span><strong># Auto Context Summary</strong><small>Target file is missing</small></div>
+<div class="annotation-card map-row-continuation"><span>Action 5 · Agent proposal</span><strong>Repeat repository search</strong><small>Fails to use the compacted working state</small></div>
 </div>
 </section>
 <section aria-label="Judge annotation decisions" class="annotation-panel judge-panel">
 <div class="annotation-panel-head">
-<span>Judge annotation</span>
-<strong>A decision for each action</strong>
-<small>Keep valid actions; replace or repair invalid ones</small>
+<span>Judge review</span>
+<strong>Choose the action</strong>
+<small>Keep, replace, or repair</small>
 </div>
 <div class="annotation-mapped-stack">
 <div class="judge-card map-row-keep"><span>Action 1 decision</span><strong>Appropriate exploration</strong><small>Leave the proposed action unchanged</small><b class="action-verdict">KEEP</b></div>
 <div class="judge-card map-row-keep"><span>Action 2 decision</span><strong>Relevant evidence gathering</strong><small>Leave the proposed action unchanged</small><b class="action-verdict">KEEP</b></div>
-<div class="judge-card map-row-trigger"><span>Action 3 decision</span><strong>Phase transition detected</strong><small>Replace continued exploration with compaction</small><b class="action-verdict">REPLACE</b></div>
-<div class="judge-card map-row-summary"><span>Action 4 decision</span><strong>Required state is missing</strong><small>Add the exact target file to the summary</small><b class="action-verdict">REPAIR</b></div>
+<div class="judge-card map-row-trigger"><span>Action 3 decision</span><strong>Compaction is appropriate</strong><small>Replace continued exploration with compaction</small><b class="action-verdict">REPLACE</b></div>
+<div class="judge-card map-row-summary"><span>Action 4 decision</span><strong>Required state is missing</strong><small>Add the target file</small><b class="action-verdict">REPAIR</b></div>
 <div class="judge-card map-row-continuation"><span>Action 5 decision</span><strong>Continuation is off track</strong><small>Use the summary and begin the localized edit</small><b class="action-verdict">REPAIR</b></div>
 </div>
 </section>
-<section aria-label="Corrected trajectory used for SFT" class="annotation-panel corrected-panel">
+<section aria-label="Actions executed after Judge review" class="annotation-panel corrected-panel">
 <div class="annotation-panel-head">
-<span>Annotated trajectory</span>
-<strong>Action after Judge review</strong>
-<small>Every row maps to the action on the left</small>
+<span>Environment execution</span>
+<strong>Actions after Judge review</strong>
+<small>These are the actions actually executed</small>
 </div>
 <div class="annotation-mapped-stack">
-<div class="annotation-card annotated-result map-row-keep"><span>Action 1 result</span><strong>Inspect candidate files</strong><small>Passed through without modification</small></div>
-<div class="annotation-card annotated-result map-row-keep"><span>Action 2 result</span><strong>Grep related symbols</strong><small>Passed through without modification</small></div>
-<div class="annotation-card annotated-result map-row-trigger"><span>Action 3 result</span><strong><code>compact()</code></strong><small>Replaces “inspect another file”</small></div>
-<div class="annotation-card annotated-result map-row-summary"><span>Action 4 result</span><strong># Auto Context Summary</strong><small>Objective, conclusion, <b>target file</b>, and next action</small></div>
-<div class="annotation-card annotated-result map-row-continuation"><span>Action 5 result</span><strong>Edit the localized file</strong><small>Replaces repeated repository search</small></div>
+<div class="annotation-card annotated-result map-row-keep"><span>Action 1 · Coding</span><strong>Inspect candidate files</strong><small class="source-observation">File contents returned</small><b class="execution-badge">Executed</b></div>
+<div class="annotation-card annotated-result map-row-keep"><span>Action 2 · Coding</span><strong>Grep related symbols</strong><small class="source-observation">Symbol matches returned</small><b class="execution-badge">Executed</b></div>
+<div class="annotation-card annotated-result map-row-trigger"><span>Action 3 · Compaction action</span><strong><code>compact()</code></strong><small class="source-observation">Context compacted</small><b class="execution-badge">Executed</b></div>
+<div class="annotation-card annotated-result map-row-summary"><span>Action 4 · Corrected</span><strong># Auto Context Summary</strong><small>State, target file, and next action</small></div>
+<div class="annotation-card annotated-result map-row-continuation"><span>Action 5 · Coding</span><strong>Edit the localized file</strong><small class="source-observation">Localized edit applied</small><b class="execution-badge">Executed</b></div>
 </div>
 </section>
 </div>
-<div aria-label="Judge decision legend" class="annotation-decision-legend"><span><i class="decision-keep"></i>KEEP · unchanged</span><span><i class="decision-replace"></i>REPLACE · new action</span><span><i class="decision-repair"></i>REPAIR · fix state or continuation</span></div>
+<div aria-label="Judge decision legend" class="annotation-decision-legend"><span><i class="decision-keep"></i>EXECUTED · environment action</span><span><i class="decision-replace"></i>NOT EXECUTED · replaced proposal</span><span><i class="decision-repair"></i>REPAIRED · corrected output</span></div>
 <div class="annotation-output">
-<div class="sft-output"><span>Accepted training example</span><strong>SFT dataset · 1,052 examples</strong><small>Original prefix + annotated action sequence</small><div class="sample-counts"><span>24% trigger</span><span>53% summary</span><span>23% continuation</span></div></div>
+<div class="sft-output"><span>Saved supervision</span><strong>Corrected trajectory enters SFT</strong><small>Executed actions and corrected outputs</small><div class="sample-counts"><span>24% trigger</span><span>53% summary</span><span>23% continuation</span></div></div>
 <div aria-hidden="true" class="output-arrow">→</div>
 <div class="inference-result"><span>After SFT</span><strong>The trained agent acts without the judge</strong><small>It learns when to trigger <code>compact()</code>, what to preserve, and how to continue.</small></div>
 </div>
 <div class="step-interaction-hint"><span>Interactive</span><strong>Click any step below to inspect that annotation state</strong></div>
 <div aria-label="Annotation process steps" class="context-step-nav annotation-step-nav" role="group">
-<button aria-pressed="true" class="context-step-button annotation-step-button is-active" data-step="1" type="button"><span>Step 1</span><strong>Keep valid actions</strong><small>Two useful exploration actions pass unchanged</small></button>
-<button aria-pressed="false" class="context-step-button annotation-step-button" data-step="2" type="button"><span>Step 2</span><strong>Replace trigger</strong><small>Change continued exploration to <code>compact()</code></small></button>
-<button aria-pressed="false" class="context-step-button annotation-step-button" data-step="3" type="button"><span>Step 3</span><strong>Repair state</strong><small>Fix the summary and continuation actions</small></button>
-<button aria-pressed="false" class="context-step-button annotation-step-button" data-step="4" type="button"><span>Step 4</span><strong>Save trajectory</strong><small>Use the full annotated sequence for SFT</small></button>
+<button aria-pressed="true" class="context-step-button annotation-step-button is-active" data-step="1" type="button"><span>Step 1</span><strong>Keep valid actions</strong><small>Actions 1 and 2 execute unchanged</small></button>
+<button aria-pressed="false" class="context-step-button annotation-step-button" data-step="2" type="button"><span>Step 2</span><strong>Replace action 3</strong><small>Skip inspection; execute <code>compact()</code></small></button>
+<button aria-pressed="false" class="context-step-button annotation-step-button" data-step="3" type="button"><span>Step 3</span><strong>Repair and continue</strong><small>Fix the summary; execute the edit</small></button>
+<button aria-pressed="false" class="context-step-button annotation-step-button" data-step="4" type="button"><span>Step 4</span><strong>Save supervision</strong><small>Store the corrected sequence for SFT</small></button>
 </div>
-<div aria-live="polite" class="context-step-status annotation-step-status" role="status">Step 1: the judge keeps two valid exploration actions unchanged and advances through the rollout.</div>
+<div aria-live="polite" class="context-step-status annotation-step-status" role="status">Step 1: actions 1 and 2 pass through Judge review and execute unchanged.</div>
 </figure>
-<p><em>Figure 3. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call </em><em><strong><code>compact()</code></strong></em><em> by itself.</em></p>
+<p><em>Figure 3. The left column shows the base model’s proposed actions. The Judge keeps valid proposals or replaces invalid ones before execution. Actions 3 and 5 on the left are not executed; the environment instead executes the corrected actions on the right, including </em><em><strong><code>compact()</code></strong></em><em> and the localized edit.</em></p>
 <p>Using 379 SWE-rebench tasks<span class="cite" data-key="swe-rebench"></span> and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.</p>
 <div aria-label="The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples." class="sample-mix" role="img">
 <div class="sample-mix-head"><strong>1,052 cold-start examples cover the full compaction loop</strong></div>
 <div class="sample-cards">
-<div class="sample-card sample-card-trigger"><span>When to compact</span><strong>24%</strong><small>Identify a phase transition and call <code>compact()</code></small></div>
+<div class="sample-card sample-card-trigger"><span>When to compact</span><strong>24%</strong><small>Determine when compaction is appropriate and call <code>compact()</code></small></div>
 <div class="sample-card sample-card-summary"><span>What to preserve</span><strong>53%</strong><small>Produce a complete summary of the state needed next</small></div>
 <div class="sample-card sample-card-continuation"><span>How to continue</span><strong>23%</strong><small>Act correctly from the compacted context</small></div>
 </div>
@@ -2422,8 +2467,14 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 <script>
 (function () {
     'use strict';
-    var TEXT_ZH = {"AutoCompact: Learning":"AutoCompact: Learning","When to Compact Context":"When to Compact Context","in Long-Horizon":"in Long-Horizon","Coding Agents":"Coding Agents","First published:":"首次发布：","July 13, 2026":"2026 年 7 月 13 日","Last update:":"最近更新：","July 27, 2026":"2026 年 7 月 27 日","7 min read":"阅读约 7 分钟","TL;DR":"TL;DR","Motivation:":"动机：","Long-horizon coding trajectories can accumulate irrelevant context (e.g., failed attempts and noisy tool output), which makes it harder for the agent to focus on what matters next.":"Long-horizon coding trajectories 会不断累积无关上下文（例如失败尝试和 noisy tool output），使 agent 更难聚焦下一步真正重要的信息。","AutoCompact teaches the model to":"AutoCompact 教会模型在必要时","adaptively compact the context":"自适应地 compact context","when necessary, i.e., replacing noisy history with a clean context for the next step.":"，也就是用 clean context 替换 noisy history，为下一步保留清晰的工作状态。","Results:":"结果：","Data:":"数据：","We collect 1,052":"我们收集了 1,052 个","judge-guided on-policy SFT examples":"judge-guided on-policy SFT examples","on SWE-rebench.":"，数据来自 SWE-rebench。","SFT:":"SFT：","AutoCompact outperforms baselines with a long-context window or naive fixed-budget compaction.":"AutoCompact 优于 long-context baseline 和 naive fixed-budget compaction。","RL:":"RL：","We further improve task solving and auto-compaction jointly via end-to-end RL.":"我们进一步通过 end-to-end RL 联合提升 task solving 与 auto-compaction。","Long-horizon coding agents accumulate context they no longer need":"Long-horizon coding agents 会累积不再需要的上下文","AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.":"AutoCompact 建立在一个简单但重要的观察之上：如果把直接促成任务完成的关键步骤单独抽出来，其余大量工作其实都属于探索。例如，在定位问题时，agent 可能会检查多个文件、比较若干可能的位置，并测试不同假设，之后才确定应当在哪里修改。这些步骤即使不会直接出现在最终方案中，在当前阶段往往仍然是必要的。","But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.":"但当 agent 进入下一阶段后，这些细节可能就不再有帮助。真正重要的是探索得到的结论，而不是得出结论的每一个中间步骤。把完整探索过程一直保留在上下文中会增加噪声，例如让模型重新回到已经排除的假设。","The agent must recognize when prior history is no longer needed and compact it without losing the working state, and all relevant information necessary to successfully complete current and future tasks.":"agent 要学会判断什么时候可以不再保留之前的完整历史。压缩上下文时，既要保住当前的工作状态，也不能丢掉完成当前任务和后续任务所需的信息。","This is not just condensing old content. The model needs to keep the working state needed for the next step, for example, which paths have been ruled out, which files have been changed, and what needs to be verified next.":"这不只是简单地缩短旧内容。模型还得留下下一步真正用得上的信息，比如已经排除了哪些路径、修改了哪些文件，以及接下来还要验证什么。","AutoCompact learns to replace the full trajectory with a clean, compact context for the next phase.":"AutoCompact 的目的是用干净、紧凑的上下文替换 full trajectory，为下一阶段做好准备。","AutoCompact lets agents decide when to compact the context":"AutoCompact 让 agent 自己决定何时 compact context","Interactive compaction":"交互式 context compaction","From noisy history to a clean working context":"从嘈杂历史转变为干净的工作上下文","Run demo":"运行 demo","Compacting":"正在压缩","Reset demo":"重置 demo","Noisy active context":"嘈杂的活动上下文","Exploration keeps accumulating":"探索过程持续累积","Initial task":"初始任务","Implement the requested change":"实现所请求的修改","KEEP":"保留","Tool · 4.2k tokens":"工具输出 · 4.2k token","Long file output":"冗长的文件输出","Most lines are unrelated to the fix":"大多数行与修复无关","DROP":"丢弃","Agent":"agent","Repeated inspect / grep":"重复检查 / grep","Revisits paths already ruled out":"重新查看已经排除的路径","Agent + tool":"agent + 工具","Failed edit and reverted diff":"失败的编辑及已回滚的差异","Based on a stale hypothesis":"基于已经过时的假设","Useful conclusion":"有效结论","Bug localized; edit plan identified":"问题已定位；修改方案已确定","SUMMARIZE":"摘要","Recent turns":"最近几轮对话","Latest command and result":"最新命令及其结果","Model-generated action":"模型生成的动作","Localization is complete. Earlier exploration is no longer needed.":"问题定位已经完成，不再需要先前的探索过程。","Clean working context":"干净的工作上下文","Ready for the next phase":"已为下一阶段做好准备","Agent is acting from compacted state":"agent 正基于压缩后的状态执行","Waiting for the model to trigger compaction":"等待模型触发 context compaction","Kept verbatim":"原样保留","Generated working state":"生成的工作状态","Objective, conclusion, modified files, verification status, and next action":"目标、结论、已修改文件、验证状态和下一步动作","Next agent turn":"agent 下一轮动作","Apply the localized fix":"实施已经定位的修复","Edit the target file, then run focused tests":"修改目标文件，然后运行针对性测试","Keep verbatim":"原样保留","Summarize":"生成摘要","Drop as outdated noise":"作为过期噪声丢弃","Interactive":"可交互","Click any step below to jump to that state":"点击下方任一步骤即可跳转到对应状态","Step 1":"步骤 1","Context grows noisy":"上下文逐渐嘈杂","Exploration and stale history accumulate":"探索过程与过期历史不断累积","Step 2":"步骤 2","Model decides":"模型作出判断","A phase boundary triggers":"phase boundary 触发","Step 3":"步骤 3","Context is compacted":"上下文完成压缩","Keep, summarize, or drop each part":"逐项决定保留、摘要或丢弃","Step 4":"步骤 4","Work continues":"继续执行任务","Use the clean context for the next phase":"使用干净上下文进入下一阶段","Step 1: exploration keeps accumulating; the context approaches capacity and becomes increasingly noisy.":"步骤 1：探索过程不断累积；上下文接近容量上限，噪声越来越多。","Figure 1. When the model decides that the current context should be cleaned up, it calls":"图 1。当模型判断当前上下文需要清理时，它会调用","to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted":"来触发压缩。此后，模型看到的只有初始任务、最近几轮对话，以及压缩生成的",", instead of the full history.":"，而不是完整历史。","Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke":"图 1 展示了 AutoCompact 的核心机制。大多数时候，模型仍像普通 agent 一样工作：读取文件、编辑代码并执行验证。在合适的阶段转换点，例如完成问题定位之后、开始编辑之前，模型可以主动调用",".":"。","When":"","is invoked, the runtime compacts the current context into a":"运行时会将当前 context compact 成",". The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with \"original task + recent turns + summary.\"":"。这个摘要保留了下一阶段所需的工作状态，同时从上下文中移除中间探索细节。之后模型 conditioned on “原始任务 + 最近对话 + 摘要”继续执行。","Judge-guided on-policy rollouts teach when and what to compact":"Judge-guided on-policy rollouts 教会模型何时 compact 、保留什么","Interactive annotation":"交互式标注","How a judge turns a rollout into SFT data":"Judge 如何把 rollout 转成 SFT data","Annotating":"正在标注","Original rollout":"Original rollout","Different actions from one rollout":"同一条轨迹中的不同动作","Judge reviews them sequentially in the TUI":"judge model 在 TUI 中依次检查这些动作","Action 1 · Agent":"动作 1 · agent","Inspect candidate files":"检查候选文件","Localization is still in progress":"问题定位仍在进行","Action 2 · Agent":"动作 2 · agent","Grep related symbols":"使用 grep 搜索相关符号","Useful exploration within the current phase":"当前阶段中有价值的探索","Action 3 · Agent":"动作 3 · agent","Inspect another file":"继续检查另一个文件","Localization is already complete":"问题定位已经完成","Action 4 · Generated summary":"动作 4 · 生成的摘要","Conclusion retained, but the exact target file is missing":"保留了结论，但遗漏了确切的目标文件","Action 5 · Agent":"动作 5 · agent","Repeat repository search":"重复搜索代码仓库","Fails to use the compacted working state":"未能使用压缩后的工作状态","Judge annotation":"Judge annotation","A decision for each action":"逐个判断每个动作","Keep valid actions; replace or repair invalid ones":"保留有效动作；替换或修复无效动作","Action 1 decision":"动作 1 的判断","Appropriate exploration":"恰当的探索","Leave the proposed action unchanged":"保持原动作不变","Action 2 decision":"动作 2 的判断","Relevant evidence gathering":"相关证据收集","Action 3 decision":"动作 3 的判断","Phase boundary detected":"检测到 phase boundary","Replace continued exploration with compaction":"用 context compaction 替换继续探索","REPLACE":"替换","Action 4 decision":"动作 4 的判断","Required state is missing":"缺少必要状态","Add the exact target file to the summary":"在摘要中补充确切的目标文件","REPAIR":"修复","Action 5 decision":"动作 5 的判断","Continuation is off track":"后续动作偏离方向","Use the summary and begin the localized edit":"利用摘要并开始修改已定位的文件","Annotated trajectory":"Annotated trajectory","Action after Judge review":"judge model 检查后的动作","Every row maps to the action on the left":"每一行都对应左侧的一个动作","Action 1 result":"动作 1 的结果","Passed through without modification":"未经修改直接保留","Action 2 result":"动作 2 的结果","Action 3 result":"动作 3 的结果","Replaces “inspect another file”":"替换“继续检查另一个文件”","Action 4 result":"动作 4 的结果","Objective, conclusion,":"目标、结论、","target file":"目标文件",", and next action":"和下一步动作","Action 5 result":"动作 5 的结果","Edit the localized file":"修改已经定位的文件","Replaces repeated repository search":"替换重复的代码仓库搜索","KEEP · unchanged":"保留 · 不变","REPLACE · new action":"替换 · 新动作","REPAIR · fix state or continuation":"修复 · 修正状态或后续动作","Accepted training example":"已接受的训练样本","SFT dataset · 1,052 examples":"SFT 数据集 · 1,052 个样本","Original prefix + annotated action sequence":"原始前缀 + 标注后的动作序列","24% trigger":"24% 触发动作","53% summary":"53% 摘要","23% continuation":"23% 后续动作","After SFT":"完成 SFT 后","The trained agent acts without the judge":"训练后的 agent 不再需要 Judge","It learns when to trigger":"它学会何时触发",", what to preserve, and how to continue.":"、需要保留什么，以及如何继续执行。","Click any step below to inspect that annotation state":"点击下方任一步骤以查看对应的标注状态","Keep valid actions":"保留有效动作","Two useful exploration actions pass unchanged":"两个有用的探索动作保持不变","Replace trigger":"替换触发动作","Change continued exploration to":"将继续探索改为","Repair state":"修复状态","Fix the summary and continuation actions":"修复摘要与后续动作","Save trajectory":"保存轨迹","Use the full annotated sequence for SFT":"将完整标注序列用于 SFT","Step 1: the judge keeps two valid exploration actions unchanged and advances through the rollout.":"步骤 1：judge model 保留两个有效的探索动作，并继续检查整条轨迹。","Figure 2. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call":"图 2。在 data collection 期间，judge model 在 TUI 中逐步检查原始 agent 动作，并将关键分支修正为可用于 SFT 的有效轨迹。在经过训练后进行 inference 时，judge model 被移除；训练后的 agent 自行决定何时调用","by itself.":"。","AutoCompact requires the model to learn three capabilities: when to invoke":"AutoCompact 要求模型学习三种能力：何时调用",", what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. As shown in Figure 2, we therefore introduce":"、摘要中应保留哪些信息，以及如何从压缩后的上下文继续执行。现有模型无法稳定表现出这些行为。因此，如图 2 所示，我们引入了","a judge model during data collection":"一个用于 data collection 阶段的 judge model",". Using only the history visible at the current step, the judge reviews each action proposed by the base model":"。judge model 只使用当前步骤可见的历史，检查基础模型提出的每个动作","More specifically, if the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with":"具体来说，如果提出的动作已经合适，judge model 就保持其不变并进入下一步。当 judge model 识别出合适的阶段转换点时，它可以将模型提出的动作替换为",". If the resulting":"，引导模型产生压缩行为。如果由此生成的","omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.":"遗漏或错误描述了下一阶段所需的状态，judge model 会修改摘要。如果模型未能利用压缩后的上下文，例如重复已经完成的探索，或忘记摘要中保存的结论，judge model 也可以修正后续动作。","The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke":"judge model 不会随意重写轨迹。它遵循一套标注协议，其中规定了有效的压缩时机、每份摘要应保留的状态，以及允许进行的修正。随后，系统使用 corrected trajectory 进行 SFT。在经过训练后进行 inference 时，judge model 被移除，训练后的模型自行决定何时调用","and continues from the compacted context on its own.":"，并自行从压缩后的上下文继续执行。","Using 379 SWE-rebench tasks":"我们使用 379 个 SWE-rebench 任务","and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.":"，并以 GPT-5.5-Codex 作为 judge model；在过滤格式错误的请求、摘要循环和偏离方向的后续动作后，共收集到 1,052 个 cold-start SFT 样本。","1,052 cold-start examples cover the full compaction loop":"1,052 个 cold-start 样本覆盖完整的 context compaction 闭环","When to compact":"When to compact","Identify the phase boundary and call":"识别 phase boundary 并调用","What to preserve":"What to preserve","Produce a complete summary of the state needed next":"完整概括下一阶段所需的状态","How to continue":"How to continue","Act correctly from the compacted context":"基于压缩后的上下文正确行动","Long context alone does not remove the need for compaction":"Long context 本身并不能取代 compaction","We first evaluate on":"我们首先在","with a":"上进行评测，使用","256k context window and no forced compaction":"256k context window，且不进行 forced compaction",". The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.":"。baseline model 保留 full trajectory，而 AutoCompact 仅在模型判断有用时才进行压缩。该设置直接检验：仅依靠 long context 是否已经足够，还是主动移除过期历史仍能改善推理。","Long context · 256k · no forced compaction":"long context · 256k · 无 forced compaction","Learned compaction solves more tasks under the same token budget":"在相同 token 预算下，学习得到的压缩策略能解决更多任务","SFT additional solved tasks":"SFT 额外解决的任务数","Baseline versus AutoCompact SFT on SWE-bench Verified by cumulative tokens processed per task with a 256k context window and no forced compaction":"在 256k context window 且无 forced compaction 的条件下，按每个任务累计处理的 token 数比较 SWE-bench Verified 上的 baseline model 与 AutoCompact SFT","AutoCompact SFT outperforms the baseline across all shown budgets in the 256k long-context regime.":"在 256k long-context setting 下，AutoCompact SFT 在图示的所有预算区间均优于 baseline model。","Pass rate (%)":"通过率（%）","Cumulative tokens processed per task (log scale)":"每个任务累计处理的 token 数（对数刻度）","Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every token budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.":"图 3。在 SWE-bench Verified 上，当 context window 为 256k 且不进行 forced compaction 时，AutoCompact-SFT 在每个 token 预算下解决的任务都多于 baseline model。因此，仅有 long context 并不足够；adaptive compaction 仍然有帮助。","AutoCompact-SFT consistently outperforms the baseline across every token budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.":"AutoCompact-SFT 在所有 token 预算下都持续优于 baseline model。由于该设置中两个模型都不会被 forced compaction，这一结果表明，压缩并不只是应对上下文溢出的紧急措施。一条轨迹即使能容纳在 256k token 内，也可能包含足够多的过期探索，从而干扰后续推理。","Jointly train task solving and compaction with RL":"用 RL 联合训练 task solving 与 compaction","The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether those decisions ultimately help solve the task.":"SFT 阶段教会模型模仿 judge model 认可的压缩行为，但并不会直接优化这些决策最终是否有助于解决任务。","Starting from the SFT checkpoint, we develop a fully asynchronous RL system and train the agent with GRPO on SWE-Gym":"从 SFT 检查点出发，我们开发了一套完全异步的强化学习系统，并在 SWE-Gym 上使用 GRPO 训练 agent",". Each rollout receives a binary outcome reward based on whether its final patch passes the test suite. GRPO converts this outcome into a trajectory-level advantage and applies the same advantage to every model-generated token in that trajectory—including regular coding actions, the decision to call":"。每条轨迹会根据最终补丁是否通过测试套件获得二元结果奖励。GRPO 将该结果转化为 trajectory-level advantage，并把同一个优势应用于轨迹中所有由模型生成的 token，包括常规编程动作、是否调用",", the generated context summary, and the continuation after compaction.":"的决策、生成的上下文摘要，以及压缩后的后续动作。","Compaction is therefore not trained as a separate auxiliary task. The agent jointly learns to solve the software-engineering problem and manage its context whenever doing so improves the final task outcome. Useful compaction is reinforced when it contributes to a successful trajectory, while unnecessary or lossy compaction is discouraged when it harms task completion. We compare the SFT model with the RL model under the same 256k evaluation setting.":"因此，context compaction 并不是作为独立的辅助任务来训练。只要上下文管理能够改善最终任务结果，agent 就会同时学习解决软件工程问题和管理上下文。当有用的压缩促成成功轨迹时，它会得到强化；当不必要或有损的压缩妨碍任务完成时，它会受到抑制。我们在相同的 256k 评测设置下比较 SFT 模型与 RL 模型。","RL · 256k · no forced compaction":"RL · 256k · 无 forced compaction","RL improves the SFT policy at every token budget":"RL 在每个 token 预算下都提升了 SFT 策略","RL additional solved tasks":"RL 额外解决的任务数","AutoCompact SFT versus AutoCompact SFT plus RL by cumulative tokens processed per task":"按每个任务累计处理的 token 数比较 AutoCompact SFT 与 AutoCompact SFT+RL","RL substantially improves over the SFT model across all shown budgets.":"在图示的所有预算区间，RL 都显著优于 SFT 模型。","Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every token budget.":"图 4。在 SWE-bench Verified 上，在相同的 256k context window 且无 forced compaction 的条件下，RL 在每个 token 预算下都优于 SFT 模型。","The RL model substantially outperforms the SFT model across every budget, with the largest gains in the finite-compute regime.":"RL 模型在所有预算下都显著优于 SFT 模型，并且在有限计算预算区间的提升最大。","SFT establishes the compaction behavior, while RL improves how that behavior contributes to task completion.":"SFT 建立 compaction behavior，RL 则进一步提升它对任务完成的贡献。","RL also changes how the model uses compaction.":"RL 也改变了模型使用 context compaction 的方式。","Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes":"轨迹分析表明，相比于“何时压缩”，AutoCompact 对“保留什么”的学习更加可靠。完成 SFT 后，模型会主动调用","in":"，覆盖","of tasks; after RL, this rises to":"的任务；完成 RL 后，这一比例上升到",", indicating that RL encourages more active context management. The generated summaries remain highly informative:":"，说明 RL 鼓励模型更主动地管理上下文。生成的摘要仍然保留了大量有效信息：","retain relevant task and workspace state, and":"的摘要保留了相关任务与工作区状态，且","specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.":"的摘要明确指出了下一步动作。不过，许多摘要仍在验证阶段触发，这表明如何学习最有价值的压缩时机，仍是一个重要的改进方向。","Fixed-budget compaction is not enough":"Fixed-budget compaction 并不够","Finally, we evaluate on":"最后，我们在","with a much smaller":"上进行评测，上下文窗口仅为","16k context window":"16k context window 进行评测",". Both AutoCompact and the baseline use the same fixed-budget forced compaction when the context limit is reached. The comparison therefore tests whether a fixed-budget compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.":"。当达到上下文上限时，AutoCompact 与 baseline model 都使用相同的 fixed-budget forced compaction。因此，该比较检验 fixed-budget compaction 规则是否已经足够，还是 AutoCompact 在达到阈值之前自适应地决定何时压缩仍能带来收益。","Limited context · 16k forced-compaction threshold":"有限上下文 · 16k forced-compaction threshold","Adaptive compaction outperforms fixed-budget compaction":"adaptive compaction 优于 fixed-budget compaction","Final-model additional solved tasks":"最终模型额外解决的任务数","Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold":"当两个模型都采用 16k forced-compaction threshold 时，比较 SWE-bench Verified 上的 baseline model 与最终 AutoCompact 模型","The final AutoCompact model remains stronger than the baseline when the context limit is reached more often.":"即使更频繁地达到上下文上限，最终 AutoCompact 模型仍然强于 baseline model。","Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-budget trigger is therefore not enough; deciding adaptively when to compact adds value.":"图 5。在 SWE-bench Verified 上，两个模型都会在 16k 阈值处进行 forced compaction，但在相同 token 预算下，AutoCompact 的表现仍然更好。因此，固定预算触发机制并不足够；自适应地决定何时压缩能够带来额外价值。","The gains persist under the smaller context window even though both models use fixed-budget compaction. Together, the experiments establish three distinct claims: long context alone does not eliminate the need for compaction, RL improves the learned policy, and fixed-budget compaction is still weaker than adaptive AutoCompact.":"即使两个模型都使用 fixed-budget compaction，在更小的 context window 下，性能提升依然存在。综合来看，这些实验支持三个不同的结论：仅有 long context 无法消除压缩的必要性；RL 能改善学习得到的策略；fixed-budget compaction 仍弱于自适应 AutoCompact。"};
+    var TEXT_ZH = {"AutoCompact: Learning":"AutoCompact: Learning","When to Compact Context":"When to Compact Context","in Long-Horizon":"in Long-Horizon","Coding Agents":"Coding Agents","First published:":"首次发布：","July 13, 2026":"2026 年 7 月 13 日","Last update:":"最近更新：","July 27, 2026":"2026 年 7 月 27 日","7 min read":"阅读约 7 分钟","TL;DR":"TL;DR","Motivation:":"动机：","Long-horizon coding trajectories can accumulate irrelevant context (e.g., failed attempts and noisy tool output), which makes it harder for the agent to focus on what matters next.":"Long-horizon coding trajectories 会不断累积无关上下文（例如失败尝试和 noisy tool output），使 agent 更难聚焦下一步真正重要的信息。","AutoCompact teaches the model to":"AutoCompact 教会模型在必要时","adaptively compact the context":"自适应地 compact context","when necessary, i.e., replacing noisy history with a clean context for the next step.":"，也就是用 clean context 替换 noisy history，为下一步保留清晰的工作状态。","Results:":"结果：","Data:":"数据：","We collect 1,052":"我们收集了 1,052 个","SFT examples from judge-guided on-policy rollouts":"来自 judge-guided on-policy rollouts 的 SFT 样本","on SWE-rebench.":"，数据来自 SWE-rebench。","SFT:":"SFT：","AutoCompact outperforms baselines with a long-context window or naive fixed-budget compaction.":"AutoCompact 优于 long-context baseline 和 naive fixed-budget compaction。","RL:":"RL：","We further improve task solving and auto-compaction jointly via end-to-end RL.":"我们进一步通过 end-to-end RL 联合提升 task solving 与 auto-compaction。","Long-horizon coding agents accumulate context they no longer need":"Long-horizon coding agents 会累积不再需要的上下文","AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase, even if they do not directly appear in the final solution.":"AutoCompact 建立在一个简单但重要的观察之上：如果把直接促成任务完成的关键步骤单独抽出来，其余大量工作其实都属于探索。例如，在定位问题时，agent 可能会检查多个文件、比较若干可能的位置，并测试不同假设，之后才确定应当在哪里修改。这些步骤即使不会直接出现在最终方案中，在当前阶段往往仍然是必要的。","But once the agent moves to the next phase, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise. For example, it may cause the model to revisit discarded hypotheses.":"但当 agent 进入下一阶段后，这些细节可能就不再有帮助。真正重要的是探索得到的结论，而不是得出结论的每一个中间步骤。把完整探索过程一直保留在上下文中会增加噪声，例如让模型重新回到已经排除的假设。","The agent must recognize when prior history is no longer needed and compact it without losing the working state, and all relevant information necessary to successfully complete current and future tasks.":"agent 要学会判断什么时候可以不再保留之前的完整历史。压缩上下文时，既要保住当前的工作状态，也不能丢掉完成当前任务和后续任务所需的信息。","This is not just condensing old content. The model needs to keep the working state needed for the next step, for example, which paths have been ruled out, which files have been changed, and what needs to be verified next.":"这不只是简单地缩短旧内容。模型还得留下下一步真正用得上的信息，比如已经排除了哪些路径、修改了哪些文件，以及接下来还要验证什么。","AutoCompact learns to replace the full trajectory with a clean, compact context for the next phase.":"AutoCompact 的目的是用干净、紧凑的上下文替换 full trajectory，为下一阶段做好准备。","AutoCompact lets agents decide when to compact the context":"AutoCompact 让 agent 自己决定何时 compact context","Interactive compaction":"交互式 context compaction","From noisy history to a clean working context":"从嘈杂历史转变为干净的工作上下文","Run demo":"运行 demo","Compacting":"正在压缩","Reset demo":"重置 demo","Noisy active context":"嘈杂的活动上下文","Exploration keeps accumulating":"探索过程持续累积","Initial task":"初始任务","Implement the requested change":"实现所请求的修改","KEEP":"保留","Tool · 4.2k tokens":"工具输出 · 4.2k token","Long file output":"冗长的文件输出","Most lines are unrelated to the fix":"大多数行与修复无关","DROP":"丢弃","Agent":"agent","Repeated inspect / grep":"重复检查 / grep","Revisits paths already ruled out":"重新查看已经排除的路径","Agent + tool":"agent + 工具","Failed edit and reverted diff":"失败的编辑及已回滚的差异","Based on a stale hypothesis":"基于已经过时的假设","Useful conclusion":"有效结论","Bug localized; edit plan identified":"问题已定位；修改方案已确定","SUMMARIZE":"摘要","Recent turns":"最近几轮对话","Latest command and result":"最新命令及其结果","Model-generated action":"模型生成的动作","Localization is complete. Earlier exploration is no longer needed.":"问题定位已经完成，不再需要先前的探索过程。","Clean working context":"干净的工作上下文","Ready for the next phase":"已为下一阶段做好准备","Agent is acting from compacted state":"agent 正基于压缩后的状态执行","Waiting for the model to trigger compaction":"等待模型触发 context compaction","Kept verbatim":"原样保留","Generated working state":"生成的工作状态","Objective, conclusion, modified files, verification status, and next action":"目标、结论、已修改文件、验证状态和下一步动作","Next agent turn":"agent 下一轮动作","Apply the localized fix":"实施已经定位的修复","Edit the target file, then run focused tests":"修改目标文件，然后运行针对性测试","Keep verbatim":"原样保留","Summarize":"生成摘要","Drop as outdated noise":"作为过期噪声丢弃","Interactive":"可交互","Click any step below to jump to that state":"点击下方任一步骤即可跳转到对应状态","Step 1":"步骤 1","Context grows noisy":"上下文逐渐嘈杂","Exploration and stale history accumulate":"探索过程与过期历史不断累积","Step 2":"步骤 2","Model decides":"模型作出判断","A phase boundary triggers":"phase boundary 触发","Step 3":"步骤 3","Context is compacted":"上下文完成压缩","Keep, summarize, or drop each part":"逐项决定保留、摘要或丢弃","Step 4":"步骤 4","Work continues":"继续执行任务","Use the clean context for the next phase":"使用干净上下文进入下一阶段","Step 1: exploration keeps accumulating; the context approaches capacity and becomes increasingly noisy.":"步骤 1：探索过程不断累积；上下文接近容量上限，噪声越来越多。","Figure 1. When the model decides that the current context should be cleaned up, it calls":"图 1。当模型判断当前上下文需要清理时，它会调用","to trigger compaction. After that, the model only sees the initial task, the most recent turns, and the compacted":"来触发压缩。此后，模型看到的只有初始任务、最近几轮对话，以及压缩生成的",", instead of the full history.":"，而不是完整历史。","Figure 1 shows the core mechanism of AutoCompact. Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition point, such as after localizing the issue and before beginning the edit, the model can proactively invoke":"图 1 展示了 AutoCompact 的核心机制。大多数时候，模型仍像普通 agent 一样工作：读取文件、编辑代码并执行验证。在合适的阶段转换点，例如完成问题定位之后、开始编辑之前，模型可以主动调用",".":"。","When":"","is invoked, the runtime compacts the current context into a":"运行时会将当前 context compact 成",". The summary preserves the working state needed for the next phase, while intermediate exploration details are removed from the active context. The model then continues with \"original task + recent turns + summary.\"":"。这个摘要保留了下一阶段所需的工作状态，同时从上下文中移除中间探索细节。之后模型 conditioned on “原始任务 + 最近对话 + 摘要”继续执行。","Interactive annotation":"交互式标注","How a judge turns a rollout into SFT data":"Judge 如何把 rollout 转成 SFT data","Annotating":"正在标注","Original rollout":"Original rollout","Different actions from one rollout":"同一条轨迹中的不同动作","Judge reviews them sequentially in the TUI":"judge model 在 TUI 中依次检查这些动作","Action 1 · Agent":"动作 1 · agent","Inspect candidate files":"检查候选文件","Localization is still in progress":"问题定位仍在进行","Action 2 · Agent":"动作 2 · agent","Grep related symbols":"使用 grep 搜索相关符号","Useful exploration within the current phase":"当前阶段中有价值的探索","Action 3 · Agent":"动作 3 · agent","Inspect another file":"继续检查另一个文件","Localization is already complete":"问题定位已经完成","Action 4 · Generated summary":"动作 4 · 生成的摘要","Conclusion retained, but the exact target file is missing":"保留了结论，但遗漏了确切的目标文件","Action 5 · Agent":"动作 5 · agent","Repeat repository search":"重复搜索代码仓库","Fails to use the compacted working state":"未能使用压缩后的工作状态","Judge annotation":"Judge annotation","A decision for each action":"逐个判断每个动作","Keep valid actions; replace or repair invalid ones":"保留有效动作；替换或修复无效动作","Action 1 decision":"动作 1 的判断","Appropriate exploration":"恰当的探索","Leave the proposed action unchanged":"保持原动作不变","Action 2 decision":"动作 2 的判断","Relevant evidence gathering":"相关证据收集","Action 3 decision":"动作 3 的判断","Phase boundary detected":"检测到 phase boundary","Replace continued exploration with compaction":"用 context compaction 替换继续探索","REPLACE":"替换","Action 4 decision":"动作 4 的判断","Required state is missing":"缺少必要状态","Add the exact target file to the summary":"在摘要中补充确切的目标文件","REPAIR":"修复","Action 5 decision":"动作 5 的判断","Continuation is off track":"后续动作偏离方向","Use the summary and begin the localized edit":"利用摘要并开始修改已定位的文件","Annotated trajectory":"Annotated trajectory","Action after Judge review":"judge model 检查后的动作","Every row maps to the action on the left":"每一行都对应左侧的一个动作","Action 1 result":"动作 1 的结果","Passed through without modification":"未经修改直接保留","Action 2 result":"动作 2 的结果","Action 3 result":"动作 3 的结果","Replaces “inspect another file”":"替换“继续检查另一个文件”","Action 4 result":"动作 4 的结果","Objective, conclusion,":"目标、结论、","target file":"目标文件",", and next action":"和下一步动作","Action 5 result":"动作 5 的结果","Edit the localized file":"修改已经定位的文件","Replaces repeated repository search":"替换重复的代码仓库搜索","KEEP · unchanged":"保留 · 不变","REPLACE · new action":"替换 · 新动作","REPAIR · fix state or continuation":"修复 · 修正状态或后续动作","Accepted training example":"已接受的训练样本","SFT dataset · 1,052 examples":"SFT 数据集 · 1,052 个样本","Original prefix + annotated action sequence":"原始前缀 + 标注后的动作序列","24% trigger":"24% 触发动作","53% summary":"53% 摘要","23% continuation":"23% 后续动作","After SFT":"完成 SFT 后","The trained agent acts without the judge":"训练后的 agent 不再需要 Judge","It learns when to trigger":"它学会何时触发",", what to preserve, and how to continue.":"、需要保留什么，以及如何继续执行。","Click any step below to inspect that annotation state":"点击下方任一步骤以查看对应的标注状态","Keep valid actions":"保留有效动作","Two useful exploration actions pass unchanged":"两个有用的探索动作保持不变","Replace trigger":"替换触发动作","Change continued exploration to":"将继续探索改为","Repair state":"修复状态","Fix the summary and continuation actions":"修复摘要与后续动作","Save trajectory":"保存轨迹","Use the full annotated sequence for SFT":"将完整标注序列用于 SFT","Step 1: the judge keeps two valid exploration actions unchanged and advances through the rollout.":"步骤 1：judge model 保留两个有效的探索动作，并继续检查整条轨迹。","Figure 2. During data collection, the judge checks the original agent actions in the TUI step by step, and corrects key branches into effective trajectories for SFT. At inference time, the judge is removed; the trained agent decides when to call":"图 2。在 data collection 期间，judge model 在 TUI 中逐步检查原始 agent 动作，并将关键分支修正为可用于 SFT 的有效轨迹。在经过训练后进行 inference 时，judge model 被移除；训练后的 agent 自行决定何时调用","by itself.":"。","AutoCompact requires the model to learn three capabilities: when to invoke":"AutoCompact 要求模型学习三种能力：何时调用",", what information to preserve in the summary, and how to continue from the compacted context. Existing models do not reliably exhibit these behaviors. As shown in Figure 2, we therefore introduce":"、摘要中应保留哪些信息，以及如何从压缩后的上下文继续执行。现有模型无法稳定表现出这些行为。因此，如图 2 所示，我们引入了","a judge model during data collection":"一个用于 data collection 阶段的 judge model",". Using only the history visible at the current step, the judge reviews each action proposed by the base model":"。judge model 只使用当前步骤可见的历史，检查基础模型提出的每个动作","More specifically, if the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge identifies an appropriate phase transition, it can instead replace the model’s proposed action with":"具体来说，如果提出的动作已经合适，judge model 就保持其不变并进入下一步。当 judge model 识别出合适的阶段转换点时，它可以将模型提出的动作替换为",". If the resulting":"，引导模型产生压缩行为。如果由此生成的","omits or misrepresents state needed for the next phase, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.":"遗漏或错误描述了下一阶段所需的状态，judge model 会修改摘要。如果模型未能利用压缩后的上下文，例如重复已经完成的探索，或忘记摘要中保存的结论，judge model 也可以修正后续动作。","The judge does not rewrite the trajectory arbitrarily. It follows an annotation protocol that specifies valid compaction points, the state each summary should preserve, and the corrections that may be applied. SFT is then performed on the resulting corrected trajectories. At inference time, the judge is removed, and the trained model decides when to invoke":"judge model 不会随意重写轨迹。它遵循一套标注协议，其中规定了有效的压缩时机、每份摘要应保留的状态，以及允许进行的修正。随后，系统使用 corrected trajectory 进行 SFT。在经过训练后进行 inference 时，judge model 被移除，训练后的模型自行决定何时调用","and continues from the compacted context on its own.":"，并自行从压缩后的上下文继续执行。","Using 379 SWE-rebench tasks":"我们使用 379 个 SWE-rebench 任务","and GPT-5.5-Codex as the judge, we collect 1,052 cold-start SFT examples after filtering malformed requests, summary loops, and off-track continuations.":"，并以 GPT-5.5-Codex 作为 judge model；在过滤格式错误的请求、摘要循环和偏离方向的后续动作后，共收集到 1,052 个 cold-start SFT 样本。","1,052 cold-start examples cover the full compaction loop":"1,052 个 cold-start 样本覆盖完整的 context compaction 闭环","When to compact":"When to compact","Identify the phase boundary and call":"识别 phase boundary 并调用","What to preserve":"What to preserve","Produce a complete summary of the state needed next":"完整概括下一阶段所需的状态","How to continue":"How to continue","Act correctly from the compacted context":"基于压缩后的上下文正确行动","Long context alone does not remove the need for compaction":"Long context 本身并不能取代 compaction","We first evaluate on":"我们首先在","with a":"上进行评测，使用","256k context window and no forced compaction":"256k context window，且不进行 forced compaction",". The baseline keeps the full trajectory, while AutoCompact may compact only when the model decides it is useful. This directly tests whether long context alone is sufficient, or whether proactively removing stale history still improves reasoning.":"。baseline model 保留 full trajectory，而 AutoCompact 仅在模型判断有用时才进行压缩。该设置直接检验：仅依靠 long context 是否已经足够，还是主动移除过期历史仍能改善推理。","Long context · 256k · no forced compaction":"long context · 256k · 无 forced compaction","Learned compaction solves more tasks under the same token budget":"在相同 token 预算下，学习得到的压缩策略能解决更多任务","SFT additional solved tasks":"SFT 额外解决的任务数","Baseline versus AutoCompact SFT on SWE-bench Verified by cumulative tokens processed per task with a 256k context window and no forced compaction":"在 256k context window 且无 forced compaction 的条件下，按每个任务累计处理的 token 数比较 SWE-bench Verified 上的 baseline model 与 AutoCompact SFT","AutoCompact SFT outperforms the baseline across all shown budgets in the 256k long-context regime.":"在 256k long-context setting 下，AutoCompact SFT 在图示的所有预算区间均优于 baseline model。","Pass rate (%)":"通过率（%）","Cumulative tokens processed per task (log scale)":"每个任务累计处理的 token 数（对数刻度）","Figure 3. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every token budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.":"图 3。在 SWE-bench Verified 上，当 context window 为 256k 且不进行 forced compaction 时，AutoCompact-SFT 在每个 token 预算下解决的任务都多于 baseline model。因此，仅有 long context 并不足够；adaptive compaction 仍然有帮助。","AutoCompact-SFT consistently outperforms the baseline across every token budget. Because neither model is forced to compact in this setting, the result shows that compaction is not merely an emergency response to context overflow. A trajectory may fit within 256k tokens and still contain enough stale exploration to impair subsequent reasoning.":"AutoCompact-SFT 在所有 token 预算下都持续优于 baseline model。由于该设置中两个模型都不会被 forced compaction，这一结果表明，压缩并不只是应对上下文溢出的紧急措施。一条轨迹即使能容纳在 256k token 内，也可能包含足够多的过期探索，从而干扰后续推理。","Jointly train task solving and compaction with RL":"用 RL 联合训练 task solving 与 compaction","The SFT stage teaches the model to imitate judge-approved compaction behavior, but it does not directly optimize whether those decisions ultimately help solve the task.":"SFT 阶段教会模型模仿 judge model 认可的压缩行为，但并不会直接优化这些决策最终是否有助于解决任务。","Starting from the SFT checkpoint, we develop a fully asynchronous RL system and train the agent with GRPO on SWE-Gym":"从 SFT 检查点出发，我们开发了一套完全异步的强化学习系统，并在 SWE-Gym 上使用 GRPO 训练 agent",". Each rollout receives a binary outcome reward based on whether its final patch passes the test suite. GRPO converts this outcome into a trajectory-level advantage and applies the same advantage to every model-generated token in that trajectory—including regular coding actions, the decision to call":"。每条轨迹会根据最终补丁是否通过测试套件获得二元结果奖励。GRPO 将该结果转化为 trajectory-level advantage，并把同一个优势应用于轨迹中所有由模型生成的 token，包括常规编程动作、是否调用",", the generated context summary, and the continuation after compaction.":"的决策、生成的上下文摘要，以及压缩后的后续动作。","Compaction is therefore not trained as a separate auxiliary task. The agent jointly learns to solve the software-engineering problem and manage its context whenever doing so improves the final task outcome. Useful compaction is reinforced when it contributes to a successful trajectory, while unnecessary or lossy compaction is discouraged when it harms task completion. We compare the SFT model with the RL model under the same 256k evaluation setting.":"因此，context compaction 并不是作为独立的辅助任务来训练。只要上下文管理能够改善最终任务结果，agent 就会同时学习解决软件工程问题和管理上下文。当有用的压缩促成成功轨迹时，它会得到强化；当不必要或有损的压缩妨碍任务完成时，它会受到抑制。我们在相同的 256k 评测设置下比较 SFT 模型与 RL 模型。","RL · 256k · no forced compaction":"RL · 256k · 无 forced compaction","RL improves the SFT policy at every token budget":"RL 在每个 token 预算下都提升了 SFT 策略","RL additional solved tasks":"RL 额外解决的任务数","AutoCompact SFT versus AutoCompact SFT plus RL by cumulative tokens processed per task":"按每个任务累计处理的 token 数比较 AutoCompact SFT 与 AutoCompact SFT+RL","RL substantially improves over the SFT model across all shown budgets.":"在图示的所有预算区间，RL 都显著优于 SFT 模型。","Figure 4. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every token budget.":"图 4。在 SWE-bench Verified 上，在相同的 256k context window 且无 forced compaction 的条件下，RL 在每个 token 预算下都优于 SFT 模型。","The RL model substantially outperforms the SFT model across every budget, with the largest gains in the finite-compute regime.":"RL 模型在所有预算下都显著优于 SFT 模型，并且在有限计算预算区间的提升最大。","SFT establishes the compaction behavior, while RL improves how that behavior contributes to task completion.":"SFT 建立 compaction behavior，RL 则进一步提升它对任务完成的贡献。","RL also changes how the model uses compaction.":"RL 也改变了模型使用 context compaction 的方式。","Trajectory analysis suggests that AutoCompact learns what to preserve more reliably than when to compact. After SFT, the model proactively invokes":"轨迹分析表明，相比于“何时压缩”，AutoCompact 对“保留什么”的学习更加可靠。完成 SFT 后，模型会主动调用","in":"，覆盖","of tasks; after RL, this rises to":"的任务；完成 RL 后，这一比例上升到",", indicating that RL encourages more active context management. The generated summaries remain highly informative:":"，说明 RL 鼓励模型更主动地管理上下文。生成的摘要仍然保留了大量有效信息：","retain relevant task and workspace state, and":"的摘要保留了相关任务与工作区状态，且","specify a next action. However, many summaries are still triggered during verification, suggesting that learning when compaction is most useful remains an important direction for improvement.":"的摘要明确指出了下一步动作。不过，许多摘要仍在验证阶段触发，这表明如何学习最有价值的压缩时机，仍是一个重要的改进方向。","Fixed-budget compaction is not enough":"Fixed-budget compaction 并不够","Finally, we evaluate on":"最后，我们在","with a much smaller":"上进行评测，上下文窗口仅为","16k context window":"16k context window 进行评测",". Both AutoCompact and the baseline use the same fixed-budget forced compaction when the context limit is reached. The comparison therefore tests whether a fixed-budget compaction rule is sufficient, or whether AutoCompact still benefits from deciding adaptively when to compact before the threshold.":"。当达到上下文上限时，AutoCompact 与 baseline model 都使用相同的 fixed-budget forced compaction。因此，该比较检验 fixed-budget compaction 规则是否已经足够，还是 AutoCompact 在达到阈值之前自适应地决定何时压缩仍能带来收益。","Limited context · 16k forced-compaction threshold":"有限上下文 · 16k forced-compaction threshold","Adaptive compaction outperforms fixed-budget compaction":"adaptive compaction 优于 fixed-budget compaction","Final-model additional solved tasks":"最终模型额外解决的任务数","Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold":"当两个模型都采用 16k forced-compaction threshold 时，比较 SWE-bench Verified 上的 baseline model 与最终 AutoCompact 模型","The final AutoCompact model remains stronger than the baseline when the context limit is reached more often.":"即使更频繁地达到上下文上限，最终 AutoCompact 模型仍然强于 baseline model。","Figure 5. On SWE-bench Verified, both models use forced compaction at the 16k threshold, but AutoCompact still performs better under equal token budgets. A fixed-budget trigger is therefore not enough; deciding adaptively when to compact adds value.":"图 5。在 SWE-bench Verified 上，两个模型都会在 16k 阈值处进行 forced compaction，但在相同 token 预算下，AutoCompact 的表现仍然更好。因此，固定预算触发机制并不足够；自适应地决定何时压缩能够带来额外价值。","The gains persist under the smaller context window even though both models use fixed-budget compaction. Together, the experiments establish three distinct claims: long context alone does not eliminate the need for compaction, RL improves the learned policy, and fixed-budget compaction is still weaker than adaptive AutoCompact.":"即使两个模型都使用 fixed-budget compaction，在更小的 context window 下，性能提升依然存在。综合来看，这些实验支持三个不同的结论：仅有 long context 无法消除压缩的必要性；RL 能改善学习得到的策略；fixed-budget compaction 仍弱于自适应 AutoCompact。"};
     Object.assign(TEXT_ZH, {
+        "Not all context is useful":"不是所有上下文都有用",
+        "AutoCompact: Adaptive context compaction":"AutoCompact：自适应压缩上下文",
+        "Learning AutoCompact from judge-guided on-policy rollouts":"通过 judge-guided on-policy rollouts 学习 AutoCompact",
+        "Long context is not enough":"长上下文不够好",
+        "Jointly optimizing coding and compaction with RL":"通过 RL 同时优化 coding 与压缩",
+        "Fixed-threshold compaction is not enough":"固定阈值压缩不够好",
         "Long-horizon coding agents accumulate context they no longer need":"Long-horizon coding agents 会累积冗长上下文",
         "Useful information retained":"保留有用信息",
         "Agent is acting from compacted state":"Agent 正基于压缩后的状态执行",
@@ -2431,6 +2482,19 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "Phase transition detected":"检测到任务阶段切换",
         "Identify a phase transition and call":"识别任务阶段切换并调用",
         "Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate phase transition, such as after localizing the issue and before beginning the edit, the model can proactively invoke":"大多数时候，模型仍像普通 agent 一样工作：读取文件、编辑代码并执行验证。在合适的任务阶段切换时，例如完成问题定位之后、开始编辑之前，模型可以主动调用",
+        "AutoCompact starts from a simple but important observation: if we separate out the key steps that directly contribute to completing the task, much of the remaining work is exploratory. During localization, for example, the agent may inspect several files, compare plausible locations, and test different hypotheses before identifying where the change should be made. These steps are often necessary in the current phase of the task, even if they do not directly appear in the final solution.":"AutoCompact 建立在一个简单但重要的观察之上：如果把直接促成任务完成的关键步骤单独抽出来，其余大量工作其实都属于探索。例如，在定位问题时，agent 可能会检查多个文件、比较若干可能的位置，并测试不同假设，之后才确定应当在哪里修改。这些步骤即使不会直接出现在最终方案中，在当前任务阶段往往仍然是必要的。",
+        "But once the agent moves to the next phase of the task, those details may no longer help. What matters is the conclusion it produced, not every intermediate step that led there. Keeping the full exploration in context adds noise that can interfere with the model's subsequent reasoning; for example, it may cause the model to revisit hypotheses it has already ruled out.":"但当 agent 进入任务的下一阶段后，这些细节可能就不再有帮助。真正重要的是探索得到的结论，而不是得出结论的每一个中间步骤。把完整探索过程一直保留在上下文中会引入噪声，干扰模型的后续判断；例如，模型可能重新考虑已被排除的假设。",
+        "AutoCompact teaches the model to replace the full trajectory with a clean, compact context, allowing it to continue into the next phase of the task with the information it needs.":"AutoCompact 让模型学会用干净、紧凑的上下文替换完整轨迹，使其能够带着必要信息进入任务的下一阶段。",
+        "Compaction is now appropriate":"此时适合进行压缩",
+        "Use the clean context for the next phase of the task":"使用干净上下文进入任务的下一阶段",
+        "Most of the time, the model still works like a normal agent: it reads files, edits code, and runs verification. At an appropriate transition between phases of the task, such as after localizing the issue and before beginning the edit, the model can proactively invoke":"大多数时候，模型仍像普通 agent 一样工作：读取文件、编辑代码并执行验证。在任务阶段切换的合适时机，例如完成问题定位之后、开始编辑之前，模型可以主动调用",
+        ". The summary preserves the working state needed for the next phase of the task, while intermediate exploration details are removed from the active context. The model then continues with \"original task + recent turns + summary.\"":"。该摘要保留任务下一阶段所需的工作状态，并从上下文中移除中间探索细节。之后，模型基于“原始任务 + 最近对话 + 摘要”继续执行。",
+        "More specifically, if the proposed action is already appropriate, the judge leaves it unchanged and advances to the next step. When the judge determines that compaction is appropriate, it can instead replace the model’s proposed action with":"具体来说，如果提出的动作已经合适，judge model 就保持其不变并进入下一步。当 judge model 判断适合进行压缩时，它可以将模型提出的动作替换为",
+        "omits or misrepresents state needed for the next phase of the task, the judge revises the summary. It can also correct the continuation if the model fails to use the compacted context, such as by repeating exploration that has already been resolved or losing track of conclusions preserved in the summary.":"遗漏或错误描述了任务下一阶段所需的状态，judge model 会修改摘要。如果模型未能利用压缩后的上下文，例如重复已经完成的探索，或忘记摘要中保存的结论，judge model 也可以修正后续动作。",
+        "Useful exploration within the current phase of the task":"当前任务阶段中有价值的探索",
+        "Compaction is appropriate":"适合进行压缩",
+        "Determine when compaction is appropriate and call":"判断何时适合压缩并调用",
+        ", where AutoCompact and the baseline are forcibly compacted at the same threshold. However, a fixed token threshold may not align with the task trajectory: by the time the threshold is reached, the accumulated context may be harder to summarize, or compaction may interrupt an ongoing phase of the task, such as reasoning, debugging, or editing. This comparison therefore tests whether fixed-threshold compaction is sufficient, or whether AutoCompact still benefits from choosing when to compact before the threshold. As shown in Figure 6, AutoCompact consistently outperforms the fixed-threshold baseline, supporting the intuition that compaction timing should depend on the current task state rather than context length alone.":"。在这一设置下，AutoCompact 和 baseline 都会在相同阈值处被强制压缩。不过，固定 token 阈值未必与任务进程一致：达到阈值时，累积的上下文可能已经更难摘要，压缩也可能打断正在进行的任务阶段，例如推理、调试或编辑。因此，这一对比检验固定阈值压缩是否已经足够，还是 AutoCompact 在达到阈值前自主选择时机仍能获益。如图 6 所示，AutoCompact 始终优于固定阈值 baseline，说明压缩时机应取决于当前任务状态，而不只是上下文长度。",
         "Interactive context-compaction demo":"交互式上下文压缩演示",
         "Interactive annotation demo":"交互式标注演示",
         "From long history to a clean context":"从冗长的历史转变为干净的上下文",
@@ -2446,7 +2510,6 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "The agent must recognize when prior history is no longer needed and compact it without losing the working state, and all relevant information necessary to successfully complete current and future tasks.":"Agent 要学会判断什么时候可以不再保留之前的完整历史。压缩上下文时，既要保住当前的工作状态，也不能丢掉完成当前任务和后续任务所需的信息。",
         "AutoCompact teaches the model to replace the full trajectory with a clean, compact context, allowing it to continue the next phase with the information it needs.":"AutoCompact 让模型学会用干净、紧凑的上下文替换完整轨迹，使其能够带着必要信息继续执行下一阶段任务。",
         "AutoCompact lets agents decide when to compact the context":"AutoCompact 让 agent 自己决定何时压缩上下文",
-        "Judge-guided on-policy rollouts teach when and what to compact":"Judge-guided on-policy rollouts 教会模型何时压缩上下文、保留什么",
         "Jointly train task solving and compaction with RL":"用 RL 联合训练 task solving 与 context compaction",
         "Run demo":"运行 demo",
         "Reset demo":"重置 demo",
@@ -2509,7 +2572,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "Final answer":"最终回答",
         "Compaction limit":"压缩上限",
         "AutoCompact lets the model decide when to compact":"AutoCompact 让模型自行决定何时压缩",
-        "The model chooses a useful phase boundary before the limit":"模型在达到上限前选择合适的阶段边界",
+        "The model chooses when to compact before the limit":"模型在达到上限前选择压缩时机",
         "Localization complete":"定位完成",
         "Model calls":"模型调用",
         "Auto context":"自动上下文",
@@ -2525,7 +2588,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         ", they rarely invoke it proactively, possibly because such behavior is uncommon in their training data. As shown in Figure 3, we therefore introduce a judge during data collection. Given only the history visible at the current step and explicit knowledge of":"，模型也很少主动调用它。我们推测，这可能是因为训练数据中缺少类似行为。因此，如图 3 所示，我们在数据收集阶段引入 judge。judge 只能看到当前步骤可见的历史信息，并知道",
         "Figure 4. On SWE-bench Verified, AutoCompact-SFT solves more tasks than the baseline under every inference-cost budget with a 256k context window and no forced compaction. Long context alone is therefore not enough; adaptive compaction still helps.":"图 4。在 SWE-bench Verified 上，当 context window 为 256k 且不会触发 threshold-based compaction 时，AutoCompact-SFT 在每个推理成本预算下解决的任务都多于 baseline model。这说明，即使 context window 足够长，adaptive compaction 仍然有帮助。",
         "Figure 5. On SWE-bench Verified, under the same 256k context window with no forced compaction, RL improves over the SFT model at every inference-cost budget.":"图 5。在 SWE-bench Verified 上，在相同的 256k 上下文窗口且无强制压缩的条件下，RL 在每个推理成本预算下都优于 SFT 模型。",
-        "Fixed-threshold compaction is not enough":"Fixed-threshold compaction 并不够",
+        "Fixed-threshold compaction is not enough":"固定阈值压缩不够好",
         "Finally, we evaluate on SWE-bench Verified with a much smaller 16k context window, where AutoCompact and the baseline are forcibly compacted at the same threshold. However, a fixed token threshold may not align with the task trajectory: by the time the threshold is reached, the accumulated context may be harder to summarize, or compaction may interrupt an ongoing reasoning, debugging, or editing phase. This comparison therefore tests whether fixed-threshold compaction is sufficient, or whether AutoCompact still benefits from choosing when to compact before the threshold. As shown in Figure 6, AutoCompact consistently outperforms the fixed-threshold baseline, supporting the intuition that compaction timing should depend on the current task state rather than context length alone.":"最后，我们在 SWE-bench Verified 上使用更小的 16k context window 进行评测，AutoCompact 与 baseline 都会在相同阈值处被强制压缩。不过，固定 token 阈值未必与任务进程一致：达到阈值时，累积的上下文可能已经更难摘要，压缩也可能打断正在进行的推理、调试或编辑阶段。因此，这一对比检验固定阈值压缩是否已经足够，还是 AutoCompact 在达到阈值前自主选择时机仍能获益。如图 6 所示，AutoCompact 始终优于固定阈值 baseline，说明压缩时机应取决于当前任务状态，而不只是上下文长度。",
         "Finally, we evaluate on":"最后，我们在",
         "with a much smaller":"上进行评测，上下文窗口仅为",
@@ -2542,12 +2605,113 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         "and continues from the compacted context on its own. Figure 3 shows how we construct the supervision signals needed to teach the model to use AutoCompact.":"，并自行从压缩后的上下文继续执行。图 3 展示了我们如何构建教会模型 AutoCompact 需要的监督信号。",
         "AutoCompact-SFT consistently outperforms the baseline across every inference-cost budget. Because neither model is forced to compact in this setting, compaction can help even when the context limit is never reached. This means that a trajectory may fit within a 256k context window and still contain enough stale exploration to impair subsequent reasoning.":"AutoCompact-SFT 在所有推理成本预算下都持续优于 baseline。由于该设置不会强制两个模型进行压缩，即使始终没有达到上下文上限，压缩仍然有帮助。这也就是说，一条轨迹即使可以容纳在 256k 上下文窗口内，也可能包含足以干扰后续推理的过期探索。"
     });
+    Object.assign(TEXT_ZH, {
+        "What the environment executed—and what SFT learns":"环境实际执行了什么，以及 SFT 学习什么",
+        "Source rollout · observed":"Source rollout · 实际记录",
+        "Actions actually executed":"环境实际执行的动作",
+        "Environment receipts show what really happened":"环境回执展示真实发生的结果",
+        "Action 1 · Agent → environment":"动作 1 · Agent → 环境",
+        "Action 2 · Agent → environment":"动作 2 · Agent → 环境",
+        "Action 3 · Agent → environment":"动作 3 · Agent → 环境",
+        "Action 4 · Model output":"动作 4 · 模型输出",
+        "Action 5 · Agent → environment":"动作 5 · Agent → 环境",
+        "File contents returned":"环境返回文件内容",
+        "Symbol matches returned":"环境返回符号匹配结果",
+        "More file contents returned":"环境返回更多文件内容",
+        "Incomplete summary recorded":"原始轨迹记录了不完整的摘要",
+        "Search results returned":"环境返回搜索结果",
+        "Executed":"执行",
+        "Offline Judge annotation":"离线 Judge 标注",
+        "Review after the rollout":"在 rollout 结束后检查",
+        "Corrected supervision":"修正后的监督信号",
+        "SFT training targets":"SFT 训练目标",
+        "Saved as labels—not replayed in the source environment":"保存为标签，不会在原环境中重新执行",
+        "Action 1 · Training target":"动作 1 · 训练目标",
+        "Action 2 · Training target":"动作 2 · 训练目标",
+        "Action 3 · Counterfactual target":"动作 3 · 反事实训练目标",
+        "Action 4 · Corrected target":"动作 4 · 修正后的训练目标",
+        "Action 5 · Counterfactual target":"动作 5 · 反事实训练目标",
+        "Matches the executed action":"与实际执行的动作一致",
+        "Replaces executed “inspect another file”":"替换实际执行的“继续检查另一个文件”",
+        "Complete state, target file, and next action":"完整状态、目标文件和下一步动作",
+        "Replaces executed repository search":"替换实际执行的代码仓库搜索",
+        "Kept target":"保留为目标",
+        "Not executed":"未执行",
+        "EXECUTED · source rollout":"执行 · source rollout",
+        "NOT EXECUTED · corrected target":"未执行 · 修正后的目标",
+        "SAVED · SFT supervision":"已保存 · SFT 监督信号",
+        "Saved supervision":"已保存的监督信号",
+        "Corrected trajectory enters SFT":"修正后的轨迹进入 SFT",
+        "Training target—not an environment replay":"这是训练目标，不是环境重放",
+        "Inspect observed execution":"查看实际执行过程",
+        "See actions and environment receipts":"查看动作及其环境回执",
+        "Contrast replacement":"对比替换前后",
+        "Executed inspect vs. target":"实际 inspect 与训练目标",
+        "Separate repairs":"区分修正与执行",
+        "Corrected outputs remain target-only":"修正后的输出仅作为训练目标",
+        "Save supervision":"保存监督信号",
+        "Store the corrected sequence for SFT":"将修正后的序列用于 SFT",
+        "Step 1: the left column records actions actually sent to the environment and the observations returned.":"步骤 1：左列记录实际发送给环境的动作，以及环境返回的 observation。",
+        "Figure 3. The left column records what actually happened in the source rollout: actions sent to the environment and the observations returned. The judge reviews that record offline. The right column is corrected SFT supervision; replacement actions such as":"图 3。左列记录 source rollout 中真实发生的过程：发送给环境的动作以及环境返回的 observation。Judge 对这些记录进行离线检查。右列是修正后的 SFT 监督信号；其中的替换动作，例如",
+        "are training targets, not actions replayed in the source environment.":"，是训练目标，并未在原环境中重新执行。",
+        "What the model proposed—and what the environment executed":"模型提出了什么，以及环境执行了什么",
+        "Base-model proposal":"Base model 提议",
+        "Actions before Judge review":"Judge 检查前的动作",
+        "Execution badges show what reached the environment":"执行标记说明哪些动作真正发送给了环境",
+        "Judge decides what reaches the environment":"Judge 决定哪些动作发送给环境",
+        "Candidate action at each step":"每一步的候选动作",
+        "Action 1 · Agent proposal":"动作 1 · Agent 提议",
+        "Action 2 · Agent proposal":"动作 2 · Agent 提议",
+        "Action 3 · Agent proposal":"动作 3 · Agent 提议",
+        "Action 5 · Agent proposal":"动作 5 · Agent 提议",
+        "Replaced before environment execution":"在发送给环境前被替换",
+        "Summary is missing the target file":"摘要缺少目标文件",
+        "Action 4 · Summary":"动作 4 · 摘要",
+        "Target file is missing":"缺少目标文件",
+        "Judge review":"Judge 检查",
+        "Select the action sent to the environment":"确定发送给环境的动作",
+        "Choose the action":"选择动作",
+        "Keep valid proposals; replace or repair the others":"保留有效提议，替换或修复其他提议",
+        "Keep, replace, or repair":"保留、替换或修复",
+        "Add the target file":"补充目标文件",
+        "Environment execution":"环境执行",
+        "Actions after Judge review":"Judge 检查后的动作",
+        "These are the actions actually executed":"这些是环境实际执行的动作",
+        "Action 4 · Corrected summary":"动作 4 · 修正后的摘要",
+        "Action 4 · Corrected":"动作 4 · 修正",
+        "State, target file, and next action":"状态、目标文件和下一步动作",
+        "Action 1 · Coding action":"动作 1 · Coding 动作",
+        "Action 2 · Coding action":"动作 2 · Coding 动作",
+        "Action 3 · Compaction action":"动作 3 · 压缩动作",
+        "Action 5 · Coding action":"动作 5 · Coding 动作",
+        "Action 1 · Coding":"动作 1 · Coding",
+        "Action 2 · Coding":"动作 2 · Coding",
+        "Action 5 · Coding":"动作 5 · Coding",
+        "Context compacted":"环境完成上下文压缩",
+        "Localized edit applied":"环境完成已定位的代码修改",
+        "EXECUTED · environment action":"执行 · 环境动作",
+        "NOT EXECUTED · replaced proposal":"未执行 · 被替换的提议",
+        "REPAIRED · corrected output":"已修复 · 修正后的输出",
+        "Executed actions and corrected outputs":"执行后的动作与修正后的输出",
+        "Actions 1 and 2 execute unchanged":"动作 1 和动作 2 保持不变并执行",
+        "Replace action 3":"替换动作 3",
+        "Skip inspection; execute":"跳过文件检查，执行",
+        "Repair and continue":"修复并继续",
+        "Fix the summary; execute the edit":"修复摘要并执行代码修改",
+        "Step 1: actions 1 and 2 pass through Judge review and execute unchanged.":"步骤 1：动作 1 和动作 2 通过 Judge 检查，保持不变并执行。",
+        "Figure 3. The left column shows the base model’s proposed actions. The Judge keeps valid proposals or replaces invalid ones before execution. Actions 3 and 5 on the left are not executed; the environment instead executes the corrected actions on the right, including":"图 3。左列展示 base model 提出的动作。Judge 在执行前保留有效提议或替换无效提议。左列的动作 3 和动作 5 不会执行；环境实际执行右列修正后的动作，包括",
+        "and the localized edit.":"以及已定位的代码修改。"
+    });
     var ATTR_ZH = {"Primary":"主导航","Table of contents":"目录","Noisy context compared with the compact working context produced by a model-triggered action":"对比嘈杂上下文与模型触发压缩后生成的紧凑工作上下文","Noisy active context before compaction":"压缩前嘈杂的活动上下文","The model proactively triggers compaction":"模型主动触发上下文压缩","Clean working context after compaction":"压缩后的干净工作上下文","Compaction disposition legend":"上下文压缩处理方式图例","Compaction demo steps":"上下文压缩演示步骤","Original base-agent rollout":"基础 agent 的原始轨迹","Judge annotation decisions":"评审模型的标注决策","Corrected trajectory used for SFT":"用于 SFT 的修正轨迹","Judge decision legend":"评审模型决策图例","Annotation process steps":"标注流程步骤","The SFT dataset contains 24 percent compaction-trigger examples, 53 percent summary examples, and 23 percent continuation examples.":"SFT 数据集包含 24% 的压缩触发样本、53% 的摘要样本和 23% 的后续动作样本。","Baseline versus AutoCompact SFT on SWE-bench Verified with a 256k context window and no forced compaction":"在 256k 上下文窗口且无强制压缩条件下，比较 SWE-bench Verified 上的 baseline model 与 AutoCompact SFT","Chart legend":"图表图例","AutoCompact SFT versus AutoCompact SFT plus RL on SWE-bench Verified with a 256k context window and no forced compaction":"在 256k 上下文窗口且无强制压缩条件下，比较 SWE-bench Verified 上的 AutoCompact SFT 与 SFT+RL","Baseline versus final AutoCompact model on SWE-bench Verified when both use a 16k forced-compaction threshold":"当两者均使用 16k 强制压缩阈值时，比较 SWE-bench Verified 上的 baseline model 与最终 AutoCompact 模型","References and notes":"参考文献与注释"};
     Object.assign(ATTR_ZH, {
         "Long history compared with the clean context produced by a model-triggered action":"对比冗长历史与模型触发压缩后生成的干净上下文",
         "Long history before compaction":"压缩前的冗长历史",
         "Clean context after compaction":"压缩后的干净上下文",
-        "The model chooses a useful phase boundary before the limit":"模型在达到上限前选择合适的任务阶段切换时机"
+        "The model chooses when to compact before the limit":"模型在达到上限前选择压缩时机",
+        "Actions and observations from the source rollout":"Source rollout 中实际执行的动作和环境返回结果",
+        "Corrected SFT targets that were not replayed in the source environment":"未在原环境中重新执行的 SFT 修正目标",
+        "Base-model proposals before Judge review":"Judge 检查前的 base model 提议",
+        "Actions executed after Judge review":"Judge 检查后实际执行的动作"
     });
     Object.assign(ATTR_ZH, {
         "GPT-5.6 Sol and Codex use fixed-threshold compaction":"GPT-5.6 Sol 和 Codex 使用固定阈值压缩",
@@ -2600,7 +2764,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         'Coding Agents': 'Coding Agents',
         'TL;DR': '要点速览',
         'Long-horizon coding trajectories can accumulate irrelevant context (e.g., failed attempts and noisy tool output), which makes it harder for the agent to focus on what matters.': 'Long-horizon coding trajectories 会不断累积无关上下文（例如失败尝试和 noisy tool output），使 agent 更难聚焦真正重要的信息。',
-        'judge-guided on-policy SFT examples': 'judge model 引导的 on-policy SFT 样本',
+        'SFT examples from judge-guided on-policy rollouts': '来自 judge-guided on-policy rollouts 的 SFT 样本',
         'Original rollout': '原始运行轨迹',
         'Judge annotation': 'judge model 标注',
         'Annotated trajectory': '标注轨迹',
@@ -2654,9 +2818,6 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         [/long context/g, '长上下文'],
         [/long-context setting/g, '长上下文设置'],
         [/这个 setting/g, '这个设置'],
-        [/phase boundary/g, '任务阶段切换'],
-        [/phase transition/g, '任务阶段切换'],
-        [/阶段边界/g, '任务阶段切换'],
         [/在合适的阶段转换点/g, '在合适的任务阶段切换时'],
         [/合适的阶段转换点时/g, '合适的任务阶段切换时'],
         [/localization/g, '问题定位'],
@@ -2699,21 +2860,18 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
     Object.keys(TEXT_ZH).forEach(function (english) {
         var translated = TEXT_ZH[english]
             .replace(/# Auto Context Summary/g, '\u0000')
-            .replace(/on-policy rollouts/g, '\u0001')
-            .replace(/on-policy rollout/g, '\u0002')
-            .replace(/runtime settings/g, '\u0003')
-            .replace(/runtime rule/g, '\u0004');
+            .replace(/runtime settings/g, '\u0001')
+            .replace(/runtime rule/g, '\u0002');
         CHINESE_TERM_REPLACEMENTS.forEach(function (replacement) {
             translated = translated.replace(replacement[0], replacement[1]);
         });
         if (english === 'Interactive context-compaction demo') translated = '交互式上下文压缩演示';
         if (english === 'Interactive annotation demo') translated = '交互式标注演示';
+        if (english === 'Learning AutoCompact from judge-guided on-policy rollouts') translated = '通过 judge-guided on-policy rollouts 学习 AutoCompact';
         TEXT_ZH[english] = translated
             .replace(/\u0000/g, '# Auto Context Summary')
-            .replace(/\u0001/g, 'on-policy rollouts')
-            .replace(/\u0002/g, 'on-policy rollout')
-            .replace(/\u0003/g, 'runtime settings')
-            .replace(/\u0004/g, 'runtime rule')
+            .replace(/\u0001/g, 'runtime settings')
+            .replace(/\u0002/g, 'runtime rule')
             .replace(/§/g, 'coding')
             .replace(/([\u3400-\u9fff])\s+(?=[\u3400-\u9fff])/g, '$1')
             .replace(/([\u3400-\u9fff])\s+([，。；：、])/g, '$1$2')
@@ -3194,15 +3352,15 @@ window.BLOG_REFERENCES = {
         var trajectoryStatus = trajectoryVisual.querySelector('.annotation-step-status');
         var trajectoryTimers = [];
         var trajectoryMessages = isZh ? {
-            1: '步骤 1：前两个探索动作都有助于定位问题，Judge 模型将它们原样保留并继续检查运行轨迹。',
-            2: '步骤 2：第三个动作在问题定位完成后仍继续探索，Judge 模型将它替换为 compact()。',
-            3: '步骤 3：Judge 模型分别修复缺少目标文件的摘要，以及重复搜索的后续动作。',
-            4: '步骤 4：包含“保留”“替换”和“修复”决策的完整标注轨迹被纳入 SFT 数据集。'
+            1: '步骤 1：动作 1 和动作 2 通过 Judge 检查，保持不变并执行。',
+            2: '步骤 2：左侧的文件检查不执行；环境实际执行右侧的 compact()。',
+            3: '步骤 3：Judge 修复摘要；左侧的重复搜索不执行，环境实际执行右侧的代码修改。',
+            4: '步骤 4：包含实际执行动作和修正输出的完整轨迹被保存为 SFT 监督信号。'
         } : {
-            1: 'Step 1: the judge keeps two useful exploration actions unchanged and advances through the rollout.',
-            2: 'Step 2: continued exploration after localization is replaced with compact().',
-            3: 'Step 3: the judge repairs a summary missing the target file and a continuation that repeats search.',
-            4: 'Step 4: the complete trajectory—with KEEP, REPLACE, and REPAIR decisions—enters the SFT dataset.'
+            1: 'Step 1: actions 1 and 2 pass through Judge review and execute unchanged.',
+            2: 'Step 2: the file inspection on the left is not executed; the environment executes compact() on the right.',
+            3: 'Step 3: the Judge repairs the summary; repeated search is not executed, and the environment applies the edit.',
+            4: 'Step 4: the complete trajectory of executed actions and corrected outputs is saved as SFT supervision.'
         };
 
         function clearTrajectoryTimers() {
