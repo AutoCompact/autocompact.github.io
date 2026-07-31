@@ -2913,16 +2913,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
         return String(value || '').replace(/\s+/g, ' ').trim();
     }
 
-    function selectedLanguage() {
-        var queryLang = null;
-        try { queryLang = new URL(window.location.href).searchParams.get('lang'); } catch (error) {}
-        if (queryLang === 'zh' || queryLang === 'en') return queryLang;
-        try {
-            var saved = window.localStorage.getItem(STORAGE_KEY);
-            if (saved === 'zh' || saved === 'en') return saved;
-        } catch (error) {}
-        return (window.navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
-    }
+    
 
     function translateTextNodes(root, lang) {
         var dictionary = lang === 'zh' ? TEXT_ZH : TEXT_EN;
