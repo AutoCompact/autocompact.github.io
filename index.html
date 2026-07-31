@@ -2915,7 +2915,7 @@ html[lang^="zh"] .invocation-prefix-code { display: none; }
 
     
 
-    function translateTextNodes(root, lang) {
+    function selectedLanguage() { var queryLang = null; try { queryLang = new URL(window.location.href).searchParams.get('lang'); } catch (error) {} if (queryLang === 'zh' || queryLang === 'en') return queryLang; return 'en'; }    function translateTextNodes(root, lang) {
         var dictionary = lang === 'zh' ? TEXT_ZH : TEXT_EN;
         var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
             acceptNode: function (node) {
